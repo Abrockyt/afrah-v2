@@ -7,6 +7,7 @@ import './v7/styles/sections.css';
 import './v7/styles/pages-theme.css';
 import './v7/styles/afrah.css';
 import './v7/styles/refinement.css';
+import './v7/styles/loader-card.css';
 
 const PagesApp = React.lazy(() => import('./v7/PagesApp.jsx'));
 const isHome = location.pathname === '/' || location.pathname === '/index.html';

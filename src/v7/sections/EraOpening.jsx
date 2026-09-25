@@ -26,7 +26,8 @@ export default function EraOpening() {
         .to(q('.era-opening__aside'), { y: -55, opacity: 0, duration: .25 }, .02)
         .fromTo(q('.era-opening__picture'), { top: () => innerWidth <= 600 ? '30vh' : '12vh', left: () => innerWidth <= 600 ? '17%' : '31%', width: () => innerWidth <= 600 ? '66%' : '38%', height: () => innerWidth <= 600 ? '57vh' : '79vh' }, { top: 0, left: 0, width: '100%', height: '100%', duration: .54, ease: 'power2.inOut' }, .12)
         .fromTo(q('.era-opening__aperture'), { borderRadius: '50%', '--eye': '58%' }, { borderRadius: '0%', '--eye': '-2%', duration: .5, ease: 'power2.inOut' }, .14)
-        .fromTo(q('.era-opening__picture img'), { scale: 1.08 }, { scale: 1, duration: .7 }, 0)
+        // magnify: the view dives into the towers while the aperture opens
+        .fromTo(q('.era-opening__picture img'), { scale: 1 }, { scale: 1.65, duration: .9, ease: 'power1.in' }, .04)
         .to(q('.era-opening__aperture'), { '--eye': '148%', duration: .25, ease: 'power2.inOut' }, .72)
         .to(q('.era-opening__map'), { opacity: 0, duration: .15 }, .65)
         .to(q('.era-opening__pattern'), { opacity: 0, duration: .15 }, .7);
