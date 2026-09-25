@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import { sectionProgress, store } from '../../core/store';
+import { loadStatue } from '../objects/Statues';
 
 // Sculpture room, composed like the Silver Pinewood lobby: a very long lens
 // looking across the statue, a dark frame behind it, faint floating stones and
@@ -91,15 +92,15 @@ export class ZeusScene {
     this.ready = loader.loadAsync('/reference-study/silver/model.gltf').then(({ scene: model }) => {
       model.updateMatrixWorld(true);
       const meshes = [];
+      const zeusBox = new THREE.Box3();
       model.traverse((o) => { if (o.isMesh) meshes.push(o); });
       meshes.forEach((o) => {
         const m = new THREE.Mesh(o.geometry, o.material.clone());
         m.applyMatrix4(o.matrixWorld);
         const name = o.name.replace(/[^A-Za-z0-9]/g, '');
         if (/^Default/.test(name)) {
-          m.castShadow = true; m.receiveShadow = true;
-          m.material.roughness = 0.75; m.material.metalness = 0.5; m.material.color.setRGB(0.8, 0.8, 0.8);
-          this.statue.push(m);
+          // the Zeus bust only marks where the sculpture stands
+          zeusBox.expandByObject(m); return;
         } else if (/^Cube/.test(name)) {
           m.material.roughness = 0.7; m.material.metalness = 0.02; m.material.color.setRGB(0.05, 0.05, 0.05);
           m.userData.rz = m.rotation.z;
@@ -110,6 +111,15 @@ export class ZeusScene {
         } else return;
         m.userData.baseY = m.position.y;
         this.group.add(m);
+      });
+      // In Zeus's place: a young man, turned three-quarters towards the light
+      const size = zeusBox.getSize(new THREE.Vector3()), c = zeusBox.getCenter(new THREE.Vector3());
+      return loadStatue('youth', { height: size.y * 0.9 }).then((youth) => {
+        youth.position.set(c.x + size.x * 0.04, zeusBox.min.y, c.z);
+        youth.rotation.y = 2.2;
+        youth.userData.baseY = youth.position.y;
+        this.statue.push(youth);
+        this.group.add(youth);
       });
     }).catch((e) => { this.error = e; console.warn('Sculpture model could not load', e); });
   }

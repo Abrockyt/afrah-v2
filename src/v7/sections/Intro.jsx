@@ -11,7 +11,7 @@ import { fallData } from '../webgl/scenes/FeatherFall';
 export function Opening() {
   const kicker = useRef(null);
   const { runwayRef, stageRef } = useStage('opening', {
-    runway: 3,
+    runway: 5,
     build: (tl, { q }) => {
       // Kicker dissolves into dash segments then vanishes; giant title sweeps
       // through masked lines; everything is gone before the light tears in.

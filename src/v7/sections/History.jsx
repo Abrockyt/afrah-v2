@@ -13,7 +13,7 @@ import {CONTACT} from '../content/copy';
 export function History(){
   const itemRef=useRef(null);
   const {runwayRef,stageRef}=useStage('history',{
-    runway:11,
+    runway:15,
     build:(tl,{q})=>{
       const strip=q('.hx__timeline-strip')[0];
       tl.fromTo(q('.hx__title .hx__word > span'),{yPercent:100},{yPercent:0,duration:.08,stagger:.006,ease:'power2.out'},.01)

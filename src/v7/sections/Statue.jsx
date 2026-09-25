@@ -7,7 +7,7 @@ import { setTheme } from '../core/store';
 // as the room settles; the statue, frame and stones drift at different speeds.
 export function Statue() {
   const { runwayRef, stageRef } = useStage('statue', {
-    runway: 5,
+    runway: 8,
     build: (tl, { q }) => {
       tl.fromTo(q('.statue__intro .line__in'), { yPercent: 110 }, { yPercent: 0, duration: 0.08, stagger: 0.012, ease: 'power2.out' }, 0.1)
         .fromTo(q('.statue__word span'), { yPercent: 105 }, { yPercent: 0, duration: 0.14, stagger: 0.012, ease: 'power3.out' }, 0.08)

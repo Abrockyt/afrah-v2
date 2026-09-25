@@ -38,7 +38,7 @@ export function useStage(id, { runway = 3, build, onProgress, deps = [], scrub =
         pin: pin ? stageEl : false,
         pinSpacing: false,
         anticipatePin,
-        scrub: scrub === true ? 0.35 : scrub,
+        scrub: scrub === true ? 0.9 : scrub,
         animation: tl,
         onUpdate: (self) => {
           const rec = store.sections[id] || (store.sections[id] = { p: 0, active: false });

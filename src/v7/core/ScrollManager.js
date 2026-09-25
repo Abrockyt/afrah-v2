@@ -14,9 +14,9 @@ let lenis = null;
 export function initScroll() {
   if (lenis) return lenis;
   lenis = new Lenis({
-    lerp: 0.1,
-    wheelMultiplier: 1,
-    touchMultiplier: 1.6,
+    lerp: 0.075,
+    wheelMultiplier: 0.62,
+    touchMultiplier: 1.05,
     smoothWheel: true,
     syncTouch: false,
     infinite: false,

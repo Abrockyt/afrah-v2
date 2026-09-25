@@ -65,7 +65,7 @@ export class SceneManager {
     this.zeus = new ZeusScene(this.scene);
     this.last = 0;
     this.bg = { from: INK, to: INK, p: 0, dir: [0, 1], seed: 1.3, fringe: 0.09 };
-    this.ready = Promise.all([this.warmup(), this.world.ready, this.zeus.ready.then(() => this.warmupLate())]);
+    this.ready = Promise.all([this.warmup(), this.world.ready, this.history.ready, this.zeus.ready.then(() => this.warmupLate())]);
   }
 
   // Compile every program while the loader is up so no stage stalls on first

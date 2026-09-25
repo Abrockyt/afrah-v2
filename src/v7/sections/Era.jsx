@@ -15,7 +15,7 @@ const words = (text) => text.split(' ').map((w, i) => <span className="era-w" ke
 // The next chapter then slides up over it, as on ERA.
 export function EraArchitecture() {
   const { runwayRef, stageRef } = useStage('eraArch', {
-    runway: 7,
+    runway: 10,
     build: (tl, { q, stage }) => {
       const ring = q('.era-ring')[0];
       const H = () => stage.clientHeight;
