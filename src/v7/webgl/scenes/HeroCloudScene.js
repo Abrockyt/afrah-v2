@@ -78,7 +78,7 @@ void main(){
 const overVert = `varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0., 1.); }`;
 const overFrag = `
 uniform float uTime; uniform float uRays; uniform float uFill; uniform float uZoom; uniform float uAspect; uniform vec2 uSun; uniform float uVignette;
-uniform vec3 uLit; uniform vec3 uShade; uniform float uGlow;
+uniform vec3 uLit; uniform vec3 uShade; uniform float uGlow; uniform float uFrame;
 varying vec2 vUv;
 float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
 float noise(vec2 p){ vec2 i = floor(p), f = fract(p); f = f*f*(3.-2.*f);
@@ -117,6 +117,22 @@ void main(){
   }
   float body = clamp(max(dens, smoothstep(.25, .6, base) * uFill * uFill) * uFill * 1.08, 0., 1.);
   float light = mix(clamp(base * 1.3 - .1 + (uv.y - .4) * .5, 0., 1.), lit, dens);
+  // the same cumulus keeps hanging round the edges of the lens while the
+  // camera flies below it, framing the city like the film
+  if (uFrame > 0.001) {
+    float edge = smoothstep(.3, .85, length(c * vec2(.72, 1.18)));
+    float fd = 0., fl = .6;
+    for (int i = 0; i < 8; i++){
+      float fi = float(i);
+      float h1 = fract(sin(fi * 41.3) * 43758.5453), h2 = fract(sin(fi * 17.7) * 24634.6);
+      float ang = fi * .785 + h1 * .5;
+      vec2 ctr = vec2(cos(ang) * uAspect * .6, sin(ang) * .66) * (1.05 + h2 * .25) + vec2(sin(uTime * .04 + fi) * .03, cos(uTime * .03 + fi) * .02);
+      puff(c, ctr, 1.15 + h1 * .85, mod(fi + 1., 4.), h2 * 6.283 + uTime * .004, fd, fl);
+    }
+    float fb = clamp(max(fd * smoothstep(.0, .5, edge + .2), smoothstep(.32, .66, base) * edge) * uFrame * 1.15, 0., 1.);
+    light = mix(light, mix(fl, clamp(base * 1.3 - .1 + (uv.y - .4) * .5, 0., 1.), 1. - fd), fb * (1. - body));
+    body = max(body, fb);
+  }
   vec3 cloud = mix(uShade, uLit, light);
   cloud += vec3(1., .8, .55) * (1. - body) * .2 * uRays;
   cloud = mix(cloud, uLit * 1.04, uGlow * (.45 + .4 * smoothstep(.9, .0, distance(uv, vec2(.52, .6)))));
@@ -172,13 +188,14 @@ export class HeroCloudScene {
     geo.setAttribute('aCloud', this.aCloud);
     this.clouds.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
     this.clouds.frustumCulled = false; this.clouds.renderOrder = 5;
+    this.clouds.visible = false;                 // the lens clouds do all the cloud work now
     this.group.add(this.clouds);
     this.order = this.puffs.map((_, i) => i);
     this.dist = new Float32Array(this.puffs.length);
 
     this.over = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), new THREE.ShaderMaterial({
       vertexShader: overVert, fragmentShader: overFrag, transparent: true, depthTest: false, depthWrite: false, toneMapped: false,
-      uniforms: { uTime: { value: 0 }, uRays: { value: 1 }, uFill: { value: 1 }, uZoom: { value: 0 }, uAspect: { value: 1.78 }, uSun: { value: new THREE.Vector2(0.12, 1.08) }, uVignette: { value: .35 }, uGlow: { value: 0 }, uMap: { value: tex }, uLit: { value: new THREE.Color('#fff3e6') }, uShade: { value: new THREE.Color('#8f7b8b') } },
+      uniforms: { uTime: { value: 0 }, uRays: { value: 1 }, uFill: { value: 1 }, uZoom: { value: 0 }, uAspect: { value: 1.78 }, uSun: { value: new THREE.Vector2(0.12, 1.08) }, uVignette: { value: .35 }, uGlow: { value: 0 }, uFrame: { value: 0 }, uMap: { value: tex }, uLit: { value: new THREE.Color('#ffe4d2') }, uShade: { value: new THREE.Color('#7f7391') } },
     }));
     this.over.frustumCulled = false; this.over.renderOrder = 999;
     this.group.add(this.over);
@@ -241,14 +258,17 @@ export class HeroCloudScene {
     const white = p < 0.36 ? smooth(range(p, WHITE_IN[0], WHITE_IN[1])) : 1 - smooth(range(p, WHITE_OUT[0], WHITE_OUT[1]));
     u.uFill.value = Math.max(open, white);
     u.uGlow.value = white;
+    // cloud round the frame through the aerial, and again round the crown
+    u.uFrame.value = p < 0.36 ? smooth(range(p, 0.06, 0.2)) * 0.95 : smooth(range(p, 0.6, 0.7)) * (1 - smooth(range(p, 0.8, 0.9))) * 0.55;
     u.uZoom.value = p < 0.23 ? range(p, 0, 0.2) * 1.6 + Math.sin(time * 0.2) * 0.02 : p < 0.36 ? (white - 1) * 0.9 : range(p, 0.36, 0.42) * 1.6;
     // clouds thin out once the camera is below them
     this.cloudMat.uniforms.uFade.value = p < 0.36 ? 1 : 0.9;
     this.cloudMat.uniforms.uNear.value = p < 0.36 ? 7 : 1.2;
     this.cloudMat.uniforms.uFog.value.copy(w.fogColor);
     // haze: deep in the aerial, clearer at the tower
-    w.fogNear = p < 0.36 ? 14 : 6; w.fogFar = p < 0.36 ? 85 : 70;
+    w.fogNear = p < 0.36 ? 18 : 8; w.fogFar = p < 0.36 ? 115 : 80;
 
+    if (!this.clouds.visible) return;
     // sort and place the puffs back to front, drifting with time
     const cam = camera.position;
     for (let i = 0; i < this.puffs.length; i++) {

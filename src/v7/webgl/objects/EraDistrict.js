@@ -22,7 +22,7 @@ const LOOK = {
   Bld_window1:     {color: [.5, .73, 1.0], metalness: .65, roughness: .06, env: 1.8, glass: true},
   Bld_Dark:        {color: [.6, .51, .365], metalness: 1, roughness: .62, env: 1},
   Bld__roof1:      {color: [.62, .56, .5], metalness: .1, roughness: .8, env: .6},
-  Bld_buildinbgs1: {color: [1.0, .9, .79], metalness: 0, roughness: .71, env: .5},
+  Bld_buildinbgs1: {color: [.78, .7, .62], metalness: 0, roughness: .71, env: .5},
   BC_plaza:        {color: [.86, .82, .76], metalness: 0, roughness: .8, env: .4},
   Poi_white_poi:   {color: [.95, .92, .88], metalness: 0, roughness: .8, env: .4},
   poi_gold:        {color: [.95, .72, .38], metalness: .7, roughness: .35, env: 1},
@@ -47,19 +47,45 @@ const BAKED = /^(Bld_|BC_|Poi_|poi_|Lnd_crosswalk|Lnd_grass|Lnd_asphalt$)/;
 export const HOLE = new THREE.Vector4(28, -322, 312, -44);
 // world → ERA model metres, kept current by tick() wherever the quarter is placed
 const TO_MODEL = new THREE.Matrix4();
-function bake(mat, tex, strength = 1, lift = 0, hole = false) {
+// Extra looks layered on the bake: `stone` adds honed-stone grain and panel
+// joints; `lights` (the evening uniform) lights random windows on city blocks.
+const BAKE_COMMON = `
+float bkH(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+float bkN(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3. - 2. * f);
+  return mix(mix(bkH(i), bkH(i + vec2(1, 0)), f.x), mix(bkH(i + vec2(0, 1)), bkH(i + vec2(1, 1)), f.x), f.y); }
+`;
+function bake(mat, tex, strength = 1, lift = 0, hole = false, extra = {}) {
   mat.onBeforeCompile = (sh) => {
     sh.uniforms.uBake = {value: tex};
     sh.uniforms.uBakeK = {value: new THREE.Vector2(strength, lift)};
     sh.uniforms.uHole = {value: HOLE};
     sh.uniforms.uToModel = {value: TO_MODEL};
+    sh.uniforms.uEve = extra.lights || {value: 0};
     sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying vec2 vBakeUv; varying vec3 vModel;')
       .replace('#include <uv_vertex>', '#include <uv_vertex>\nvBakeUv = uv; vModel = (modelMatrix * vec4(position, 1.0)).xyz;');
-    sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nuniform sampler2D uBake; uniform vec2 uBakeK; uniform vec4 uHole; uniform mat4 uToModel; varying vec2 vBakeUv; varying vec3 vModel;')
+    sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nuniform sampler2D uBake; uniform vec2 uBakeK; uniform vec4 uHole; uniform mat4 uToModel; uniform float uEve; varying vec2 vBakeUv; varying vec3 vModel;' + BAKE_COMMON)
       .replace('#include <clipping_planes_fragment>', '#include <clipping_planes_fragment>\n' + (hole ? `{ vec2 m = (uToModel * vec4(vModel, 1.0)).xz; if (m.x > uHole.x && m.x < uHole.z && m.y > uHole.y && m.y < uHole.w) discard; }` : ''))
-      .replace('#include <map_fragment>', '#include <map_fragment>\n vec3 bk = texture2D(uBake, vBakeUv).rgb; diffuseColor.rgb *= mix(vec3(1.0), bk * (1.0 - uBakeK.y) + uBakeK.y, uBakeK.x);');
+      .replace('#include <map_fragment>', `#include <map_fragment>
+        vec3 bk = texture2D(uBake, vBakeUv).rgb; diffuseColor.rgb *= mix(vec3(1.0), bk * (1.0 - uBakeK.y) + uBakeK.y, uBakeK.x);
+        vec3 mm = (uToModel * vec4(vModel, 1.0)).xyz;
+        vec3 fn = normalize(cross(dFdx(mm), dFdy(mm)));
+        float hor = dot(mm.xz, vec2(-fn.z, fn.x));
+        ${extra.stone ? `{
+          float jy = abs(fract(mm.y / 1.52) - .5), jx = abs(fract(hor / 1.18) - .5);
+          float joint = smoothstep(.465, .495, max(jy, jx)) * (1. - abs(fn.y));
+          float grain = bkN(mm.xy * 1.3 + mm.z * .7) * .55 + bkN(vec2(hor, mm.y) * 7.) * .45;
+          diffuseColor.rgb *= (1. - joint * .28) * (.9 + grain * .16);
+        }` : ''}`)
+      .replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>
+        ${extra.lights ? `if (abs(fn.y) < .35) {
+          vec2 g = vec2(hor / 2.7, (mm.y - 1.5) / 3.2);
+          vec2 cell = floor(g), f = fract(g);
+          float win = step(.2, f.x) * step(f.x, .8) * step(.28, f.y) * step(f.y, .82);
+          float lit = step(.6, bkH(cell));
+          totalEmissiveRadiance += mix(vec3(1., .66, .36), vec3(1., .86, .66), bkH(cell + 7.)) * win * lit * uEve * (.35 + bkH(cell + 3.) * .7);
+        }` : ''}`);
   };
-  mat.customProgramCacheKey = () => 'bake' + strength + '_' + lift + (hole ? 'h' : '');
+  mat.customProgramCacheKey = () => 'bake' + strength + '_' + lift + (hole ? 'h' : '') + (extra.stone ? 's' : '') + (extra.lights ? 'l' : '');
   return mat;
 }
 
@@ -94,17 +120,18 @@ async function build(renderer) {
     if (mats[name]) return mats[name];
     let m;
     const L = LOOK[name];
-    if (name === 'Lnd_grass') m = bake(new THREE.MeshStandardMaterial({map: grass, color: '#a9b98f', roughness: 1}), shadow, 1, .25);
+    if (name === 'Lnd_grass') m = bake(new THREE.MeshStandardMaterial({map: grass, color: '#8c9c72', roughness: 1}), shadow, 1, .25);
     else if (name === 'Lnd_asphalt' || name === 'Lnd_Asphalt_out') m = bake(new THREE.MeshStandardMaterial({map: asphalt, color: '#9a9690', roughness: .92}), shadow, name === 'Lnd_asphalt' ? 1 : 0, .3);
-    else if (name === 'Offroad_2' || name === 'Bld_offroad') m = new THREE.MeshStandardMaterial({map: ground, color: '#e0cdb4', roughness: 1});
+    else if (name === 'Offroad_2' || name === 'Bld_offroad') m = new THREE.MeshStandardMaterial({map: ground, color: '#b9a893', roughness: 1});
     else if (name === 'Lnd_water') m = new THREE.MeshStandardMaterial({color: '#4c6f7c', roughness: .08, metalness: .2, envMapIntensity: 1.6});
-    else if (/^Tree_leafs/.test(name)) m = new THREE.MeshStandardMaterial({map: leaves, alphaTest: .45, side: THREE.DoubleSide, color: name === 'Tree_leafs_02' ? '#c2d49a' : name === 'Tree_leafs_03' ? '#d3dd9c' : '#adc58f', roughness: .9});
+    else if (/^Tree_leafs/.test(name)) m = new THREE.MeshStandardMaterial({map: leaves, alphaTest: .45, side: THREE.DoubleSide, color: name === 'Tree_leafs_02' ? '#93a472' : name === 'Tree_leafs_03' ? '#a3ab6e' : '#86996a', roughness: .9});
     else if (name === 'Tree_bark') m = new THREE.MeshStandardMaterial({color: '#5a4a3c', roughness: 1});
     else if (name === 'Bld_window1') m = makeGlass({envMap, toModel: TO_MODEL, eve});
     else if (name === 'Bld__Bronze' || name === 'Bld__Bronze1') m = makeCopper({envMap, toModel: TO_MODEL, eve, bakeMap: shadow});
     else if (L) {
       m = new THREE.MeshStandardMaterial({color: new THREE.Color(...L.color), metalness: L.metalness, roughness: L.roughness, envMapIntensity: L.env});
-      if (BAKED.test(name)) bake(m, shadow, 1, name.startsWith('Bld_') ? .12 : .2, /^(Bld_buildinbgs1|Poi_|poi_|BC_)/.test(name));
+      if (BAKED.test(name)) bake(m, shadow, 1, name.startsWith('Bld_') ? .12 : .2, /^(Bld_buildinbgs1|Poi_|poi_|BC_)/.test(name),
+        {stone: /^Bld_(Metal|Dark|_roof)/.test(name), lights: /^(Bld_buildinbgs1|Poi_white_poi|Poi_Brown|Poi_Torpedo|BC_plaza)/.test(name) ? eve : null});
     } else m = new THREE.MeshStandardMaterial({color: '#cfc8bc', roughness: .9});
     m.envMap = envMap; m.name = name;
     return mats[name] = m;
@@ -181,23 +208,27 @@ async function build(renderer) {
   const pools = new THREE.Group();
   const waterMat = new THREE.ShaderMaterial({
     transparent: false, fog: true,
-    uniforms: THREE.UniformsUtils.merge([THREE.UniformsLib.fog, {uTime: {value: 0}, uSky: {value: new THREE.Color('#bfe3ee')}, uDeep: {value: new THREE.Color('#1d8fa6')}}]),
+    uniforms: THREE.UniformsUtils.merge([THREE.UniformsLib.fog, {uTime: {value: 0}, uSky: {value: new THREE.Color('#bfe3ee')}, uDeep: {value: new THREE.Color('#136f82')}, uEve: {value: 0}}]),
     vertexShader: `varying vec2 vUv; varying vec3 vW;
       #include <fog_pars_vertex>
       void main(){ vUv=uv; vec4 w=modelMatrix*vec4(position,1.); vW=w.xyz; vec4 mvPosition=viewMatrix*w; gl_Position=projectionMatrix*mvPosition;
         #include <fog_vertex>
       }`,
-    fragmentShader: `uniform float uTime; uniform vec3 uSky; uniform vec3 uDeep; varying vec2 vUv; varying vec3 vW;
+    fragmentShader: `uniform float uTime; uniform vec3 uSky; uniform vec3 uDeep; uniform float uEve; varying vec2 vUv; varying vec3 vW;
       #include <fog_pars_fragment>
-      float h(vec2 p){ return sin(p.x*9.+uTime*1.3)*sin(p.y*7.-uTime*1.1)+sin((p.x+p.y)*13.+uTime*1.7)*.5; }
+      float h(vec2 p){ return sin(p.x * 3.1 + uTime * .9) * sin(p.y * 2.3 - uTime * .7) + sin((p.x - p.y) * 5.7 + uTime * 1.3) * .35; }
       void main(){
-        vec2 p=vW.xz*4.;
-        float c=h(p); float caus=pow(abs(sin(c*3.)),6.);
-        vec3 V=normalize(cameraPosition-vW); float fr=pow(1.-max(V.y,0.),3.);
-        float edge=smoothstep(0.,.06,vUv.x)*smoothstep(0.,.06,1.-vUv.x)*smoothstep(0.,.1,vUv.y)*smoothstep(0.,.1,1.-vUv.y);
-        vec3 col=mix(uDeep*1.25,uDeep*.8,1.-edge)+caus*.18;
-        col=mix(col,uSky,.25+fr*.6);
-        gl_FragColor=vec4(col,1.);
+        vec2 p = vW.xz * 180.;
+        float e = .02;
+        vec3 n = normalize(vec3(h(p + vec2(e, 0.)) - h(p - vec2(e, 0.)), 6., h(p + vec2(0., e)) - h(p - vec2(0., e))));
+        vec3 V = normalize(cameraPosition - vW);
+        float fr = .03 + .97 * pow(1. - max(dot(V, n), 0.), 5.);
+        float edge = smoothstep(0., .08, vUv.x) * smoothstep(0., .08, 1. - vUv.x) * smoothstep(0., .14, vUv.y) * smoothstep(0., .14, 1. - vUv.y);
+        vec3 body = mix(uDeep * .55, uDeep * 1.15, edge);
+        body += vec3(.08, .55, .6) * uEve * (.25 + .55 * edge);               // underwater lights
+        vec3 col = mix(body, uSky, clamp(fr, 0., .85));
+        col += pow(max(dot(reflect(-V, n), normalize(vec3(-.5, .4, -.7))), 0.), 180.) * .8;
+        gl_FragColor = vec4(col, 1.);
         #include <tonemapping_fragment>
         #include <colorspace_fragment>
         #include <fog_fragment>
@@ -206,8 +237,8 @@ async function build(renderer) {
   const deckMat = bake(new THREE.MeshStandardMaterial({color: '#d9cdb9', roughness: .85, envMap}), shadow, 0);
   const pool = (x, z, w, d, ry = 0) => {
     const g = new THREE.Group(); g.position.set(x, 13.6, z); g.rotation.y = ry;
-    const deck = new THREE.Mesh(new THREE.BoxGeometry(w + 8, .6, d + 8), deckMat); deck.position.y = -.2;
-    const water = new THREE.Mesh(new THREE.PlaneGeometry(w, d), waterMat); water.rotation.x = -Math.PI / 2; water.position.y = .14;
+    const deck = new THREE.Mesh(new THREE.BoxGeometry(w + 8, .35, d + 8), deckMat); deck.position.y = -.1;
+    const water = new THREE.Mesh(new THREE.PlaneGeometry(w, d), waterMat); water.rotation.x = -Math.PI / 2; water.position.y = .085;
     g.add(deck, water);
     // loungers along the long edge
     const lounger = new THREE.BoxGeometry(1, .5, 2.2), lm = new THREE.MeshStandardMaterial({color: '#f3eee6', roughness: .7, envMap});
@@ -231,7 +262,7 @@ async function build(renderer) {
   return {
     group: holder, envMap, waterMat, materials: mats,
     // evening: 0 = golden hour, 1 = dusk with rooms lit
-    setEvening(k) { eve.value = k; },
+    setEvening(k) { eve.value = k; waterMat.uniforms.uEve.value = k; },
     tick(t) { waterMat.uniforms.uTime.value = t; holder.updateMatrixWorld(); TO_MODEL.copy(holder.matrixWorld).invert(); },
   };
 }

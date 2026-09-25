@@ -32,7 +32,9 @@ export default function EraOpening() {
   }, []);
   const { runwayRef, stageRef } = useStage('hero', {
     runway: 10,
-    build: (tl, { q }) => {
+    build: (tl, { q, stage }) => {
+      // the hero's shading leaves with it, never sliding over the next chapter
+      tl.fromTo(stage, { '--shade': 1 }, { '--shade': 0, duration: 0.06 }, 0.9);
       // the title card sits on the cloud, then dissolves as the cloud parts
       tl.to(q('.hero__mark'), { scale: 1.35, letterSpacing: '0.3em', autoAlpha: 0, filter: 'blur(10px)', duration: 0.14, ease: 'power1.in' }, 0.05)
         .to(q('.hero__tag, .hero__meta'), { autoAlpha: 0, y: -30, duration: 0.08 }, 0.04)

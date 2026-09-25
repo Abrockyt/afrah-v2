@@ -83,7 +83,7 @@ float eraLeafH(vec4 f){
   float rib = smoothstep(.08 + fwidth(au), .0, au);
   float rim = smoothstep(.82, 1., au);
   // only real leaves carry veins; the thin diagonal straps stay plain metal
-  float leaf = smoothstep(.5, .9, f.z) * smoothstep(5., 9., f.w);
+  float leaf = smoothstep(.5, .9, f.z) * smoothstep(5., 9., f.w) * smoothstep(3.2, 4.6, f.w / (2. * f.z));
   return (vein * .55 + rib - rim * .4) * leaf;
 }
 `;
@@ -116,7 +116,7 @@ export function makeGlass({ envMap, toModel, eve }) {
 }
 
 export function makeCopper({ envMap, toModel, eve, bakeMap }) {
-  const m = new THREE.MeshStandardMaterial({ color: '#c26a3c', metalness: .72, roughness: .38, envMap, envMapIntensity: 1.25, emissive: '#ff8a45', emissiveIntensity: 1 });
+  const m = new THREE.MeshStandardMaterial({ color: '#a8592f', metalness: .7, roughness: .42, envMap, envMapIntensity: 1.25, emissive: '#ff8a45', emissiveIntensity: 1 });
   m.onBeforeCompile = (sh) => {
     sh.uniforms.uToModel = { value: toModel };
     sh.uniforms.uEve = eve;

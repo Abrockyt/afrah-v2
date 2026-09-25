@@ -55,3 +55,4 @@
 .tower__lead{position:absolute;left:7px;top:0;height:1px;width:calc(min(16vw,220px) * var(--draw));background:rgba(251,245,238,.85);transform-origin:left}
 .tower__label{position:absolute;left:calc(min(16vw,220px) + 20px);top:-7px;white-space:nowrap;font:500 11px/1 var(--font-display);letter-spacing:.22em;text-transform:uppercase;color:#fbf5ee;opacity:var(--draw)}
 @media (max-width:600px){.tower__lead{width:calc(18vw * var(--draw))}.tower__label{left:calc(18vw + 14px);font-size:9px}}
+.hero::before,.hero::after{opacity:var(--shade,1)}

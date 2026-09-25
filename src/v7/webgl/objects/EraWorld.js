@@ -43,7 +43,9 @@ void main(){
 
 export const MOODS = {
   // Baahubali: warm golden light through a rose haze
-  golden: { horizon: '#f2cfb0', mid: '#d9aea6', top: '#7d7b9c', sun: '#ffd09a', sunCol: '#ffc98f', fog: '#e2c3b4', hemiSky: '#ffe9d4', hemiGround: '#6d5f58', sunI: 2.6, hemiI: 1.15, ground: .9, evening: 0 },
+  // (renamed in spirit: ERA's renders are all at twilight — pink horizon, blue
+  // overhead, rooms lit — so the hero is too)
+  golden: { horizon: '#f4ad8a', mid: '#b98aa0', top: '#34406e', sun: '#ffb487', sunCol: '#ffae80', fog: '#d9a595', hemiSky: '#e7c9cf', hemiGround: '#3a3240', sunI: 2.0, hemiI: .8, ground: .7, evening: .85 },
   // the place chapter: a clear, cool morning
   morning: { horizon: '#f6e3cf', mid: '#bfd5e6', top: '#6d9ccc', sun: '#fff0da', sunCol: '#fff1d6', fog: '#e3e8eb', hemiSky: '#eef4fb', hemiGround: '#8b8578', sunI: 2.4, hemiI: 1.25, ground: 1, evening: 0 },
   // the building chapter: last light, rooms coming on
@@ -107,6 +109,7 @@ export class EraWorld {
     u.uSunCol.value.copy(mix(a.sunCol, b.sunCol)); u.uGround.value = a.ground + (b.ground - a.ground) * k;
     // haze takes the horizon's colour, so the far ground melts into the sky
     this.fogColor.copy(u.uHorizon.value);
+    this.district?.waterMat.uniforms.uSky.value.copy(u.uMid.value).lerp(u.uHorizon.value, .5);
     this.sun.color.copy(mix(a.sun, b.sun)); this.hemi.color.copy(mix(a.hemiSky, b.hemiSky)); this.hemi.groundColor.copy(mix(a.hemiGround, b.hemiGround));
     this._sunI = a.sunI + (b.sunI - a.sunI) * k; this._hemiI = a.hemiI + (b.hemiI - a.hemiI) * k;
     this.district?.setEvening(a.evening + (b.evening - a.evening) * k);
