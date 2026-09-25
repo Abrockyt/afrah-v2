@@ -14,7 +14,7 @@ export default function Arrival(){
         .to(q('.arrival__chapter'),{autoAlpha:0,duration:.1},.72)
         .fromTo(q('.arrival__next'),{autoAlpha:0},{autoAlpha:1,duration:.1},.18);
     },
-    onProgress:()=>setTheme('dark'),
+    onProgress:()=>setTheme('light'),
   });
   return <section className="runway" ref={runwayRef} id="arrival"><div className="stage stage--arrival" ref={stageRef}>
     <div className="stage__inner"><span className="arrival__chapter t-small">01 / THE ARRIVAL</span><h2 className="arrival__word">A new<br/>perspective.<span>FORM / LIGHT / LIFE</span></h2><a className="arrival__next t-small" href="#introduction">Enter the story <b>↓</b></a></div>

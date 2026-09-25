@@ -24,7 +24,7 @@ export function Building() {
       tl.fromTo(q('.tower__cta'), { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: 0.04 }, 0.78);
       tl.to(q('.tower__cta'), { autoAlpha: 0, duration: 0.03 }, 0.9);
     },
-    onProgress: () => setTheme('dark'),
+    onProgress: () => setTheme('light'),
   });
   return (
     <section className="runway" ref={runwayRef} id="tower">

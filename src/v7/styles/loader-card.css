@@ -29,3 +29,14 @@
 .hero__above-sub{margin:22px 0 0;font:500 12px/1 var(--font-display);letter-spacing:.24em;text-transform:uppercase;color:rgba(248,245,240,.85)}
 .hero .era-opening__map{z-index:3}
 @media (max-width:600px){.hero__mark{font-size:24vw}.hero__meta{flex-direction:column;gap:10px;bottom:16vh}.hero__tag{top:26vh;font-size:9px}}
+
+/* Daylight community: dark text over the bright sky and ground */
+.stage--tower,.stage--tower .tower__title{color:#0b1b2e!important}
+.stage--tower .tower__chapter,.stage--tower .tower__shot p.tower__meta{color:#33475c!important}
+.stage--tower .tower__num{color:#8c5f45!important}
+.stage--arrival{color:#0b1b2e!important}
+.stage--arrival .arrival__word,.stage--arrival .arrival__next{color:#0b1b2e!important;text-shadow:none}
+.stage--arrival .arrival__chapter{color:#8c5f45!important}
+.stage--arrival::before,.stage--tower::before{content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:linear-gradient(90deg,rgba(244,241,235,.72) 0%,rgba(244,241,235,.38) 22%,rgba(244,241,235,0) 42%,rgba(244,241,235,0) 62%,rgba(244,241,235,.34) 82%,rgba(244,241,235,.62) 100%)}
+.stage--arrival .stage__inner,.stage--tower .stage__inner{z-index:1}

@@ -13,15 +13,15 @@ function shots(towers){
   const c=(t,dy=0)=>[t.centre.x,dy,t.centre.z];
   return {
     arrival:[
-      {pos:[24,1.6,-44],look:[0,6,2]},
-      {pos:[11,2.6,-27],look:[0,7,0]},
+      {pos:[26,1.7,-48],look:[0,9,4]},
+      {pos:[12,2.8,-30],look:[0,11,2]},
     ],
     tower:[
-      {pos:[46,38,-46],look:[0,3,13]},                                        // aerial of the whole community
+      {pos:[52,46,-50],look:[0,6,14]},                                        // aerial of the whole community
       {pos:[-10,one.height*.55,-13],look:c(one,one.height*.62)},              // close on Tower One's facade
-      {pos:[-5,two.height*.3,5],look:c(two,two.height*.55)},                  // Tower Two from the courtyard
-      {pos:[5,1.1,9],look:c(three,three.height*.7)},                          // low angle up Tower Three
-      {pos:[9,four.height+3,15],look:c(four,four.height*.85)},                // the crown of Tower Four
+      {pos:[-2,two.height*.5,1],look:c(two,two.height*.55)},                  // Tower Two from the courtyard
+      {pos:[-7,2.4,6],look:c(three,three.height*.55)},                        // over the pool, up Tower Three
+      {pos:[19,four.height+6,5],look:c(four,four.height*.8)},                 // the crown of Tower Four
     ],
   };
 }
@@ -41,15 +41,21 @@ export class ReferenceBuildingScene {
         if(['BG','Ground_Parking'].includes(o.name)||o.name.startsWith('RS_Camera')){o.visible=false;return;}
         o.material=o.material.clone();o.material.envMap=envMap;o.material.envMapIntensity=.85;o.material.needsUpdate=true;
       });
-      const {group,towers}=createCommunity(model,innerWidth<760);
-      this.towers=towers;this.shots=shots(towers);
+      // daylight: the model's own night lights step right down
+      model.traverse(o=>{if(o.isLight)o.intensity*=.12;});
+      const community=createCommunity(model,innerWidth<760);
+      const {group,towers}=community;
+      community.lights.forEach(l=>scene.add(l));
+      this.community=community;this.towers=towers;this.shots=shots(towers);
       this.model=model;this.group.add(model,group);
       return renderer.compileAsync?.(scene,new THREE.PerspectiveCamera(42,1,.1,100));
     }).catch(e=>{this.error=e;console.warn('Reference building could not load',e);});
   }
-  update(camera){
+  update(camera,time=0){
     const mode=store.activeStage;
-    const on=mode==='arrival'||mode==='building';this.group.visible=on&&!!this.model;if(!on||!this.shots)return;
+    const on=mode==='arrival'||mode==='building';this.group.visible=on&&!!this.model;
+    this.community?.update(time,camera,on);
+    if(!on||!this.shots)return;
     const p=mode==='arrival'?sectionProgress('arrival'):sectionProgress('building');
     if(this.active!==mode){this.sm=p;this.active=mode;}else this.sm+=(p-this.sm)*.08;
     let a,b,t;
@@ -67,6 +73,7 @@ export class ReferenceBuildingScene {
     camera.fov=mode==='arrival'?30:34;camera.updateProjectionMatrix();
     camera.position.copy(this.position);
     camera.lookAt(this.target);
+    this.community.update(time,camera,true);
     if(mode==='arrival' && k>.7){
       this.right.set(1,0,0).applyQuaternion(camera.quaternion);
       this.target.addScaledVector(this.right,-6);

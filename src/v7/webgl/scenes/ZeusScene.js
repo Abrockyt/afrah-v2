@@ -122,6 +122,7 @@ export class ZeusScene {
     const k = active ? this.intensity : 0;
     this.room.forEach((l) => { l.intensity = l.userData.base * k; });
     this.cursorLight.intensity = 8 * Math.PI * k;
+    this.cursorLight.shadow.autoUpdate = active;
     if (!active) return;
 
     const p = sectionProgress('statue');
