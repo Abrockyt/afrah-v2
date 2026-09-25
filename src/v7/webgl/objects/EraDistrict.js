@@ -225,7 +225,7 @@ async function build(renderer) {
         float fr = .03 + .97 * pow(1. - max(dot(V, n), 0.), 5.);
         float edge = smoothstep(0., .08, vUv.x) * smoothstep(0., .08, 1. - vUv.x) * smoothstep(0., .14, vUv.y) * smoothstep(0., .14, 1. - vUv.y);
         vec3 body = mix(uDeep * .55, uDeep * 1.15, edge);
-        body += vec3(.08, .55, .6) * uEve * (.25 + .55 * edge);               // underwater lights
+        body += vec3(.03, .26, .3) * uEve * (.25 + .55 * edge);               // underwater lights
         vec3 col = mix(body, uSky, clamp(fr, 0., .85));
         col += pow(max(dot(reflect(-V, n), normalize(vec3(-.5, .4, -.7))), 0.), 180.) * .8;
         gl_FragColor = vec4(col, 1.);

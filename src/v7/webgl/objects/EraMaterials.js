@@ -116,7 +116,7 @@ export function makeGlass({ envMap, toModel, eve }) {
 }
 
 export function makeCopper({ envMap, toModel, eve, bakeMap }) {
-  const m = new THREE.MeshStandardMaterial({ color: '#a8592f', metalness: .7, roughness: .42, envMap, envMapIntensity: 1.25, emissive: '#ff8a45', emissiveIntensity: 1 });
+  const m = new THREE.MeshStandardMaterial({ color: '#9c6649', metalness: .68, roughness: .46, envMap, envMapIntensity: 1.25, emissive: '#ff8a45', emissiveIntensity: 1 });
   m.onBeforeCompile = (sh) => {
     sh.uniforms.uToModel = { value: toModel };
     sh.uniforms.uEve = eve;
