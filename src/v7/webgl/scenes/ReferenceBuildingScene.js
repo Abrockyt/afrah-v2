@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {DRACOLoader} from 'three/examples/jsm/loaders/DRACOLoader.js';
 import {sectionProgress,range,smooth,store} from '../../core/store';
+import {stackFloors} from '../objects/StackFloors';
 
 const CAMERA=[
   {pos:[15.137,.4,-19.258],look:[.363,4.346,-6.368]},
@@ -26,6 +27,7 @@ export class ReferenceBuildingScene {
         o.material=o.material.clone();o.material.envMap=envMap;o.material.envMapIntensity=.85;o.material.needsUpdate=true;
         // Preserve the source model's embedded PBR values and texture maps.
       });
+      this.tower=stackFloors(model,renderer,innerWidth<760?6:10);
       this.model=model;this.group.add(model);
       return renderer.compileAsync?.(scene,new THREE.PerspectiveCamera(42,1,.1,100));
     }).catch(e=>{this.error=e;console.warn('Reference building could not load',e);});
@@ -45,6 +47,10 @@ export class ReferenceBuildingScene {
     const k=store.aspectK||1;
     this.position.set(...a.pos).lerp(this.nextPosition.set(...b.pos),t);
     this.target.set(...a.look).lerp(this.nextTarget.set(...b.look),t);
+    // the building now rises many floors higher: frame it from further out
+    // and look up toward its middle
+    this.position.sub(this.target).multiplyScalar(2.1).add(this.target);
+    this.position.y+=2.5; this.target.y+=5.2;
     camera.fov=mode==='arrival'?25:27;camera.updateProjectionMatrix();
     camera.position.set(this.position.x/k**.48,this.position.y,this.position.z/k**.55);
     camera.lookAt(this.target);
