@@ -8,16 +8,34 @@ import { loadEraDistrict } from './EraDistrict';
 
 const skyVert = `varying vec3 vDir; void main(){ vDir = position; vec4 p = projectionMatrix * modelViewMatrix * vec4(position, 1.0); gl_Position = p.xyww; }`;
 const skyFrag = `
-uniform vec3 uHorizon; uniform vec3 uMid; uniform vec3 uTop; uniform vec3 uSunDir; uniform vec3 uSunCol; uniform float uGround;
+uniform vec3 uHorizon; uniform vec3 uMid; uniform vec3 uTop; uniform vec3 uSunDir; uniform vec3 uSunCol; uniform float uGround; uniform float uTime; uniform float uCloud;
 varying vec3 vDir;
+float h21(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+float n2(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3. - 2. * f);
+  return mix(mix(h21(i), h21(i + vec2(1, 0)), f.x), mix(h21(i + vec2(0, 1)), h21(i + vec2(1, 1)), f.x), f.y); }
+float fbm(vec2 p){ float v = 0., a = .5; for (int i = 0; i < 6; i++){ v += a * n2(p); p = p * 2.02 + 3.1; a *= .5; } return v; }
 void main(){
   vec3 d = normalize(vDir);
   float h = d.y;
-  vec3 col = mix(uHorizon, uMid, smoothstep(0.0, 0.28, h));
-  col = mix(col, uTop, smoothstep(0.22, 0.95, h));
+  vec3 sd = normalize(uSunDir);
+  float s = max(dot(d, sd), 0.0);
+  // three-band twilight gradient, warmer towards the sun
+  vec3 col = mix(uHorizon, uMid, smoothstep(0.0, 0.22, h));
+  col = mix(col, uTop, smoothstep(0.18, 0.85, h));
+  col = mix(col, uHorizon * 1.08, pow(s, 3.) * (1. - smoothstep(0., .45, h)) * .6);
+  // high streaks of cloud, lit on their sun side, darker away from it
+  if (h > 0.) {
+    vec2 q = d.xz / (h + .08) * .55;
+    float c = fbm(q * vec2(1., 2.6) + vec2(uTime * .004, 0.));
+    float cl = smoothstep(.52, .78, c) * smoothstep(0., .08, h) * (1. - smoothstep(.55, .95, h)) * uCloud;
+    vec3 lit = mix(uMid * 1.25, uSunCol * 1.1, pow(s, 2.) * .8 + .15);
+    vec3 shade = mix(uTop, uMid, .55) * .85;
+    col = mix(col, mix(shade, lit, smoothstep(.55, .8, fbm(q * vec2(1., 2.6) + vec2(uTime * .004, 0.) + sd.xz * .12))), cl);
+  }
   col = mix(col, uHorizon * uGround, smoothstep(0.0, -0.25, h));
-  float s = max(dot(d, normalize(uSunDir)), 0.0);
-  col += uSunCol * (pow(s, 6.0) * 0.35 + pow(s, 60.0) * 0.8 + pow(s, 900.0) * 3.0);
+  col += uSunCol * (pow(s, 8.0) * 0.28 + pow(s, 80.0) * 0.6 + pow(s, 1200.0) * 2.5);
+  // film grain, as in a real render
+  col += (h21(gl_FragCoord.xy + fract(uTime) * 91.) - .5) * .018;
   gl_FragColor = vec4(col, 1.0);
   #include <tonemapping_fragment>
   #include <colorspace_fragment>
@@ -29,7 +47,7 @@ export const MOODS = {
   // the place chapter: a clear, cool morning
   morning: { horizon: '#f6e3cf', mid: '#bfd5e6', top: '#6d9ccc', sun: '#fff0da', sunCol: '#fff1d6', fog: '#e3e8eb', hemiSky: '#eef4fb', hemiGround: '#8b8578', sunI: 2.4, hemiI: 1.25, ground: 1, evening: 0 },
   // the building chapter: last light, rooms coming on
-  dusk: { horizon: '#e79a74', mid: '#8a6d80', top: '#1d2640', sun: '#ff9a62', sunCol: '#ff8f5a', fog: '#6e5a66', hemiSky: '#c6a8b8', hemiGround: '#231d24', sunI: 1.9, hemiI: .55, ground: .45, evening: 1 },
+  dusk: { horizon: '#ee9f7e', mid: '#8b6f93', top: '#252a52', sun: '#ff9a62', sunCol: '#ff8f5a', fog: '#6e5a66', hemiSky: '#c6a8b8', hemiGround: '#231d24', sunI: 1.9, hemiI: .55, ground: .45, evening: 1 },
 };
 
 export class EraWorld {
@@ -37,7 +55,7 @@ export class EraWorld {
     this.group = new THREE.Group(); this.group.visible = false; scene.add(this.group);
     this.sky = new THREE.Mesh(new THREE.SphereGeometry(1, 48, 24), new THREE.ShaderMaterial({
       vertexShader: skyVert, fragmentShader: skyFrag, side: THREE.BackSide, depthWrite: false, depthTest: true, fog: false,
-      uniforms: { uHorizon: { value: new THREE.Color() }, uMid: { value: new THREE.Color() }, uTop: { value: new THREE.Color() }, uSunDir: { value: new THREE.Vector3(-.55, .32, -.75) }, uSunCol: { value: new THREE.Color() }, uGround: { value: .9 } },
+      uniforms: { uHorizon: { value: new THREE.Color() }, uMid: { value: new THREE.Color() }, uTop: { value: new THREE.Color() }, uSunDir: { value: new THREE.Vector3(-.55, .32, -.75) }, uSunCol: { value: new THREE.Color() }, uGround: { value: .9 }, uTime: { value: 0 }, uCloud: { value: 1 } },
     }));
     this.sky.frustumCulled = false; this.sky.renderOrder = -5; this.sky.scale.setScalar(900);
     this.group.add(this.sky);
@@ -56,7 +74,8 @@ export class EraWorld {
     const mix = (x, y) => new THREE.Color(x).lerp(new THREE.Color(y), k);
     u.uHorizon.value.copy(mix(a.horizon, b.horizon)); u.uMid.value.copy(mix(a.mid, b.mid)); u.uTop.value.copy(mix(a.top, b.top));
     u.uSunCol.value.copy(mix(a.sunCol, b.sunCol)); u.uGround.value = a.ground + (b.ground - a.ground) * k;
-    this.fogColor.copy(mix(a.fog, b.fog));
+    // haze takes the horizon's colour, so the far ground melts into the sky
+    this.fogColor.copy(u.uHorizon.value);
     this.sun.color.copy(mix(a.sun, b.sun)); this.hemi.color.copy(mix(a.hemiSky, b.hemiSky)); this.hemi.groundColor.copy(mix(a.hemiGround, b.hemiGround));
     this._sunI = a.sunI + (b.sunI - a.sunI) * k; this._hemiI = a.hemiI + (b.hemiI - a.hemiI) * k;
     this.district?.setEvening(a.evening + (b.evening - a.evening) * k);
@@ -70,6 +89,7 @@ export class EraWorld {
     this.hemi.intensity = on ? this._hemiI || 0 : 0;
     if (!on) return;
     this.sky.position.copy(camera.position);
+    this.sky.material.uniforms.uTime.value = time;
     this.district?.tick(time);
   }
 }

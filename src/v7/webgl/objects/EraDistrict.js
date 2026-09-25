@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {DRACOLoader} from 'three/examples/jsm/loaders/DRACOLoader.js';
+import {makeGlass, makeCopper, addFinCoords} from './EraMaterials';
 
 // ERA's own 3D district (era.estate/3d-map, Era_100.gltf) with its original
 // baked textures: every building carries ERA's 4K baked shadow atlas on uv0,
@@ -16,7 +17,7 @@ const DIR = '/media/era3d/';
 const LOOK = {
   Bld__Bronze:     {color: [.96, .58, .34], metalness: .9, roughness: .3, env: 1.3},
   Bld__Bronze1:    {color: [.96, .58, .34], metalness: .9, roughness: .3, env: 1.3},
-  Bld_Metal_1_ZK:  {color: [1.0, .913, .85], metalness: .3, roughness: .5, env: 1},
+  Bld_Metal_1_ZK:  {color: [.80, .77, .74], metalness: .15, roughness: .55, env: .9},
   Bld_Metal_2_ZK:  {color: [.93, .88, .82], metalness: .3, roughness: .5, env: 1},
   Bld_window1:     {color: [.5, .73, 1.0], metalness: .65, roughness: .06, env: 1.8, glass: true},
   Bld_Dark:        {color: [.6, .51, .365], metalness: 1, roughness: .62, env: 1},
@@ -86,8 +87,9 @@ async function build(renderer) {
   const envMap = pmrem.fromEquirectangular(sky).texture; pmrem.dispose(); sky.dispose();
 
   const root = gltf.scene;
+  root.updateMatrixWorld(true);
   const mats = {};
-  const glassMats = [];
+  const eve = {value: 0};
   const make = (name) => {
     if (mats[name]) return mats[name];
     let m;
@@ -98,26 +100,10 @@ async function build(renderer) {
     else if (name === 'Lnd_water') m = new THREE.MeshStandardMaterial({color: '#4c6f7c', roughness: .08, metalness: .2, envMapIntensity: 1.6});
     else if (/^Tree_leafs/.test(name)) m = new THREE.MeshStandardMaterial({map: leaves, alphaTest: .45, side: THREE.DoubleSide, color: name === 'Tree_leafs_02' ? '#c2d49a' : name === 'Tree_leafs_03' ? '#d3dd9c' : '#adc58f', roughness: .9});
     else if (name === 'Tree_bark') m = new THREE.MeshStandardMaterial({color: '#5a4a3c', roughness: 1});
+    else if (name === 'Bld_window1') m = makeGlass({envMap, toModel: TO_MODEL, eve});
+    else if (name === 'Bld__Bronze' || name === 'Bld__Bronze1') m = makeCopper({envMap, toModel: TO_MODEL, eve, bakeMap: shadow});
     else if (L) {
       m = new THREE.MeshStandardMaterial({color: new THREE.Color(...L.color), metalness: L.metalness, roughness: L.roughness, envMapIntensity: L.env});
-      if (L.glass) {
-        m = new THREE.MeshPhysicalMaterial({color: new THREE.Color(...L.color), metalness: L.metalness, roughness: L.roughness, envMapIntensity: L.env, clearcoat: 1, clearcoatRoughness: .05});
-        m.emissive = new THREE.Color('#ffc58c'); m.emissiveIntensity = 0;
-        // rooms light up one by one, never the whole facade at once
-        m.onBeforeCompile = (sh) => {
-          sh.uniforms.uToModel = {value: TO_MODEL};
-          sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying vec3 vFacade; uniform mat4 uToModel;')
-            .replace('#include <worldpos_vertex>', '#include <worldpos_vertex>\nvFacade = (uToModel * modelMatrix * vec4(transformed, 1.0)).xyz;');
-          sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nvarying vec3 vFacade;')
-            .replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>
-              float floorId = floor(vFacade.y / 3.4);
-              float bayId = floor((vFacade.x + vFacade.z * .61) / 3.8);
-              float room = fract(sin(dot(vec2(floorId, bayId), vec2(12.9898, 78.233))) * 43758.5453);
-              totalEmissiveRadiance *= step(.52, room) * (.6 + room * .8);`);
-        };
-        m.customProgramCacheKey = () => 'era-glass';
-        glassMats.push(m);
-      }
       if (BAKED.test(name)) bake(m, shadow, 1, name.startsWith('Bld_') ? .12 : .2, /^(Bld_buildinbgs1|Poi_|poi_|BC_)/.test(name));
     } else m = new THREE.MeshStandardMaterial({color: '#cfc8bc', roughness: .9});
     m.envMap = envMap; m.name = name;
@@ -130,6 +116,7 @@ async function build(renderer) {
     if (name === 'pasted__Lnd_floor_common' || name === 'fadeer') { o.visible = false; return; }
     o.material = make(name);
     o.castShadow = false; o.receiveShadow = false;
+    if (name === 'Bld__Bronze' || name === 'Bld__Bronze1') addFinCoords(o, o.matrixWorld);
     if (/^Tree_/.test(name)) trees.push(o);
   });
 
@@ -242,9 +229,9 @@ async function build(renderer) {
   holder.updateMatrixWorld(); TO_MODEL.copy(holder.matrixWorld).invert();
 
   return {
-    group: holder, envMap, glassMats, waterMat, materials: mats,
+    group: holder, envMap, waterMat, materials: mats,
     // evening: 0 = golden hour, 1 = dusk with rooms lit
-    setEvening(k) { glassMats.forEach((m) => { m.emissiveIntensity = k * 1.1; }); },
+    setEvening(k) { eve.value = k; },
     tick(t) { waterMat.uniforms.uTime.value = t; holder.updateMatrixWorld(); TO_MODEL.copy(holder.matrixWorld).invert(); },
   };
 }
