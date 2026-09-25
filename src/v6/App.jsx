@@ -3,6 +3,7 @@ import gsap from 'gsap';
 import {ScrollTrigger} from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 import {Dialog} from '../Forms';
+import PageNav from '../v7/ui/PageNav';
 
 gsap.registerPlugin(ScrollTrigger);
 const Film = lazy(() => import('./Film'));
@@ -56,17 +57,7 @@ export default function App() {
   const isPage = PATHS.includes(path);
   return <Nav.Provider value={go}>
     <div className="a-app">
-      {/* ERA-pattern navigation: floating pills, no bar */}
-      <div className="a-left">
-        <button className="f-pill sm" onClick={() => setMenu(true)}><i className="a-burger"/>Menu</button>
-        <Link to="/select" className="f-pill ghost sm hide-m">Select a level</Link>
-        <Link to="/map" className="f-pill ghost sm hide-m">3D map</Link>
-      </div>
-      <Link to="/" className="a-mark">AFRAH</Link>
-      <div className="a-right">
-        <Link to="/favourites" className="a-round" aria-label="Favourites"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg><Suspense fallback={null}><sup><FavCount/></sup></Suspense></Link>
-        <Link to="/viewing" className="f-pill sm">Arrange a viewing</Link>
-      </div>
+      <PageNav path={path} go={go}/>
       <div className="a-chapter"><i><b ref={bar}/></i></div>
       <Suspense fallback={null}>{isPage ? <Page key={path} path={path}/> : <main key="film"><Film/></main>}</Suspense>
       <footer className="a-foot">

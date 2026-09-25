@@ -66,17 +66,17 @@ function UnitDialog({u, onClose}) {
 }
 
 function ResidencesPage() {
-  const [beds, setBeds] = useState(0), [lv, setLv] = useState([2, 26]), [area, setArea] = useState(300), [sort, setSort] = useState('floor'), [open, setOpen] = useState(null);
+  const [beds, setBeds] = useState(0), [lv, setLv] = useState([2, 64]), [area, setArea] = useState(300), [sort, setSort] = useState('floor'), [open, setOpen] = useState(null);
   const [fav, toggle] = useFavourites();
   const list = useMemo(() => UNITS.filter(u => (!beds || u.beds === beds) && u.floor >= lv[0] && u.floor <= lv[1] && u.area <= area).sort((a, b) => a[sort] - b[sort]), [beds, lv, area, sort]);
   return <main className="e-page">
     <PageTitle eyebrow="Residences" crumbs="Residences">Residences</PageTitle>
     <section className="e-filters">
       <div><label>Bedrooms</label><div className="e-chips">{[0, 1, 2, 3, 4].map(b => <button key={b} aria-pressed={beds === b} onClick={() => setBeds(b)}>{b || 'All'}</button>)}</div></div>
-      <div><label>Level {lv[0]}–{lv[1]}</label><div className="e-range"><input type="range" min="2" max="26" value={lv[0]} onChange={e => setLv([Math.min(+e.target.value, lv[1]), lv[1]])} aria-label="Lowest level"/><input type="range" min="2" max="26" value={lv[1]} onChange={e => setLv([lv[0], Math.max(+e.target.value, lv[0])])} aria-label="Highest level"/></div></div>
+      <div><label>Level {lv[0]}–{lv[1]}</label><div className="e-range"><input type="range" min="2" max="64" value={lv[0]} onChange={e => setLv([Math.min(+e.target.value, lv[1]), lv[1]])} aria-label="Lowest level"/><input type="range" min="2" max="64" value={lv[1]} onChange={e => setLv([lv[0], Math.max(+e.target.value, lv[0])])} aria-label="Highest level"/></div></div>
       <div><label>Area up to {area} m²</label><input type="range" min="80" max="300" step="5" value={area} onChange={e => setArea(+e.target.value)} aria-label="Maximum area"/></div>
       <div><label>Sort</label><div className="e-chips">{[['floor', 'Level'], ['area', 'Area'], ['beds', 'Bedrooms']].map(([k, n]) => <button key={k} aria-pressed={sort === k} onClick={() => setSort(k)}>{n}</button>)}</div></div>
-      <div className="e-count"><strong>{list.length}</strong><span>residences</span><button onClick={() => { setBeds(0); setLv([2, 26]); setArea(300); }}>Reset</button></div>
+      <div className="e-count"><strong>{list.length}</strong><span>residences</span><button onClick={() => { setBeds(0); setLv([2, 64]); setArea(300); }}>Reset</button></div>
     </section>
     <section className="e-grid">{list.map(u => <UnitCard key={u.id} u={u} fav={fav.includes(u.id)} onFav={toggle} onOpen={setOpen}/>)}</section>
     {open && <UnitDialog u={open} onClose={() => setOpen(null)}/>}

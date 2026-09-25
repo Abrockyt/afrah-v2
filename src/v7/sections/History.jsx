@@ -48,7 +48,7 @@ export function History(){
     <div className="hx__intro">{HISTORY_INTRO.map((l,i)=><span className="hx__line" key={i}>{l||'\u00a0'}</span>)}</div>
     <div className="hx__item" ref={itemRef} aria-live="polite"><span className="hx__item-year"/><h3 className="hx__item-title"/></div>
     <div className="hx__timeline" aria-hidden="true"><div className="hx__timeline-strip">{years.map((it,i)=><span key={i}>{it.year}</span>)}</div></div>
-    <span className="hx__kicker t-small">05 / The story</span>
+    <span className="hx__kicker t-small">11 / The story</span>
   </div></section>;
 }
 

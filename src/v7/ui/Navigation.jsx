@@ -9,8 +9,9 @@ import { BRAND, NAV } from '../content/copy';
 const CHAPTERS = [
   { id: 'home', label: 'Afrah', sections: ['hero'] },
   { id: 'arrival', label: 'Arrival', sections: ['arrival'] },
+  { id: 'tower', label: 'The building', sections: ['building'] },
   { id: 'introduction', label: 'The opening', sections: ['opening'] },
-  { id: 'tower', label: 'The tower', sections: ['building'] },
+  { id: 'map-teaser', label: 'Place', sections: ['place'] },
   { id: 'cases', label: 'Residences', sections: ['cases'] },
   { id: 'architecture', label: 'Architecture', sections: ['eraArch'] },
   { id: 'history', label: 'History', sections: ['history'] },

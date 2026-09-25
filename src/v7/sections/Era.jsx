@@ -174,3 +174,71 @@ export function EraInteriors() {
     </section>
   );
 }
+
+/* ── The new Art Deco era (ERA's opening statement) ──────────────────── */
+export function EraArtDeco() {
+  const ref = useRef(null);
+  useReveals(ref);
+  return (
+    <section className="era-deco" ref={ref} id="art-deco" onPointerEnter={() => setTheme('dark')}>
+      <span className="t-small era-kicker" data-rise>04 / A place of art</span>
+      <h2 className="era-deco__title" data-words>{words('THE NEW')}<br />{words('ART DECO ERA')}</h2>
+      <figure className="era-deco__img" data-rise><img src="/v3/era/art-deco.webp" alt="Bronze Art Deco detailing on the AFRAH facade" loading="lazy" data-parallax="8" /></figure>
+      <p className="era-deco__text" data-rise>The towers you flew through borrow their confidence from the 1930s: vertical lines, bronze leaves, stepped crowns. What the old skyscrapers promised the city, AFRAH delivers to the people who live in it.</p>
+    </section>
+  );
+}
+
+/* ── Ceilings: 5.89 m ─────────────────────────────────────────────────── */
+export function EraCeilings() {
+  const ref = useRef(null);
+  useReveals(ref, (el) => {
+    const n = el.querySelector('.era-ceil__num b'), o = { v: 0 };
+    gsap.to(o, { v: 5.89, duration: 2.4, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 60%' }, onUpdate: () => { n.textContent = o.v.toFixed(2); } });
+    gsap.fromTo(el.querySelector('.era-ceil__img img'), { scale: 1.25 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: 0.6 } });
+  });
+  return (
+    <section className="era-ceil" ref={ref} id="ceilings" onPointerEnter={() => setTheme('light')}>
+      <figure className="era-ceil__img"><img src="/v3/era/ceilings.webp" alt="A double-height lounge under a coffered ceiling" loading="lazy" /></figure>
+      <div className="era-ceil__card" data-rise>
+        <span className="t-small">Ceiling height, m</span>
+        <p className="era-ceil__num"><b>0.00</b></p>
+        <p>Lobbies and lounges rise almost six metres, so the light comes in high and falls deep into every room.</p>
+      </div>
+    </section>
+  );
+}
+
+/* ── Apartments: two ways in ──────────────────────────────────────────── */
+export function EraApartments() {
+  const ref = useRef(null);
+  useReveals(ref);
+  return (
+    <section className="era-apart" ref={ref} id="apartments" onPointerEnter={() => setTheme('dark')}>
+      <img className="era-apart__bg" src="/v3/era/apart-bg.webp" alt="" aria-hidden="true" data-parallax="6" />
+      <div className="era-apart__head"><span className="t-small era-kicker" data-rise>10 / Residences</span><h2 data-words>{words('APARTMENTS')}</h2></div>
+      <div className="era-apart__cards">
+        <a className="era-apart__card" href="/residences" data-rise><span className="t-small">Select by criteria</span><strong>Bedrooms, level, area, view</strong><b>Select an apartment ↗</b></a>
+        <a className="era-apart__card era-apart__card--img" href="/select" data-rise><img src="/v3/era/apart-buildings.webp" alt="" aria-hidden="true" /><span className="t-small">Visual selection</span><strong>Pick a floor on the tower</strong><b>Open the tower ↗</b></a>
+      </div>
+    </section>
+  );
+}
+
+/* ── A new era: the last word ─────────────────────────────────────────── */
+export function EraOutro() {
+  const ref = useRef(null);
+  useReveals(ref, (el) => {
+    gsap.fromTo(el.querySelector('.era-outro__bg'), { scale: 1.2 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom bottom', scrub: 0.6 } });
+  });
+  return (
+    <section className="era-outro" ref={ref} id="new-era" onPointerEnter={() => setTheme('dark')}>
+      <img className="era-outro__bg" src="/v3/era/new-era.webp" alt="" aria-hidden="true" />
+      <div className="era-outro__copy">
+        <span className="t-small" data-rise>A place where life becomes art</span>
+        <h2 data-words>{words('A NEW ERA')}<br />{words('FOR THE CITY,')}<br />{words('A NEW CHAPTER')}<br />{words('IN YOUR LIFE.')}</h2>
+        <a className="era-pill" href="#contact" data-rise>REQUEST A CALL <b>↗</b></a>
+      </div>
+    </section>
+  );
+}

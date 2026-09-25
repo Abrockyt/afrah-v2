@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import { initScroll, ScrollTrigger } from './core/ScrollManager';
+import { initScroll, ScrollTrigger, scrollTo } from './core/ScrollManager';
+import { subscribe } from './core/store';
 import { toggleSound } from './core/sound';
 import PersistentCanvas from './webgl/PersistentCanvas';
 import Navigation from './ui/Navigation';
@@ -8,8 +9,8 @@ import Arrival from './sections/Arrival';
 import { Opening } from './sections/Intro';
 import { Building } from './sections/Building';
 import EraOpening from './sections/EraOpening';
-import { Living, PlaceChapter } from './sections/Living';
-import { EraArchitecture, EraStatement, EraJoy, EraMap, EraGarden, EraInteriors } from './sections/Era';
+import { Living } from './sections/Living';
+import { EraArchitecture, EraStatement, EraJoy, EraMap, EraGarden, EraInteriors, EraArtDeco, EraCeilings, EraApartments, EraOutro } from './sections/Era';
 import { History, Contact } from './sections/History';
 import { Statue } from './sections/Statue';
 
@@ -20,7 +21,15 @@ export default function App() {
     initScroll();
     if (document.fonts) document.fonts.ready.then(() => ScrollTrigger.refresh());
     const t = setTimeout(() => ScrollTrigger.refresh(), 600);
-    return () => clearTimeout(t);
+    // arriving from another page with #chapter: go there once the film is ready
+    let jumped = false;
+    const off = subscribe((st) => {
+      if (jumped || !st.ready || !location.hash) return;
+      jumped = true;
+      const el = document.getElementById(location.hash.slice(1));
+      if (el) setTimeout(() => scrollTo(el, { immediate: true, offset: 2 }), 400);
+    });
+    return () => { clearTimeout(t); off(); };
   }, []);
   return (
     <>
@@ -32,10 +41,10 @@ export default function App() {
         <Building />
         <Opening />
         <Living />
-        <EraArchitecture /><EraStatement /><EraJoy /><EraMap /><EraGarden /><EraInteriors />
+        <EraArtDeco /><EraArchitecture /><EraStatement /><EraJoy /><EraMap /><EraGarden /><EraInteriors /><EraCeilings /><EraApartments />
         <History />
         <Statue />
-        <PlaceChapter />
+        <EraOutro />
         <Contact />
       </main>
       <Loader onSound={(v) => toggleSound(v)} />

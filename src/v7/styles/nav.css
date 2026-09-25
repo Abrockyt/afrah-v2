@@ -1,0 +1,35 @@
+/* The one top navigation, shared by the film and every page. */
+.nav{font-family:var(--font-display)}
+.nav { position: fixed; inset: 0; z-index: 40; pointer-events: none; color: var(--c-white); opacity: 0; transition: color var(--dur-mid), opacity var(--dur-mid); }
+.nav.is-ready { opacity: 1; }
+.nav--light { color: var(--c-ink); }
+.nav > * { pointer-events: auto; position: absolute; }
+.nav__logo { top: 22px; left: var(--gutter); display: flex; flex-direction: column; line-height: 1.05; font-size: 15px; font-weight: 500; letter-spacing: -0.01em; }
+.nav__center { top: 26px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 22px; }
+.nav__label { opacity: 0.85; }
+.nav__line { position: absolute; top: 26px; left: 50%; transform: translateX(-50%); width: min(280px, 26vw); height: 1px; background: currentColor; opacity: 0.25; overflow: hidden; }
+.nav__line i { position: absolute; inset: 0; background: currentColor; opacity: 1; transform-origin: left; transform: scaleX(0); }
+.nav__grid { width: 16px; height: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 3px; margin-left: 140px; }
+.nav__grid i { background: currentColor; }
+.nav__why { top: 26px; right: var(--gutter); display: inline-flex; align-items: center; gap: 8px; }
+.nav__why b { font-weight: 400; }
+.nav__hint { bottom: 22px; left: var(--gutter); opacity: 0.6; transition: opacity var(--dur-mid); }
+.nav__skip { bottom: 22px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 10px; opacity: 0.8; transition: opacity var(--dur-mid); }
+.nav__skip i { width: 64px; height: 1px; background: currentColor; opacity: 0.4; display: block; }
+.nav__sound { bottom: 22px; right: var(--gutter); display: inline-flex; align-items: center; gap: 8px; opacity: 0.8; }
+.nav .is-hidden { opacity: 0; pointer-events: none; }
+.nav__menu { position: fixed; top: 64px; left: 50%; transform: translate(-50%, -8px); width: min(560px, 92vw); display: grid; grid-template-columns: 1fr 1fr; gap: 2px 28px; padding: 22px 24px; background: var(--c-ink); color: var(--c-white); border: 1px solid var(--c-line); opacity: 0; visibility: hidden; transition: opacity var(--dur-mid) var(--ease-out), transform var(--dur-mid) var(--ease-out), visibility 0s var(--dur-mid); }
+.nav__menu.is-open { opacity: 1; visibility: visible; transform: translate(-50%, 0); transition-delay: 0s; }
+.nav__menu a { display: flex; align-items: baseline; gap: 10px; padding: 7px 0; font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; border-bottom: 1px solid var(--c-line); }
+.nav__menu a:hover { color: var(--c-accent); }
+.nav__menu em { font-style: normal; font-size: 10px; color: var(--c-mist); width: 18px; }
+.nav__menu > i { grid-column: 1 / -1; height: 14px; }
+.nav__menu .nav__page b { margin-left: auto; font-weight: 400; color: var(--c-mist); }
+.nav__line{display:none}.nav__center{gap:28px}.nav__grid{margin-left:0}.nav__logo{font-size:18px;letter-spacing:-.06em}.nav__why{font-weight:400}
+.nav__hint{pointer-events:none}.nav__menu{box-shadow:0 24px 80px rgba(0,0,0,.25);padding:30px;max-height:75vh;overflow:auto}
+.nav__menu:not(.is-open){display:none}
+@media (max-width:600px){.nav__grid{margin-left:24px}.nav__why{display:none}.nav__center{left:auto;right:var(--gutter);transform:none;top:26px}.nav__label{font-size:9px}.nav__logo{font-size:17px}}
+.nav .t-small{font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+.nav button{background:none;border:0;color:inherit;padding:0;cursor:pointer;font:inherit}
+.nav a{color:inherit;text-decoration:none}
+.nav__menu .is-on{color:var(--c-accent)}

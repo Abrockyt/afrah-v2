@@ -1,10 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
-import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import gsap from 'gsap';
-import { buildTower, hideSourceBuilding, FLOOR, FIRST_RES_FLOOR_Y, BAND_TOP, BAND } from '../webgl/objects/StackFloors';
+import { loadEraDistrict } from '../webgl/objects/EraDistrict';
 import { UNITS } from '../../v6/residences-data';
 import { Plan } from '../../v6/pages';
 import '../styles/floor-select.css';
@@ -15,11 +12,14 @@ import '../styles/floor-select.css';
 // to it and the plan draws itself in the panel. Pick a residence on the plan
 // for its details.
 
-const BANDS = 9;
-const FIRST_LABEL = 3;                                   // storey number of the first residential floor
-const TOP_Y = BAND_TOP + BANDS * BAND;
-const FLOORS = Math.floor((TOP_Y - FIRST_RES_FLOOR_Y) / FLOOR);
-const FOOT = { minX: -6.94, maxX: 4.59, minZ: -7.42, maxZ: 3.82 };
+// The tallest tower of the quarter (the one the hero film flies up), from
+// ERA's district model: 266 m, bronze leaf crown. Scene scale 1 unit = 12.5 m.
+const K = 0.08;                                          // metres → units
+const TOWER_M = { x: -139.5, z: -121 };                  // tower centre in model metres
+const FIRST_LABEL = 5;                                   // storey number of the first residential floor
+const FLOOR = 3.6 * K, FIRST_RES_FLOOR_Y = 18 * K, TOP_Y = 234 * K;
+const FLOORS = Math.round((TOP_Y - FIRST_RES_FLOOR_Y) / FLOOR);
+const FOOT = { minX: -25.5 * K, maxX: 25.5 * K, minZ: -22 * K, maxZ: 22 * K };
 const CX = (FOOT.minX + FOOT.maxX) / 2, CZ = (FOOT.minZ + FOOT.maxZ) / 2, W = FOOT.maxX - FOOT.minX, D = FOOT.maxZ - FOOT.minZ;
 const floorY = (i) => FIRST_RES_FLOOR_Y + i * FLOOR;
 const STATUS = (u) => (['available', 'available', 'reserved', 'available', 'sold'][(u.seed * 7) % 5]);
@@ -34,15 +34,13 @@ function useTower(canvasRef, onHover, onPick) {
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.localClippingEnabled = true;
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 300);
-    const pmrem = new THREE.PMREMGenerator(renderer);
-    const env = pmrem.fromScene(new RoomEnvironment(), 0.04).texture; pmrem.dispose();
+    const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 900);
     scene.add(new THREE.HemisphereLight('#ffffff', '#1a2433', 0.9));
     const key = new THREE.DirectionalLight('#ffffff', 1.4); key.position.set(-12, 20, -14); scene.add(key);
     const rim = new THREE.DirectionalLight('#bcd0ff', 0.6); rim.position.set(14, 8, 12); scene.add(rim);
 
     const ground = new THREE.Mesh(new THREE.CircleGeometry(26, 64), new THREE.MeshStandardMaterial({ color: '#0d1826', roughness: 0.95 }));
-    ground.rotation.x = -Math.PI / 2; ground.position.set(CX, -0.01, CZ); scene.add(ground);
+    ground.rotation.x = -Math.PI / 2; ground.position.set(CX, -0.01, CZ);
 
     // hover and selection storeys, and the dimming volumes above/below
     const slabGeo = new THREE.BoxGeometry(W + 0.35, FLOOR * 0.96, D + 0.35);
@@ -63,19 +61,19 @@ function useTower(canvasRef, onHover, onPick) {
     collider.position.set(CX, (TOP_Y + FIRST_RES_FLOOR_Y) / 2, CZ); scene.add(collider);
 
     // camera rig: orbit angle + height + distance, all tweened
-    const rig = { angle: -0.55, y: TOP_Y * 0.5, dist: 34, lookY: TOP_Y * 0.48, spin: true };
-    const draco = new DRACOLoader().setDecoderPath('/reference-study/draco/');
-    new GLTFLoader().setDRACOLoader(draco).loadAsync('/reference-study/likova/dark.glb').then(({ scene: model }) => {
-      model.traverse((o) => {
-        if (!o.isMesh) return;
-        if (['BG', 'Ground_Parking', 'Parking_Lines'].includes(o.name) || o.name.startsWith('RS_Camera')) { o.visible = false; return; }
-        o.material = o.material.clone(); o.material.envMap = env; o.material.envMapIntensity = 0.85;
-      });
-      const tower = buildTower(model, BANDS);
-      hideSourceBuilding(model);
-      scene.add(model, tower);
+    const rig = { angle: -0.55, y: TOP_Y * 0.55, dist: 46, lookY: TOP_Y * 0.5, spin: true };
+    loadEraDistrict(renderer).then((d) => {
+      // re-scale ERA's quarter so the tallest tower stands on the origin
+      const g = d.group;
+      g.scale.setScalar(K);
+      g.position.set(-TOWER_M.x * K, 0, -TOWER_M.z * K);
+      d.setEvening(0.7);
+      scene.add(g);
+      const tick = (t) => d.tick(t);
+      api.current.tick = tick;
       canvas.classList.add('is-ready');
     });
+    scene.fog = new THREE.Fog('#081c32', 60, 260);
 
     const ray = new THREE.Raycaster(), ptr = new THREE.Vector2();
     const floorAt = (e) => {
@@ -115,7 +113,7 @@ function useTower(canvasRef, onHover, onPick) {
       if (i < 0) {
         gsap.to(picked.scale, { x: 1, z: 1, duration: 0.4 });
         gsap.to(dimMat, { opacity: 0, duration: 0.5, onComplete: () => { picked.visible = false; } });
-        gsap.to(rig, { y: TOP_Y * 0.5, dist: 34, lookY: TOP_Y * 0.48, duration: 1.2, ease: 'power3.inOut' });
+        gsap.to(rig, { y: TOP_Y * 0.55, dist: 46, lookY: TOP_Y * 0.5, duration: 1.2, ease: 'power3.inOut' });
         return;
       }
       const y = floorY(i);
@@ -127,7 +125,7 @@ function useTower(canvasRef, onHover, onPick) {
       const topSpan = TOP_Y + 1.2 - (y + FLOOR);
       dimAbove.scale.y = Math.max(0.01, topSpan); dimAbove.position.set(CX, y + FLOOR + topSpan / 2, CZ);
       gsap.to(dimMat, { opacity: 0.62, duration: 0.6 });
-      gsap.to(rig, { y: y + 4.5, lookY: y - 0.4, dist: 31, duration: 1.3, ease: 'power3.inOut' });
+      gsap.to(rig, { y: y + 3.2, lookY: y - 0.2, dist: 22, duration: 1.3, ease: 'power3.inOut' });
     };
 
     let raf;
@@ -139,6 +137,7 @@ function useTower(canvasRef, onHover, onPick) {
       if (rig.spin) rig.angle += dt * 0.06;
       camera.position.set(CX + Math.sin(rig.angle) * rig.dist, rig.y, CZ - Math.cos(rig.angle) * rig.dist);
       camera.lookAt(CX, rig.lookY, CZ);
+      api.current.tick?.(clock.elapsedTime);
       renderer.render(scene, camera);
       raf = requestAnimationFrame(loop);
     };
