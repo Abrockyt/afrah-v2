@@ -32,7 +32,8 @@ void main(){
     vec3 shade = mix(uTop, uMid, .55) * .85;
     col = mix(col, mix(shade, lit, smoothstep(.55, .8, fbm(q * vec2(1., 2.6) + vec2(uTime * .004, 0.) + sd.xz * .12))), cl);
   }
-  col = mix(col, uHorizon * uGround, smoothstep(0.0, -0.25, h));
+  // below the horizon the sky keeps the haze colour, so no band can show under it
+  col = mix(col, uHorizon, smoothstep(0.0, -0.05, h));
   col += uSunCol * (pow(s, 8.0) * 0.28 + pow(s, 80.0) * 0.6 + pow(s, 1200.0) * 2.5);
   // film grain, as in a real render
   col += (h21(gl_FragCoord.xy + fract(uTime) * 91.) - .5) * .018;
@@ -62,11 +63,21 @@ export class EraWorld {
     this.sky.frustumCulled = false; this.sky.renderOrder = -5; this.sky.scale.setScalar(900);
     this.group.add(this.sky);
     this.sun = new THREE.DirectionalLight('#ffd09a', 0); this.sun.position.set(-40, 26, -52);
+    // real shadows from the low sun across the quarter
+    this.sun.castShadow = true;
+    const small = Math.min(innerWidth, innerHeight) < 760;
+    this.sun.shadow.mapSize.set(small ? 1024 : 2048, small ? 1024 : 2048);
+    Object.assign(this.sun.shadow.camera, { left: -9, right: 9, top: 9, bottom: -9, near: 1, far: 160 });
+    this.sun.shadow.bias = -0.0004; this.sun.shadow.normalBias = 0.02;
+    this.sun.shadow.autoUpdate = false;
+    scene.add(this.sun.target);
     this.hemi = new THREE.HemisphereLight('#ffe9d4', '#6d5f58', 0);
     scene.add(this.sun, this.hemi);
     this.fogColor = new THREE.Color('#e2c3b4');
     this.fogNear = 30; this.fogFar = 220;
     this.mood = null;
+    // volumetric cloud state, set by whichever stage drives the world
+    this.cloud = { on: 1, deck: [16, 30, .45, 1], low: [2.8, 5, 0, 0], hole: [0, 0, 0], bank: [0, -100, 0, 1], bankD: 0, rays: .25 };
     this.ready = loadEraDistrict(renderer).then((d) => {
       this.district = d; this.group.add(d.group);
       this.bakeSkies(renderer);
@@ -116,10 +127,23 @@ export class EraWorld {
     this.mood = name;
   }
 
+  applyClouds(post) {
+    const c = this.cloud, u = post.clouds, sky = this.sky.material.uniforms;
+    u.uOn.value = c.on;
+    u.uDeck.value.set(...c.deck); u.uLow.value.set(...c.low); u.uHole.value.set(...c.hole);
+    u.uBank.value.set(...c.bank); u.uBankD.value = c.bankD;
+    u.uSunDir.value.copy(sky.uSunDir.value).normalize();
+    u.uSunCol.value.copy(sky.uSunCol.value).multiplyScalar(2.4);
+    u.uAmbHi.value.copy(sky.uMid.value).lerp(sky.uHorizon.value, .35);
+    u.uAmbLo.value.copy(sky.uTop.value).lerp(sky.uMid.value, .35).multiplyScalar(.75);     // cool lavender in the folds
+    u.uFog.value.copy(sky.uHorizon.value);
+  }
+
   // Called every frame by SceneManager after the rigs ran.
   update(camera, time, on) {
     this.group.visible = on && !!this.district;
     this.sun.intensity = on ? this._sunI || 0 : 0;
+    this.sun.shadow.autoUpdate = on;
     this.hemi.intensity = on ? this._hemiI || 0 : 0;
     if (!on) return;
     this.sky.position.copy(camera.position);

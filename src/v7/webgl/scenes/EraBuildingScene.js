@@ -86,6 +86,7 @@ export class EraBuildingScene {
     // golden hour at the arrival, dusk through the tower chapter
     const eve = mode === 'arrival' ? smooth(p) * 0.35 : 0.35 + smooth(range(p, 0, 0.6)) * 0.65;
     this.world.setMood('dusk', eve);
+    Object.assign(this.world.cloud, { on: 1, deck: [16, 30, 0.45, 1], low: [2.8, 5, 0, 0], hole: [0, 0, 0], bankD: 0, rays: 0.25 });
     this.world.fogNear = 8; this.world.fogFar = 90 - eve * 30;
 
     // callout anchor → CSS variables on the tower stage

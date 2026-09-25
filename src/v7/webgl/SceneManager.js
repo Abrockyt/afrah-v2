@@ -6,6 +6,7 @@ import { TunnelScene } from './scenes/TunnelScene';
 import { EraBuildingScene } from './scenes/EraBuildingScene';
 import { EraWorld } from './objects/EraWorld';
 import { EraMapScene } from './scenes/EraMapScene';
+import { WorldPost } from './post/WorldPost';
 import { HistoryScene, HISTORY_BG } from './scenes/HistoryScene';
 import { ZeusScene, ZEUS_BG } from './scenes/ZeusScene';
 import { HeroCloudScene } from './scenes/HeroCloudScene';
@@ -62,6 +63,8 @@ export class SceneManager {
     this.world = new EraWorld(this.scene, this.renderer);
     this.building = new EraBuildingScene(this.world);
     this.map = new EraMapScene(this.world);
+    try { this.post = new WorldPost(this.renderer); } catch (e) { console.warn('post pipeline unavailable', e); this.post = null; }
+    this.world.volumetric = !!this.post;
     this.heroClouds = new HeroCloudScene(this.scene, this.world);
     this.history = new HistoryScene(this.scene);
     this.zeus = new ZeusScene(this.scene);
@@ -116,6 +119,7 @@ export class SceneManager {
     // the camera back and pull objects toward the centre line.
     store.aspectK = Math.max(0.45, Math.min(1, (w / h) / 1.78));
     this.camera.updateProjectionMatrix();
+    if (this.post) { const v = this.renderer.getDrawingBufferSize(new THREE.Vector2()); this.post.setSize(v.x, v.y); }
   }
 
   // Which stage colour is under the DOM, and any in-progress feathered wipe.
@@ -216,7 +220,10 @@ export class SceneManager {
     this.zeus.update(this.camera, t);
     mark('rigs');
     mark('composition');
-    r.render(this.scene, this.camera);
+    if (inWorld && this.post && this.world.district) {
+      this.world.applyClouds(this.post);
+      this.post.render(this.scene, this.camera, t, { rays: this.world.cloud.rays });
+    } else r.render(this.scene, this.camera);
     // The same organic edge covers the outgoing composition and uncovers
     // the next camera rig. The cut happens only while the screen is covered.
     const stage=store.activeStage;

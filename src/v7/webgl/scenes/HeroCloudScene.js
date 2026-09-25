@@ -22,8 +22,8 @@ const POOL = V(0.92, 0.28, 1.8);
 // keyframes: p, camera, target, roll (radians), fov
 const SHOTS = [
   // A — inside the cloud
-  { p: 0.00, pos: V(18, 26, 40), look: V(4, 8, 10), roll: 0.0, fov: 46 },
-  { p: 0.12, pos: V(14, 20, 30), look: V(1, 2, 4), roll: -0.02, fov: 44 },
+  { p: 0.00, pos: V(19, 28, 42), look: V(5, 12, 12), roll: 0.0, fov: 46 },      // over a sea of cloud tops
+  { p: 0.12, pos: V(14, 18.5, 30), look: V(1, 3, 4), roll: -0.02, fov: 44 },    // through the deck
   // B — the district revealed through the gap, sinking and turning
   { p: 0.22, pos: V(10, 14.5, 21), look: V(0.2, 1.5, 0.5), roll: -0.04, fov: 40 },
   { p: 0.32, pos: V(6.5, 10.5, 14), look: V(-0.3, 2.2, -0.4), roll: -0.07, fov: 38 },
@@ -254,19 +254,40 @@ export class HeroCloudScene {
     u.uRays.value = (1 - smooth(range(p, 0.14, 0.3))) * 0.75 + smooth(range(p, 0.62, 0.74)) * (1 - smooth(range(p, 0.8, 0.92))) * 0.45;
     u.uSun.value.set(p < 0.36 ? 0.12 : 0.18, p < 0.36 ? 1.08 : 0.95);
     // the opening fill parts over the first shot; the whiteout closes and reopens at the cut
-    const open = 1 - smooth(range(p, 0.015, 0.2));
+    const vol = !!w.volumetric;
+    const open = vol ? 0 : 1 - smooth(range(p, 0.015, 0.2));
     const white = p < 0.36 ? smooth(range(p, WHITE_IN[0], WHITE_IN[1])) : 1 - smooth(range(p, WHITE_OUT[0], WHITE_OUT[1]));
     u.uFill.value = Math.max(open, white);
     u.uGlow.value = white;
     // cloud round the frame through the aerial, and again round the crown
-    u.uFrame.value = p < 0.36 ? smooth(range(p, 0.06, 0.2)) * 0.95 : smooth(range(p, 0.6, 0.7)) * (1 - smooth(range(p, 0.8, 0.9))) * 0.55;
+    u.uFrame.value = vol ? 0 : p < 0.36 ? smooth(range(p, 0.06, 0.2)) * 0.95 : smooth(range(p, 0.6, 0.7)) * (1 - smooth(range(p, 0.8, 0.9))) * 0.55;
     u.uZoom.value = p < 0.23 ? range(p, 0, 0.2) * 1.6 + Math.sin(time * 0.2) * 0.02 : p < 0.36 ? (white - 1) * 0.9 : range(p, 0.36, 0.42) * 1.6;
+    if (vol) {
+      // the real clouds are volumetric (post/WorldPost); the lens pass is kept
+      // only to carry the whiteout across the cut
+      u.uRays.value = 0; u.uVignette.value = 0;
+      this.over.visible = white > 0.002;
+      const c = w.cloud; c.on = 1;
+      if (p < 0.36) {
+        const opened = smooth(range(p, 0.04, 0.26));
+        c.deck = [13, 21.5, 0.66, 1.3];                        // the camera starts above this deck
+        c.hole = [0.5, 1.5, 4 + opened * 8];                  // the gap over the quarter widens as it sinks
+        c.low = [2.6, 6.5, 0.42, 0.9];                        // wisps between the camera and the city
+        c.bank = [5.2, 8.9, 11.4, 3.4]; c.bankD = smooth(range(p, 0.25, 0.33)) * 3;   // the bank it dives into
+        c.rays = 0.9 - opened * 0.4;
+      } else {
+        const crown = smooth(range(p, 0.6, 0.7)) * (1 - smooth(range(p, 0.88, 0.97)));
+        c.deck = [15, 29, 0.5, 1]; c.hole = [0, 0, 4]; c.bankD = 0;
+        c.low = [3.1, 4.7, 0.5 * crown, 0.9 * crown];         // above the clouds: wisps below the crown
+        c.rays = 0.35;
+      }
+    } else this.over.visible = true;
     // clouds thin out once the camera is below them
     this.cloudMat.uniforms.uFade.value = p < 0.36 ? 1 : 0.9;
     this.cloudMat.uniforms.uNear.value = p < 0.36 ? 7 : 1.2;
     this.cloudMat.uniforms.uFog.value.copy(w.fogColor);
     // haze: deep in the aerial, clearer at the tower
-    w.fogNear = p < 0.36 ? 18 : 8; w.fogFar = p < 0.36 ? 115 : 80;
+    w.fogNear = p < 0.36 ? 40 : 14; w.fogFar = p < 0.36 ? 190 : 110;
 
     if (!this.clouds.visible) return;
     // sort and place the puffs back to front, drifting with time

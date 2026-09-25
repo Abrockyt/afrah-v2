@@ -142,7 +142,9 @@ async function build(renderer) {
     const name = o.material?.name || '';
     if (name === 'pasted__Lnd_floor_common' || name === 'fadeer') { o.visible = false; return; }
     o.material = make(name);
-    o.castShadow = false; o.receiveShadow = false;
+    // towers cast onto each other and the ground; everything built receives
+    o.castShadow = /^Bld_(Metal|window|Dark|_roof|_Bronze)|^Bld__/.test(name);
+    o.receiveShadow = !/^Tree_leafs|Lnd_water/.test(name);
     if (name === 'Bld__Bronze' || name === 'Bld__Bronze1') addFinCoords(o, o.matrixWorld);
     if (/^Tree_/.test(name)) trees.push(o);
   });
@@ -155,7 +157,7 @@ async function build(renderer) {
     if (!o.isMesh || !/^Bld_(Metal|window|Bronze|_Bronze|Dark|_roof)|^Bld__/.test(o.material.name)) return;
     const b = new THREE.Box3().setFromObject(o);
     if (b.max.y < 30 || b.min.x < -300 || b.max.x > 40 || b.min.z < -240 || b.max.z > 80) return;
-    const c = new THREE.Mesh(o.geometry, o.material); c.applyMatrix4(o.matrixWorld); phase2.add(c);
+    const c = new THREE.Mesh(o.geometry, o.material); c.applyMatrix4(o.matrixWorld); c.castShadow = true; c.receiveShadow = true; phase2.add(c);
   });
   // rotated a quarter turn and set on the open plot north-east of the park
   phase2.rotation.y = Math.PI / 2;

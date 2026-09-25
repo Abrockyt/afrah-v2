@@ -31,6 +31,7 @@ export class EraMapScene {
     if (!this.on) { this.sm = p0; this.on = true; } else this.sm += (p0 - this.sm) * (window.__snap ? 1 : 0.08);
     const p = this.sm;
     if (this.world.mood !== 'morning') this.world.setMood('morning');
+    this.world.cloud.on = 0;                     // the camera is above any deck here: a clear morning
     // from a map (straight down) to an oblique orbit round the quarter
     const tilt = smooth(range(p, 0.08, 0.6));
     const az = 0.35 - p * 0.9 + Math.sin(time * 0.05) * 0.02;
