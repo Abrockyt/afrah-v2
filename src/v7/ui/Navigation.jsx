@@ -12,7 +12,7 @@ const CHAPTERS = [
   { id: 'introduction', label: 'The opening', sections: ['opening'] },
   { id: 'tower', label: 'The tower', sections: ['building'] },
   { id: 'cases', label: 'Residences', sections: ['cases'] },
-  { id: 'tunnel', label: 'The passage', sections: ['tunnel'] },
+  { id: 'architecture', label: 'Architecture', sections: ['eraArch'] },
   { id: 'history', label: 'History', sections: ['history'] },
   { id: 'statue', label: 'Heritage', sections: ['statue'] },
   { id: 'contact', label: 'Viewing', sections: [] },
@@ -30,6 +30,10 @@ function chapterState() {
   }
   const contact = document.getElementById('contact');
   if (contact && contact.getBoundingClientRect().top < window.innerHeight * 0.7) return { label: 'Viewing', p: 1, id: 'contact' };
+  for (const [id, label] of [['interiors', 'Interiors'], ['garden', 'Garden'], ['map-teaser', 'Place'], ['joy', 'Living']]) {
+    const el = document.getElementById(id);
+    if (el) { const r = el.getBoundingClientRect(); if (r.top <= 100 && r.bottom > 100) return { label, p: 0, id }; }
+  }
   const living = document.getElementById('cases');
   if (living && living.getBoundingClientRect().top <= 100 && living.getBoundingClientRect().bottom > 100) return { label: 'Living', p: 0, id: 'cases' };
   const place = document.getElementById('place-chapter');

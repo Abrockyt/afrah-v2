@@ -9,7 +9,7 @@ import { Opening } from './sections/Intro';
 import { Building } from './sections/Building';
 import EraOpening from './sections/EraOpening';
 import { Living, PlaceChapter } from './sections/Living';
-import { Tunnel } from './sections/Middle';
+import { EraArchitecture, EraStatement, EraJoy, EraMap, EraGarden, EraInteriors } from './sections/Era';
 import { History, Contact } from './sections/History';
 import { Statue } from './sections/Statue';
 
@@ -30,7 +30,8 @@ export default function App() {
       <main id="page">
         <EraOpening /><Arrival /><Opening />
         <Building />
-        <Living /><Tunnel />
+        <Living />
+        <EraArchitecture /><EraStatement /><EraJoy /><EraMap /><EraGarden /><EraInteriors />
         <History />
         <Statue />
         <PlaceChapter />

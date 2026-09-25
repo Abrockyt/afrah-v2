@@ -131,7 +131,8 @@ export class SceneManager {
     else if (act('bridge')) { bg.from = INK2; }
     else if (act('history')) { bg.from = HISTORY_BG; }
     else if (act('statue')) { bg.from = ZEUS_BG; }
-    else if (!store.activeStage && s.building?.st && s.tunnel?.st && store.scroll > s.building.st.end && store.scroll < s.tunnel.st.start) { bg.from = BONE; }
+    else if (!store.activeStage && s.building?.st && s.eraArch?.st && store.scroll > s.building.st.end && store.scroll < s.eraArch.st.start) { bg.from = BONE; }
+    else if (!store.activeStage && s.history?.st && store.scroll < s.history.st.start && store.scroll > s.history.st.start - store.vh * 1.5) { bg.from = HISTORY_BG; }
     else if (store.scroll < 4) { bg.from = INK; }
     // Theme for the navigation follows the dominant colour
     const light = ((bg.from === BONE || bg.from === HISTORY_BG) && bg.p < 0.5) || (bg.to === BONE && bg.p >= 0.5);
@@ -216,11 +217,8 @@ export class SceneManager {
     }
     // Composites-style cuts around the passage, the story and the sculpture
     // room: the outgoing colour is wiped away by a feathered edge.
-    if(stage==='tunnel' && sectionProgress('tunnel')<.08)
-      this.wipe.cover(r,this.camera.aspect,range(sectionProgress('tunnel'),0,.08),BONE,true);
     if(stage==='history'){
       const p=sectionProgress('history');
-      if(p<.05)this.wipe.cover(r,this.camera.aspect,range(p,0,.05),INK,true,[1,0]);
       if(p>.965)this.wipe.cover(r,this.camera.aspect,range(p,.965,1),ZEUS_BG,false,[0,-1]);
     }
     if(stage==='statue' && sectionProgress('statue')<.08)

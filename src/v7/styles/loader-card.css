@@ -14,3 +14,9 @@
   .loader__mark{left:17vw;top:42vh;font-size:7vw}
   .loader__pct{left:50vw;top:56.8vh}
 }
+
+/* Hero: a true circle that grows from where it sits (no oval morph) */
+.era-opening{--rise:-40vh;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-size:100% 140%;mask-size:100% 140%;-webkit-mask-position:0 var(--rise);mask-position:0 var(--rise)}
+.era-opening__picture{--d:min(38vw,79vh);width:var(--d)!important;height:var(--d)!important;left:calc(50% - var(--d) / 2)!important;top:calc(51.5vh - var(--d) / 2)!important;transform-origin:50% 50%;will-change:transform}
+.era-opening__aperture{border-radius:50%!important}
+@media (max-width:600px){.era-opening__picture{--d:min(70vw,57vh);top:calc(60vh - var(--d) / 2)!important}}
