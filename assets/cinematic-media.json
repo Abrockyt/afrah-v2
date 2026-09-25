@@ -1,0 +1,29 @@
+[
+  {
+    "file": "public\\cinematic\\images\\interior.webp",
+    "source": "https://unsplash.com/photos/ctyssSFmXmU",
+    "author": "Spacejoy",
+    "license": "Unsplash License",
+    "licenseUrl": "https://unsplash.com/license",
+    "bytes": 377330,
+    "role": "Illustrative lifestyle image"
+  },
+  {
+    "file": "public\\cinematic\\images\\lounge.webp",
+    "source": "https://unsplash.com/photos/vPKNB_gc23Q",
+    "author": "Spacejoy",
+    "license": "Unsplash License",
+    "licenseUrl": "https://unsplash.com/license",
+    "bytes": 656350,
+    "role": "Illustrative lifestyle image"
+  },
+  {
+    "file": "public\\cinematic\\images\\morning.webp",
+    "source": "https://unsplash.com/photos/lT9im5ngwdE",
+    "author": "Rolf Schmidbauer",
+    "license": "Unsplash License",
+    "licenseUrl": "https://unsplash.com/license",
+    "bytes": 726346,
+    "role": "Illustrative lifestyle image"
+  }
+]

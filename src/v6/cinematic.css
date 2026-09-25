@@ -1,0 +1,646 @@
+/* 
+  AFRAH Cinematic Website CSS
+  Visual System:
+  - AFRAH BLACK: #0B0B0A
+  - ARCHITECTURAL IVORY: #F1EDE5
+  - MUTED BRONZE: #98735B
+  
+  Typography:
+  - Serif: 'Playfair Display'
+  - Sans: 'Inter'
+*/
+
+/* ==========================================================================
+   1. GLOBAL RESET & BASE
+   ========================================================================== */
+
+:root {
+  --color-black: #0B0B0A;
+  --color-ivory: #F1EDE5;
+  --color-bronze: #98735B;
+  
+  --font-serif: 'Playfair Display', serif;
+  --font-sans: 'Inter', sans-serif;
+  
+  --transition-slow: 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-medium: 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-fast: 0.4s ease-out;
+  
+  --z-canvas: 0;
+  --z-content: 10;
+  --z-nav: 50;
+  --z-loader: 100;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100%;
+  background-color: var(--color-black);
+  color: var(--color-ivory);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  overscroll-behavior: none;
+}
+
+/* Base Typography Classes */
+.cin-serif {
+  font-family: var(--font-serif);
+  font-weight: 400;
+}
+
+.cin-sans-label {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  opacity: 0.6;
+}
+
+/* ==========================================================================
+   2. LOADING SCREEN (.cin-loader)
+   ========================================================================== */
+.cin-loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-black);
+  z-index: var(--z-loader);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: opacity var(--transition-slow);
+}
+
+.cin-loader.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cin-loader-wordmark {
+  font-size: clamp(2rem, 8vw, 6rem);
+  letter-spacing: 0.05em;
+  opacity: 0;
+  animation: fadeIn 1.5s ease-out forwards;
+}
+
+.cin-loader-progress {
+  position: absolute;
+  bottom: 10%;
+  width: 200px;
+  height: 1px;
+  background-color: rgba(241, 237, 229, 0.2);
+}
+
+.cin-loader-progress-bar {
+  height: 100%;
+  background-color: var(--color-ivory);
+  width: 0%;
+  transition: width 0.1s linear;
+}
+
+/* ==========================================================================
+   3. PERSISTENT CANVAS (.cin-canvas)
+   ========================================================================== */
+.cin-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: var(--z-canvas);
+  pointer-events: none;
+}
+
+.cin-canvas canvas {
+  width: 100%;
+  height: 100%;
+  outline: none;
+}
+
+/* ==========================================================================
+   4. NAVIGATION (.cin-nav)
+   ========================================================================== */
+.cin-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: var(--z-nav);
+  mix-blend-mode: difference;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.cin-nav-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.cin-nav-brand {
+  pointer-events: auto;
+  font-size: 1.5rem;
+  text-decoration: none;
+  color: var(--color-ivory);
+  letter-spacing: 0.05em;
+}
+
+.cin-nav-links {
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.cin-nav-link {
+  color: var(--color-ivory);
+  text-decoration: none;
+  transition: opacity var(--transition-fast);
+}
+
+.cin-nav-link:hover {
+  opacity: 1;
+}
+
+.cin-nav-bottom {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+
+.cin-scroll-indicator {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+
+/* ==========================================================================
+   5. HERO SECTION (.cin-hero)
+   ========================================================================== */
+.cin-hero {
+  position: relative;
+  height: 500vh;
+  z-index: var(--z-content);
+}
+
+.cin-hero-pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.cin-hero-title {
+  font-size: clamp(4rem, 15vw, 12rem);
+  letter-spacing: 0.02em;
+  text-align: center;
+  line-height: 1;
+}
+
+.cin-hero-scroll {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* ==========================================================================
+   6. BUILDING SECTION (.cin-building)
+   ========================================================================== */
+.cin-building {
+  position: relative;
+  height: 400vh;
+  z-index: var(--z-content);
+  pointer-events: none;
+}
+
+.cin-building-labels {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+}
+
+.cin-floating-label {
+  position: absolute;
+  opacity: 0;
+  transition: opacity var(--transition-slow), transform var(--transition-slow);
+  transform: translateY(20px);
+}
+
+.cin-floating-label.is-active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.cin-label-1 { top: 30%; left: 15%; }
+.cin-label-2 { top: 50%; right: 15%; }
+.cin-label-3 { bottom: 20%; left: 20%; }
+
+/* ==========================================================================
+   7. EDITORIAL PAUSE (.cin-editorial)
+   ========================================================================== */
+.cin-editorial {
+  position: relative;
+  min-height: 100vh;
+  background-color: var(--color-ivory);
+  color: var(--color-black);
+  z-index: var(--z-content);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 100px 20px;
+}
+
+.cin-editorial-content {
+  max-width: 1200px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.cin-editorial-text {
+  position: relative;
+}
+
+.cin-editorial-label {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  color: var(--color-black);
+}
+
+.cin-editorial-body {
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  line-height: 1.4;
+}
+
+.cin-editorial-image {
+  width: 100%;
+  aspect-ratio: 3/4;
+  background-color: #dcd7cc;
+  overflow: hidden;
+}
+
+.cin-editorial-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ==========================================================================
+   8. TUNNEL SECTION (.cin-tunnel)
+   ========================================================================== */
+.cin-tunnel {
+  position: relative;
+  height: 400vh;
+  background-color: var(--color-black);
+  z-index: var(--z-content);
+}
+
+.cin-tunnel-pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.cin-tunnel-text {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 800px;
+  padding: 0 20px;
+}
+
+.cin-tunnel-aperture {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 10vw;
+  height: 10vw;
+  background-color: var(--color-ivory);
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0;
+  z-index: 1;
+}
+
+/* ==========================================================================
+   9. MATERIAL SECTION (.cin-material)
+   ========================================================================== */
+.cin-material {
+  position: relative;
+  background-color: var(--color-black);
+  z-index: var(--z-content);
+  padding: 150px 20px;
+}
+
+.cin-material-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 20px;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.cin-material-item {
+  position: relative;
+}
+
+.cin-material-item:nth-child(1) { grid-column: 2 / 8; }
+.cin-material-item:nth-child(2) { grid-column: 7 / 12; margin-top: 150px; }
+.cin-material-item:nth-child(3) { grid-column: 3 / 9; margin-top: 100px; }
+
+.cin-material-image {
+  width: 100%;
+  background-color: #1a1a1a;
+  aspect-ratio: 16/9;
+}
+
+.cin-material-item:nth-child(2) .cin-material-image { aspect-ratio: 3/4; }
+
+.cin-material-label {
+  margin-top: 16px;
+}
+
+/* ==========================================================================
+   10. SCULPTURAL OBJECT (.cin-sculpture)
+   ========================================================================== */
+.cin-sculpture {
+  position: relative;
+  height: 100vh;
+  background-color: var(--color-black);
+  z-index: var(--z-content);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.cin-sculpture-label {
+  position: absolute;
+  bottom: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* ==========================================================================
+   11. SPATIAL GALLERY (.cin-gallery)
+   ========================================================================== */
+.cin-gallery {
+  position: relative;
+  height: 600vh;
+  z-index: var(--z-content);
+  pointer-events: none;
+}
+
+.cin-gallery-pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+.cin-gallery-labels {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cin-gallery-label {
+  position: absolute;
+  opacity: 0;
+  transition: opacity var(--transition-slow);
+}
+
+.cin-gallery-label.is-active {
+  opacity: 1;
+}
+
+/* ==========================================================================
+   12. RESIDENCES (.cin-residences)
+   ========================================================================== */
+.cin-residences {
+  position: relative;
+  min-height: 100vh;
+  background-color: var(--color-black);
+  z-index: var(--z-content);
+  padding: 100px 40px;
+  display: flex;
+  flex-direction: column;
+}
+
+.cin-residences-ui {
+  position: relative;
+  z-index: 10;
+  max-width: 400px;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.cin-floor-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+.cin-floor-btn {
+  background: transparent;
+  border: none;
+  color: var(--color-ivory);
+  text-align: left;
+  cursor: pointer;
+  opacity: 0.4;
+  transition: opacity var(--transition-fast);
+}
+
+.cin-floor-btn.is-active,
+.cin-floor-btn:hover {
+  opacity: 1;
+}
+
+.cin-floor-data {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.cin-data-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cin-data-value {
+  font-size: 1.25rem;
+}
+
+/* ==========================================================================
+   13. PLACE/MAP (.cin-place)
+   ========================================================================== */
+.cin-place {
+  position: relative;
+  height: 100vh;
+  background-color: #111111;
+  z-index: var(--z-content);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cin-place-content {
+  text-align: center;
+  z-index: 2;
+}
+
+/* ==========================================================================
+   14. FINAL SCENE (.cin-final)
+   ========================================================================== */
+.cin-final {
+  position: relative;
+  height: 100vh;
+  z-index: var(--z-content);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cin-final-title {
+  font-size: clamp(3rem, 10vw, 8rem);
+  letter-spacing: 0.1em;
+}
+
+/* ==========================================================================
+   15. CTA (.cin-cta)
+   ========================================================================== */
+.cin-cta {
+  position: relative;
+  padding: 200px 20px;
+  background-color: var(--color-black);
+  z-index: var(--z-content);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+}
+
+.cin-btn {
+  display: inline-block;
+  padding: 16px 40px;
+  background: transparent;
+  color: var(--color-ivory);
+  border: 1px solid rgba(241, 237, 229, 0.3);
+  text-decoration: none;
+  transition: all var(--transition-medium);
+  cursor: pointer;
+}
+
+.cin-btn:hover {
+  border-color: var(--color-ivory);
+  background-color: var(--color-ivory);
+  color: var(--color-black);
+}
+
+/* ==========================================================================
+   16. FOOTER (.cin-footer)
+   ========================================================================== */
+.cin-footer {
+  position: relative;
+  background-color: var(--color-black);
+  z-index: var(--z-content);
+  padding: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-top: 1px solid rgba(241, 237, 229, 0.1);
+}
+
+/* ==========================================================================
+   ANIMATIONS & UTILITIES
+   ========================================================================== */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.cin-fade-in {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity var(--transition-slow), transform var(--transition-slow);
+}
+
+.cin-fade-in.cin-is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.cin-text-reveal {
+  clip-path: polygon(0 0, 0 0, 0 100%, 0% 100%);
+  transition: clip-path var(--transition-slow);
+}
+
+.cin-text-reveal.cin-is-visible {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN
+   ========================================================================== */
+@media (max-width: 768px) {
+  .cin-nav { padding: 20px; }
+  
+  .cin-editorial-content {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  
+  .cin-material-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+  }
+  
+  .cin-material-item {
+    margin-top: 0 !important;
+  }
+  
+  .cin-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+}

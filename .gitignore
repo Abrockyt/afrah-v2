@@ -1,0 +1,10 @@
+node_modules/
+dist/
+private/
+*.log
+research/
+reuse-assets/
+qa/
+backups/
+assets/source/
+.21st/

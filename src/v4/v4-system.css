@@ -1,0 +1,215 @@
+/* AFRAH v4 system layer — loaded after v4.css.
+   Black / silver / white · sharp corners · Composites spacing (thin outer margin, huge bold type,
+   copy offset on a 12-column grid) · ERA arcs and Decart numerals · greyscale photography. */
+
+:root{
+  --pad:clamp(20px,2.8vw,44px);--gap:clamp(12px,1.4vw,24px);--section:clamp(120px,20vh,260px);--header:76px;
+  --col:calc((100vw - 2 * var(--pad)) / 12);
+  --grad:linear-gradient(100deg,color-mix(in srgb,var(--ink) 38%,var(--bg)) 0%,var(--ink) 26%,color-mix(in srgb,var(--ink) 52%,var(--bg)) 50%,var(--ink) 76%,color-mix(in srgb,var(--ink) 38%,var(--bg)) 100%);
+  --metal:linear-gradient(100deg,#7d7d7d 0%,#f4f4f4 24%,#9d9d9d 48%,#ffffff 72%,#8a8a8a 100%);
+}
+body{font-family:var(--body);font-size:clamp(16px,1.05vw,19px)}
+/* mild gradient: every tone gets a soft light pool from the top */
+.v-app{background:radial-gradient(150% 80% at 50% -20%,color-mix(in srgb,var(--bg) 84%,#fff 16%) 0%,var(--bg) 62%) fixed,var(--bg)}
+body::after{content:'';position:fixed;inset:0;z-index:300;pointer-events:none;opacity:.05;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* ── Type ── */
+.v-label{font-family:var(--ui);font-weight:700;font-size:12px;letter-spacing:.08em}
+.v-title{font-family:var(--display);font-weight:700;font-size:clamp(3rem,8.6vw,11.5rem);line-height:.82;letter-spacing:-.03em}
+.v-accent,.v-silver{background:var(--grad);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:v-sheen 8s ease-in-out infinite alternate}
+.v-statement p,.v-quote blockquote{font-family:var(--display);font-weight:600;letter-spacing:-.025em;line-height:.96;margin-left:calc(var(--col) * 2);font-size:clamp(1.9rem,4.3vw,5.4rem)}
+.v-river-text{font-weight:600;margin-left:var(--col)}
+.v-counter strong,.v-clock,.v-journey strong,.v-numbered-num,.v-index-hour,.v-day-hour,.v-sun-time,.v-selector-floor,.v-loader-pct,.v-carousel-count,.v-service span,.v-res-card b,.v-res-table td:first-child{font-family:var(--serif);font-weight:400;letter-spacing:0}
+.v-clock,.v-numbered-num{-webkit-text-stroke:1px var(--ink)}
+.v-selector-floor{background:var(--metal);-webkit-background-clip:text;background-clip:text}
+
+/* ── Sections: Composites spacing ── */
+.v-statement,.v-river,.v-numbers,.v-quote,.v-services,.v-paradox,.v-principles,.v-acts,.v-moments,.v-journeys,.v-arch-grid,.v-lobby,.v-materials,.v-rooms,.v-collections,.v-contact,.v-joys,.v-sides,.v-index,.v-silhouette,.v-stepped{padding-block:var(--section)}
+.v-statement-top,.v-river-top,.v-numbers-head,.v-index-head,.v-acts-head,.v-journeys-head{padding-bottom:18px;border-bottom:1px solid var(--line);margin-bottom:clamp(40px,8vh,100px)}
+.v-numbered,.v-numbered.reverse{grid-template-columns:calc(var(--col) * 2) 1fr 1fr;gap:var(--gap) calc(var(--col) * .6)}
+.v-principles{grid-template-columns:calc(var(--col) * 5) 1fr;gap:var(--gap)}
+
+/* ── Photography: greyscale, colour returns on hover ── */
+main img,main video,.v-menu img{filter:grayscale(1) contrast(1.06);transition:filter 1.2s var(--ease),transform 1s var(--ease),opacity 1s}
+main :is(figure,.v-tilt,.v-sides-media,.v-carousel-stage,.v-rooms-stage,.v-index-media,.v-day-card,.v-res-card,.v-citymap-card):hover img{filter:grayscale(0) contrast(1)}
+.v-stone,.v-framed-lights{filter:grayscale(1) brightness(1.2)!important}
+
+/* ── Buttons ── */
+.v-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:44px;padding:0 18px;border:1px solid currentColor;background:transparent;color:inherit;font:700 12px/1 var(--ui);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;transition:background .35s,color .35s}
+.v-btn:hover{background:var(--ink);color:var(--bg)}
+.v-btn.solid{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.v-btn.solid:hover{background:transparent;color:var(--ink)}
+.v-btn em{font-style:normal;display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 4px;border:1px solid currentColor}
+.v-pill{display:inline-flex;align-items:center;gap:10px;height:48px;padding:0 22px;background:var(--ink);color:var(--bg);font:700 12px/1 var(--ui);letter-spacing:.08em;text-transform:uppercase}
+.v-round{border-color:var(--line)}
+.v-round:hover{background:var(--ink);color:var(--bg)}
+.v-text-link i{background:var(--ink);color:var(--bg)}
+.v-text-link.light i{background:#fff;color:#000}
+.v-switch i{background:var(--ink)}
+.v-switch button[aria-pressed=true]{color:var(--bg)}
+
+/* ── Floating corners (no header bar) ── */
+.v-corner{position:fixed;z-index:70;color:#fff;mix-blend-mode:difference}
+.v-corner-tl{top:var(--pad);left:var(--pad);font:700 clamp(18px,1.5vw,24px)/1 var(--ui);letter-spacing:.34em;padding-top:12px}
+.v-corner-tr{top:var(--pad);right:var(--pad);display:flex;gap:8px}
+.v-corner-tr .v-btn:hover{background:#fff;color:#000}
+.v-btn-menu{position:relative;gap:12px;padding-left:44px}
+.v-btn-menu i{position:absolute;left:18px;top:50%;width:16px;height:1px;background:currentColor;transform:translateY(-4px)}
+.v-btn-menu i+i{transform:translateY(3px)}
+.v-corner-bl{bottom:var(--pad);left:var(--pad);display:flex;align-items:baseline;gap:14px;font:700 11px/1 var(--ui);letter-spacing:.08em;text-transform:uppercase}
+.v-corner-bl b{font:400 22px/1 var(--serif);letter-spacing:0}
+.v-corner-br{bottom:var(--pad);right:var(--pad);display:flex;align-items:baseline;gap:12px}
+.v-corner-br span{font:400 22px/1 var(--serif)}
+.v-corner-br i{font:700 11px/1 var(--ui);font-style:normal;letter-spacing:.08em;text-transform:uppercase}
+
+/* ── Loader: ERA interlocking arcs, silver glint ── */
+.v-loader{position:fixed;inset:0;z-index:120;background:radial-gradient(120% 90% at 50% 0%,#1b1b1b 0%,#050505 70%);color:#ededeb;overflow:hidden}
+.v-arcs{position:absolute;inset:0;width:100%;height:100%}
+.v-arcs circle{stroke-dasharray:1;stroke-dashoffset:1;animation:v-draw 2.4s var(--ease) forwards;animation-delay:var(--d)}
+@keyframes v-draw{to{stroke-dashoffset:0}}
+.v-loader-word{position:absolute;inset:0;display:grid;place-items:center;font:700 clamp(3rem,11vw,13rem)/1 var(--display);letter-spacing:.32em;padding-left:.32em;background:var(--metal);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:v-fadein 2s .6s both,v-sheen 3s ease-in-out infinite alternate}
+@keyframes v-fadein{from{opacity:0;filter:blur(14px);transform:scale(1.04)}}
+.v-loader-foot{position:absolute;left:0;right:0;bottom:var(--pad);display:flex;justify-content:space-between;align-items:flex-end}
+.v-loader-pct{font-size:clamp(3rem,6vw,6.5rem);line-height:.8}
+.v-loader-foot button{height:44px;padding:0 18px;border:1px solid rgba(255,255,255,.4);font:700 12px/1 var(--ui);letter-spacing:.08em;text-transform:uppercase}
+.v-curtain{background:linear-gradient(180deg,#0a0a0a,#1c1c1c)}
+.v-curtain span{font-family:var(--display);font-weight:700;letter-spacing:.32em;background:var(--metal);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* ── Home: pinned 3D flight ── */
+.v-flight-track{position:relative;height:900vh}
+.v-flight-pin{position:sticky;top:0;height:100vh;overflow:hidden;background:#0a0a0a;color:#f3f3f1}
+.v-flight{position:absolute;inset:0}
+.v-flight canvas,.v-building canvas,.v-citymap-canvas canvas{display:block;width:100%!important;height:100%!important}
+.v-flight-shade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,.35) 0%,transparent 26%,transparent 52%,rgba(0,0,0,.62) 100%)}
+.v-flight-hero,.v-flight-cap{position:absolute;opacity:0;transform:translateY(46px);transition:opacity .9s var(--ease),transform 1.1s var(--ease);pointer-events:none}
+.v-flight-hero.on,.v-flight-cap.on{opacity:1;transform:none;pointer-events:auto}
+.v-flight-hero{left:0;right:0;bottom:calc(var(--pad) + 56px)}
+.v-mega{font:700 clamp(4.2rem,15vw,21.5rem)/.78 var(--display);letter-spacing:-.04em;text-transform:uppercase}
+.v-mega span{display:block}
+.v-mega .v-silver,.v-flight-cap .v-silver{background:var(--metal);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent}
+.v-flight-hero-foot{display:grid;grid-template-columns:calc(var(--col) * 5) 1fr auto;align-items:end;gap:var(--gap);margin-top:4vh}
+.v-flight-hero-foot p{font-size:clamp(1rem,1.2vw,1.25rem);color:rgba(255,255,255,.78)}
+.v-flight-cap{left:0;bottom:calc(var(--pad) + 56px);max-width:min(78vw,1300px)}
+.v-flight-cap.right{left:auto;right:0;text-align:right}
+.v-flight-cap h2{margin-top:18px;font:700 clamp(3rem,8.6vw,11.5rem)/.8 var(--display);letter-spacing:-.035em;text-transform:uppercase}
+.v-flight-cap h2 span{display:block}
+.v-flight-cap p{margin-top:22px;max-width:40ch;color:rgba(255,255,255,.75);font-size:clamp(1rem,1.2vw,1.25rem)}
+.v-flight-cap.right p{margin-left:auto}
+.v-flight-rail{position:absolute;right:var(--pad);top:50%;height:28vh;width:1px;background:rgba(255,255,255,.22);transform:translateY(-50%)}
+.v-flight-rail i{display:block;height:100%;background:#fff;transform-origin:top}
+
+/* ── 3D map (ERA style) ── */
+.v-citymap{position:absolute;inset:0;overflow:hidden;background:#e8e7e4;color:#0a0a0a}
+.v-citymap.night{background:#0a0a0a;color:#ededeb}
+.v-citymap-canvas{position:absolute;inset:0;cursor:grab}
+.v-citymap-canvas:active{cursor:grabbing}
+.v-citymap-pins{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.v-pin{position:absolute;left:0;top:0;display:flex;align-items:center;gap:6px;margin:-52px 0 0 -18px;pointer-events:auto;transition:opacity .35s}
+.v-pin i{position:relative;display:grid;place-items:center;width:36px;height:36px;background:#0a0a0a;color:#fff;border:1px solid #fff;font:700 11px/1 var(--ui);font-style:normal;box-shadow:0 10px 24px -8px rgba(0,0,0,.5);transition:background .3s,color .3s,transform .4s var(--ease)}
+.v-pin i::after{content:'';position:absolute;left:50%;top:100%;width:1px;height:16px;background:#0a0a0a}
+.v-pin span{padding:9px 12px;background:#fff;color:#0a0a0a;font:700 11px/1 var(--ui);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;box-shadow:0 10px 24px -10px rgba(0,0,0,.4);opacity:0;transform:translateX(-6px);transition:opacity .3s,transform .4s var(--ease)}
+.v-pin span em{font-style:normal;color:#777;margin-left:8px}
+.v-pin:hover span,.v-pin.on span,.v-pin.home span{opacity:1;transform:none}
+.v-pin:hover i,.v-pin.on i{background:#fff;color:#000;border-color:#000;transform:translateY(-4px)}
+.v-pin.home{margin:-66px 0 0 -24px}
+.v-pin.home i{width:48px;height:48px;font-size:16px;background:var(--metal);color:#000;border-color:#000}
+.v-pin.dim{opacity:.18!important}
+.v-citymap.compact .v-pin:not(.home) span{display:none}
+.v-citymap-filters{position:absolute;left:var(--pad);bottom:var(--pad);display:flex;flex-wrap:wrap;gap:6px;max-width:62%}
+.v-citymap-filters button{height:36px;padding:0 14px;background:rgba(243,243,241,.85);backdrop-filter:blur(8px);border:1px solid #0a0a0a;font:700 11px/1 var(--ui);letter-spacing:.06em;text-transform:uppercase}
+.v-citymap-filters button[aria-pressed=true]{background:#0a0a0a;color:#fff}
+.v-citymap-tools{position:absolute;right:var(--pad);bottom:var(--pad);display:grid;gap:6px}
+.v-citymap-tools button{display:grid;place-items:center;width:44px;height:44px;background:#f3f3f1;border:1px solid #0a0a0a;transition:.3s}
+.v-citymap-tools button:hover{background:#0a0a0a;color:#fff}
+.v-citymap-card{position:absolute;right:var(--pad);top:calc(var(--pad) + 64px);width:min(360px,calc(100% - 2 * var(--pad)));background:#f3f3f1;color:#0a0a0a;border:1px solid #0a0a0a;box-shadow:0 30px 60px -30px rgba(0,0,0,.5);animation:v-dialog .5s var(--ease)}
+.v-citymap-card img{width:100%;aspect-ratio:16/10;object-fit:cover}
+.v-citymap-card>div{padding:20px 22px 24px}
+.v-citymap-card h3{margin:10px 0 8px;font:700 clamp(1.6rem,2.2vw,2.4rem)/.9 var(--display);text-transform:uppercase;letter-spacing:-.02em}
+.v-citymap-card p{font-size:15px;color:#444}
+.v-citymap-close{position:absolute;top:10px;right:10px;z-index:2;display:grid;place-items:center;width:32px;height:32px;background:#0a0a0a;color:#fff}
+.v-citymap-loading{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;gap:14px;font:700 12px/1 var(--ui);letter-spacing:.08em;text-transform:uppercase}
+.v-citymap-loading span{width:140px;height:1px;background:linear-gradient(90deg,transparent,currentColor,transparent);background-size:50% 100%;background-repeat:no-repeat;animation:v-scan 1.2s linear infinite}
+@keyframes v-scan{from{background-position:-100% 0}to{background-position:200% 0}}
+.v-mappage{position:relative;height:100vh;height:100dvh;overflow:hidden}
+.v-mappage-title{position:absolute;left:var(--pad);top:calc(var(--pad) + 70px);pointer-events:none;color:#0a0a0a}
+.v-mappage-title h1{margin-top:14px;font:700 clamp(2.6rem,6.4vw,7.5rem)/.8 var(--display);text-transform:uppercase;letter-spacing:-.035em}
+.v-mapteaser{position:relative;height:115vh;overflow:hidden;border-block:1px solid var(--line)}
+.v-mapteaser-stage{position:absolute;inset:0}
+.v-mapteaser-copy{position:absolute;left:var(--pad);top:var(--section);width:min(620px,calc(100% - 2 * var(--pad)));padding:clamp(24px,3vw,44px);background:rgba(243,243,241,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid #0a0a0a;color:#0a0a0a}
+.v-mapteaser-copy .v-title{font-size:clamp(2.6rem,5vw,6.4rem);margin:18px 0 22px}
+.v-mapteaser-copy p{margin-bottom:28px;color:#444}
+.v-mapteaser-copy .v-btn.solid{background:#0a0a0a;color:#f3f3f1;border-color:#0a0a0a}
+.v-map-live{padding-top:var(--section)}
+.v-map-live-head{display:grid;grid-template-columns:calc(var(--col) * 6) 1fr;align-items:end;gap:var(--gap);margin-bottom:clamp(40px,6vh,80px)}
+.v-map-live-head .v-label{grid-column:1/-1}
+.v-map-live-head p{color:var(--soft);max-width:42ch}
+.v-map-live-stage{position:relative;height:100vh;border-top:1px solid var(--line)}
+
+/* ── Building scenes ── */
+.v-building{position:absolute;inset:0}
+.v-sun{background:#f2f2f0;color:#0a0a0a}
+.v-sun-copy{background:rgba(243,243,241,.82);border:1px solid #0a0a0a}
+.v-sun-copy .v-accent{background:var(--metal);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-stroke:1px #0a0a0a}
+.v-sun-controls{background:#0a0a0a;color:#ededeb}
+.v-sun-controls input{accent-color:#ededeb}
+.v-sun-presets button:hover{background:#ededeb;color:#0a0a0a;border-color:#ededeb}
+.v-selector-stage{background:radial-gradient(90% 70% at 50% 60%,#1d1d1d 0%,#0a0a0a 65%)}
+
+/* ── Restyled pieces from v3 ── */
+.v-chapter-hero{padding-top:calc(var(--pad) + 90px)}
+.v-chapter-title{font-weight:700;letter-spacing:-.04em;line-height:.8}
+.v-day-head{top:calc(var(--pad) + 80px)}
+.v-day{--sky-top:#8e8e8e;--sky-bot:#e4e4e2}
+.v-day-sun{background:radial-gradient(circle,#fff 0%,rgba(255,255,255,.55) 35%,transparent 70%)}
+.v-day-card{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.35)}
+.v-day-card h3,.v-stack-card h3,.v-sides-title,.v-next-copy strong,.v-index-title,.v-acts li strong,.v-journey span,.v-biglist li,.v-rooms-tabs button,.v-accordion button,.v-seasons-name,.v-finale-copy h2,.v-footer-big,.v-menu nav a{letter-spacing:-.03em}
+.v-framed{background:#0a0a0a}
+.v-framed-card{background:#f3f3f1}
+.v-framed-card span{font-family:var(--ui);font-weight:700;letter-spacing:.3em}
+.v-flip-back{background:var(--metal);color:#0a0a0a}
+.v-layer.l1{background:repeating-linear-gradient(90deg,transparent 0 5.5%,#cfcfcf 5.5% 8%)}
+.v-layer.on{filter:drop-shadow(0 0 16px #fff) brightness(1.3)}
+.v-stones{background:radial-gradient(ellipse at 50% 60%,#1f1f1f,#0a0a0a 70%)}
+.v-iso span{border-color:rgba(255,255,255,.5)}
+.v-footer-word{background:var(--metal);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;font-family:var(--display);font-weight:700;letter-spacing:.06em;font-size:26vw;line-height:.8}
+.v-footer-big{font-weight:700}
+.v-menu{background:radial-gradient(120% 90% at 50% 0%,#1b1b1b,#050505 70%);color:#ededeb}
+.v-menu nav a span{color:#9a9a9a;font-family:var(--serif)}
+.v-menu nav a:hover,.v-menu nav a[aria-current=page]{color:#fff}
+.v-menu .v-btn.solid{background:#ededeb;color:#0a0a0a;border-color:#ededeb}
+.dialog-close{background:var(--ink);color:var(--bg)}
+.enquiry-dialog{border-left:1px solid var(--line)}
+.enquiry-dialog h2,.v-contact-form h2{font-family:var(--display);font-weight:700;letter-spacing:-.03em}
+.submit-button{background:var(--ink);color:var(--bg)}
+.eyebrow{color:var(--soft)}
+.v-plan{background:#f3f3f1;color:#0a0a0a}
+.v-plan .v-pill{background:#0a0a0a;color:#f3f3f1}
+
+/* ── Responsive ── */
+@media (max-width:1000px){.v-hide-sm{display:none!important}}
+@media (max-width:800px){
+  :root{--header:64px}
+  .v-hide-xs{display:none!important}
+  .v-corner-bl span{display:none}
+  .v-statement p,.v-quote blockquote,.v-river-text{margin-left:0}
+  .v-flight-track{height:760vh}
+  .v-flight-hero-foot{grid-template-columns:1fr;gap:16px}
+  .v-flight-hero-foot .v-label{display:none}
+  .v-flight-cap,.v-flight-cap.right{left:0;right:0;text-align:left}
+  .v-flight-cap.right p{margin-left:0}
+  .v-flight-rail{display:none}
+  .v-map-live-head,.v-principles,.v-numbered,.v-numbered.reverse{grid-template-columns:1fr}
+  .v-citymap-filters{max-width:calc(100% - 2 * var(--pad) - 60px);overflow-x:auto;flex-wrap:nowrap}
+  .v-citymap-card{top:auto;bottom:calc(var(--pad) + 52px)}
+  .v-citymap-card img{display:none}
+  .v-mapteaser-copy{top:auto;bottom:var(--pad)}
+  .v-mappage-title h1{font-size:2.6rem}
+}
+
+/* Captions invert over the white towers, like Composites' type over its sculpture. */
+.v-flight-cap,.v-flight-hero{mix-blend-mode:difference;color:#fff}
+.v-flight-hero-foot .v-btn{mix-blend-mode:normal}
+.v-sun-ui{inset:calc(var(--pad) + 70px) 0 calc(var(--pad) + 44px)}
+.v-selector-hint{bottom:calc(var(--pad) + 44px)}
+.v-selector-steps{bottom:calc(var(--pad) + 30px)}
+.v-flight-hero{mix-blend-mode:normal;text-shadow:0 2px 40px rgba(0,0,0,.35)}

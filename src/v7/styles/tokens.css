@@ -1,0 +1,43 @@
+/* Design tokens — sampled from the reference recording (rounded pixel values)
+   but expressed as our own scale. Everything downstream reads these. */
+:root {
+  /* Surfaces */
+  --c-ink: #081c32;
+  --c-ink-2: #06172b;
+  --c-bone: #f0eee8;
+  --c-bone-2: #e4e8ec;
+  --c-accent: #c5a48f;
+  --c-accent-deep: #8c705f;
+  --c-mist: #c4ced8;
+  --c-mist-2: #647484;
+  --c-ghost: rgba(8, 28, 50, 0.14);
+  --c-line: rgba(255, 255, 255, 0.16);
+  --c-line-light: rgba(18, 18, 18, 0.18);
+  --c-white: #f8f5f0;
+
+  /* Type */
+  --font-display: 'Orbit Display', 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  /* Sizes are tied to the shorter viewport axis so the composition holds at
+     any aspect ratio (measured against a 1190x593 reference viewport). */
+  --fs-hero: clamp(48px, min(6.2vw, 12vh), 150px);
+  --fs-giant: clamp(44px, min(5.4vw, 10.5vh), 140px);
+  --fs-h1: clamp(28px, min(3.5vw, 6.8vh), 80px);
+  --fs-h2: clamp(22px, min(2.4vw, 4.6vh), 56px);
+  --fs-h3: clamp(14px, min(1.3vw, 2.5vh), 26px);
+  --fs-case: clamp(36px, min(4.5vw, 8.8vh), 110px);
+  --fs-body: clamp(12px, min(0.85vw, 1.75vh), 15px);
+  --fs-small: 11px;
+  --lh-tight: 0.92;
+  --lh-body: 1.45;
+  --track-caps: 0.005em;
+  --track-small: 0.12em;
+
+  /* Rhythm */
+  --gutter: clamp(20px, 3.6vw, 56px);
+  --nav-h: 64px;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Motion */
+  --dur-fast: 220ms;
+  --dur-mid: 520ms;
+}

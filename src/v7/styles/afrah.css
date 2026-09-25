@@ -1,0 +1,28 @@
+/* AFRAH additions on top of the Composites-style tokens/base/sections. */
+
+/* tower chapter — transparent stage, the canvas draws bone + grid + model */
+.stage--tower { color: var(--c-ink); }
+.tower__chapter { position: absolute; left: var(--gutter); top: 13vh; color: var(--c-mist-2); }
+.tower__shot { position: absolute; bottom: 12vh; display: grid; gap: 1.6vh; max-width: 44vw; }
+.tower__shot--l { left: var(--gutter); }
+.tower__shot--r { right: var(--gutter); text-align: right; justify-items: end; }
+.tower__title { font-size: clamp(56px, min(9vw, 17vh), 220px); line-height: 0.84; color: var(--c-ink); }
+.tower__num { color: var(--c-accent); opacity: 0; }
+.tower__shot p.tower__meta { opacity: 0; color: var(--c-mist-2); }
+.tower__cta { position: absolute; left: 50%; bottom: 7vh; transform: translateX(-50%); opacity: 0; }
+
+/* real photography in the Composites panels */
+img.photo { display: block; width: 100%; height: 100%; object-fit: cover; }
+.artwork img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.gallery__card .artwork { background: #bdb8b7; }
+
+/* nav: the grid button opens chapters + pages */
+.nav__menu { position: fixed; top: 64px; left: 50%; transform: translate(-50%, -8px); width: min(560px, 92vw); display: grid; grid-template-columns: 1fr 1fr; gap: 2px 28px; padding: 22px 24px; background: var(--c-ink); color: var(--c-white); border: 1px solid var(--c-line); opacity: 0; visibility: hidden; transition: opacity var(--dur-mid) var(--ease-out), transform var(--dur-mid) var(--ease-out), visibility 0s var(--dur-mid); }
+.nav__menu.is-open { opacity: 1; visibility: visible; transform: translate(-50%, 0); transition-delay: 0s; }
+.nav__menu a { display: flex; align-items: baseline; gap: 10px; padding: 7px 0; font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; border-bottom: 1px solid var(--c-line); }
+.nav__menu a:hover { color: var(--c-accent); }
+.nav__menu em { font-style: normal; font-size: 10px; color: var(--c-mist); width: 18px; }
+.nav__menu > i { grid-column: 1 / -1; height: 14px; }
+.nav__menu .nav__page b { margin-left: auto; font-weight: 400; color: var(--c-mist); }
+
+.cta[disabled] { opacity: 0.6; cursor: default; }

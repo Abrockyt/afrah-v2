@@ -1,0 +1,32 @@
+[
+  {
+    "source": "https://www.composites.archi/_nuxt/shape.BcJDqfMP.glb",
+    "local": "/composites/shape.glb",
+    "bytes": 355448,
+    "temporaryStudyAsset": true
+  },
+  {
+    "source": "https://www.composites.archi/_nuxt/tunnel.BoV1xo96.glb",
+    "local": "/composites/tunnel.glb",
+    "bytes": 698056,
+    "temporaryStudyAsset": true
+  },
+  {
+    "source": "https://www.composites.archi/_nuxt/matcapWhite.DoOoxyYe.png",
+    "local": "/composites/matcap.png",
+    "bytes": 108101,
+    "temporaryStudyAsset": true
+  },
+  {
+    "source": "https://www.composites.archi/images/under_explore_materials.jpg",
+    "local": "/composites/materials.jpg",
+    "bytes": 56384,
+    "temporaryStudyAsset": true
+  },
+  {
+    "source": "https://www.composites.archi/_nuxt/matcapblack.KVedG_V-.png",
+    "local": "/composites/matcap-dark.png",
+    "bytes": 34730,
+    "temporaryStudyAsset": true
+  }
+]

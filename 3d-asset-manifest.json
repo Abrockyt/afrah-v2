@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "units": "metres",
+  "status": "planning",
+  "assets": [
+    {
+      "name": "Afrah Terraced Frame",
+      "type": "original-building",
+      "source": "new architectural brief / option B proposed",
+      "license": "original project concept",
+      "polycount": null,
+      "textureResolution": null,
+      "masterPath": null,
+      "webPath": null,
+      "LODLevels": [
+        "high",
+        "standard",
+        "mobile"
+      ],
+      "sceneUsage": [
+        "LAND",
+        "FORM",
+        "LIGHT"
+      ],
+      "fileSize": null,
+      "notes": "No Blender master or GLB exported. Proposed 46×28m base, 42.45m height. See architecture documents."
+    }
+  ]
+}

@@ -1,0 +1,2527 @@
+# ============================================================
+# AFRAH — MASTER CREATIVE + TECHNICAL PRODUCTION BRIEF
+# ============================================================
+
+You are not simply redesigning a website.
+
+You are acting as:
+
+- Creative Director
+- Digital Art Director
+- Senior Product Designer
+- UX Designer
+- Editorial Designer
+- Motion Designer
+- Cinematic Storyboard Artist
+- 3D/WebGL Creative Developer
+- Three.js / React Three Fiber Engineer
+- GSAP Motion Engineer
+- Remotion Video Engineer
+- Frontend Architect
+- Performance Engineer
+- Accessibility Engineer
+- Design Researcher
+- Asset Curator
+- Sound Designer
+- Analytics / UX Research Engineer
+
+PROJECT:
+AFRAH
+
+CATEGORY:
+Premium architecture / residential real estate.
+
+AMBITION:
+International, cinematic, editorial, highly polished,
+Awwwards-quality creative execution.
+
+TARGET FEEL:
+premium
+architectural
+quiet
+precise
+cinematic
+modern
+human
+international
+restrained
+memorable
+
+TARGET AUDIENCE:
+Primarily premium UK/international property audiences,
+while remaining culturally understandable globally.
+
+The experience should have the visual sophistication associated
+with high-end UK architecture/editorial design while having the
+technical spectacle and spatial interaction associated with
+world-class creative-development studios.
+
+============================================================
+ABSOLUTE RULE
+============================================================
+
+DO NOT immediately modify the existing Afrah website.
+
+We will build the new Afrah design system and experience
+FROM SCRATCH in an isolated environment first.
+
+The existing website is only:
+- a source of existing Afrah content
+- branding
+- project information
+- approved assets
+- existing business requirements
+
+It is NOT the design constraint.
+
+Create an isolated development branch such as:
+
+afrah-cinematic-v2
+
+or an isolated workspace:
+
+/afrah-v2/
+
+Do not destructively change production/main until the new system
+has been reviewed.
+
+============================================================
+MASTER PROCESS
+============================================================
+
+Work in this exact order:
+
+PHASE 01
+Reference research + website forensic study
+
+PHASE 02
+Reference extraction library
+
+PHASE 03
+Afrah asset library
+
+PHASE 04
+Design DNA + visual system
+
+PHASE 05
+Story architecture
+
+PHASE 06
+Storyboard / keyframes
+
+PHASE 07
+3D pipeline
+
+PHASE 08
+Remotion / cinematic video system
+
+PHASE 09
+Sound design system
+
+PHASE 10
+Figma/layout system
+
+PHASE 11
+Motion system
+
+PHASE 12
+Interactive prototype
+
+PHASE 13
+Full frontend implementation
+
+PHASE 14
+Performance optimization
+
+PHASE 15
+Accessibility + responsive behaviour
+
+PHASE 16
+Analytics + heatmaps
+
+PHASE 17
+User testing / iteration
+
+PHASE 18
+Production integration
+
+Do NOT jump ahead.
+
+============================================================
+PHASE 01 — REFERENCE FORENSICS
+============================================================
+
+Study these websites deeply.
+
+1. ERA
+https://era.estate/
+
+USE FOR:
+- cinematic architecture
+- building presentation
+- opening experience
+- WebGL atmosphere
+- environmental effects
+- location / spatial map ideas
+- transitions
+- high-impact visual moments
+
+
+2. LIKOVA
+https://likova.space/
+
+USE FOR:
+- architecture as interface
+- interactive building
+- spatial camera movement
+- site plan
+- floor/building interaction
+- exterior/interior journey
+
+
+3. SILVER PINEWOOD
+https://silver-pinewood.com/
+
+USE FOR:
+- quiet luxury
+- whitespace
+- editorial pacing
+- material storytelling
+- visual restraint
+- gentle scroll rhythm
+- sophisticated pauses
+
+
+4. THE WHITELEY
+https://www.thewhiteleylondon.com/
+
+USE FOR:
+- UK premium positioning
+- typography
+- architectural editorial design
+- content hierarchy
+- spacing
+- restrained luxury
+
+
+5. BANKSIDE YARDS
+https://banksideyards.com/
+
+USE FOR:
+- UK real-estate information architecture
+- architecture content
+- location
+- development story
+- project navigation
+- property communication
+
+
+============================================================
+WEB-SCRAPING / DESIGN-RESEARCH REQUIREMENT
+============================================================
+
+Perform a proper PUBLIC-FACING design study.
+
+This is design research — NOT copying proprietary code/assets.
+
+Use where appropriate:
+
+- Playwright
+- browser automation
+- Chrome DevTools
+- DOM inspection
+- computed CSS inspection
+- viewport screenshots
+- full-page screenshots
+- section screenshots
+- screen recordings
+- network-type inspection
+- performance inspection
+- Lighthouse
+- responsive viewport testing
+
+Capture reference behaviour at:
+
+1920px
+1440px
+1280px
+1024px
+768px
+430px
+390px
+
+For every important section record:
+
+SOURCE WEBSITE
+SOURCE PAGE
+SECTION NAME
+PURPOSE
+
+Then extract:
+
+- viewport height
+- section height
+- width
+- max-width
+- columns
+- margins
+- gutters
+- alignment
+- typography scale
+- line height
+- text width
+- whitespace
+- image ratios
+- image placement
+- video placement
+- sticky behaviour
+- scroll distance
+- animation trigger
+- animation duration
+- animation easing
+- camera position
+- camera movement
+- parallax amount
+- masks
+- clipping
+- opacity
+- rotation
+- scale
+- blur
+- hover behaviour
+- cursor behaviour
+- page transition
+- loading behaviour
+- WebGL presence
+- media type
+- sound behaviour
+- responsive changes
+
+DO NOT copy proprietary:
+- HTML/CSS/JS source
+- 3D models
+- photographs
+- video
+- fonts
+- shaders
+- sounds
+- branding
+- illustration
+
+Do not bypass access controls.
+
+Do not download protected assets.
+
+We are learning the:
+- composition
+- principles
+- proportions
+- behaviour
+- rhythm
+- storytelling
+- interaction logic
+
+Then rebuilding everything ourselves.
+
+============================================================
+REFERENCE OUTPUT STRUCTURE
+============================================================
+
+Create:
+
+/research/
+    /era/
+        screenshots/
+        recordings/
+        notes.md
+        measurements.json
+        motion-analysis.md
+
+    /likova/
+        ...
+
+    /silver-pinewood/
+        ...
+
+    /whiteley/
+        ...
+
+    /bankside-yards/
+        ...
+
+    reference-matrix.md
+    inspiration-map.md
+
+For every reference component assign:
+
+KEEP PRINCIPLE
+ADAPT
+REJECT
+
+Do not blindly combine everything.
+
+============================================================
+WHAT WE EXTRACT
+============================================================
+
+ERA:
+
+A.
+CINEMATIC OPENING
+
+Study how anticipation begins before the main content.
+
+B.
+ARCHITECTURE AS SPECTACLE
+
+Study:
+camera
+depth
+light
+environment
+scale
+
+C.
+LOCATION EXPERIENCE
+
+Study how spatial/context information becomes visually interesting.
+
+
+LIKOVA:
+
+A.
+BUILDING AS INTERFACE
+
+B.
+ARCHITECTURAL CAMERA JOURNEY
+
+C.
+SITE / FLOOR / BUILDING EXPLORATION
+
+
+SILVER PINEWOOD:
+
+A.
+NEGATIVE SPACE
+
+B.
+CALM SCROLL RHYTHM
+
+C.
+MATERIAL / ARCHITECTURAL CLOSEUPS
+
+
+THE WHITELEY:
+
+A.
+EDITORIAL TYPOGRAPHY
+
+B.
+LUXURY WHITESPACE
+
+C.
+UK ARCHITECTURAL CONTENT TONE
+
+
+BANKSIDE YARDS:
+
+A.
+PROPERTY INFORMATION ARCHITECTURE
+
+B.
+LOCATION CONTENT
+
+C.
+DEVELOPMENT / ARCHITECTURE STRUCTURE
+
+
+============================================================
+AFRAH DESIGN EQUATION
+============================================================
+
+ERA
+=
+cinematic intensity
+
+LIKOVA
+=
+interactive architecture
+
+SILVER PINEWOOD
+=
+calm pacing
+
+THE WHITELEY
+=
+UK editorial sophistication
+
+BANKSIDE YARDS
+=
+property-information discipline
+
+AFRAH
+=
+OUR OWN RESULT
+
+Never clone one reference.
+
+============================================================
+VISUAL PHILOSOPHY
+============================================================
+
+AFRAH SHOULD NOT LOOK LIKE:
+
+- SaaS
+- startup landing page
+- Webflow template
+- generic real-estate template
+- Dribbble mockup
+- AI-generated interface
+- neon 3D experience
+- metaverse/game UI
+- luxury cliché
+
+AVOID:
+
+- excessive rounded cards
+- endless glassmorphism
+- random gradients
+- glowing neon
+- excessive gold
+- random blobs
+- excessive shadows
+- animation everywhere
+- meaningless parallax
+- text flying from every direction
+
+RULE:
+
+ONE PRIMARY VISUAL IDEA PER SCENE.
+
+============================================================
+COLOR SYSTEM
+============================================================
+
+Primary base:
+
+AFRAH BLACK
+#0B0B0A
+
+Not #000000.
+
+Warm day surface:
+
+ARCHITECTURAL IVORY
+#F1EDE5
+
+Stone:
+
+#C8BCAA
+
+Muted bronze accent:
+
+#98735B
+
+Dusk blue:
+
+#1D2530
+
+Interior window amber:
+
+#D39050
+
+Day primary text:
+
+#121210
+
+Dusk primary text:
+
+#F2EEE7
+
+Muted text:
+
+derive accessible neutral variants.
+
+IMPORTANT:
+
+Bronze and amber are accents.
+
+Do NOT cover the interface in bronze/gold.
+
+NO unnecessary CSS gradients.
+
+Prefer:
+
+- flat colour
+- architectural photography
+- environmental images
+- real sky imagery
+- HDRI/environment lighting
+- material texture
+- controlled vignette
+
+rather than generic gradients.
+
+============================================================
+DAY / DUSK SYSTEM
+============================================================
+
+Do NOT call this normal "dark mode".
+
+The control is:
+
+DAY / DUSK
+
+DAY:
+
+- architectural ivory surfaces
+- daylight building
+- natural landscape
+- dark text
+- neutral windows
+- daylight HDRI/environment
+
+DUSK:
+
+- blue-hour environment
+- deep charcoal / dusk surfaces
+- warm interior window lights
+- warm reflections
+- darker landscaping
+- off-white text
+- subtle environmental ambience
+
+Do not turn it into full midnight.
+
+Think approximately:
+
+20–40 minutes after sunset.
+
+When switching:
+
+- building must not disappear/reload
+- interpolate materials where possible
+- crossfade environment
+- animate light intensity
+- animate window emissive material
+- update UI colours
+- update environmental audio gently
+
+Target transition:
+roughly 1.2–2.5 seconds depending on implementation.
+
+Use physically believable lighting.
+
+============================================================
+TYPOGRAPHY
+============================================================
+
+FIRST:
+
+Inspect the existing approved Afrah typography.
+
+Do NOT replace an existing brand font without justification.
+
+Potential prototype direction if required:
+
+DISPLAY:
+Canela Light / Regular
+
+UTILITY/UI:
+Suisse Int'l
+
+BUT:
+Only use these if legally licensed for the intended use.
+
+Never scrape font files from reference websites.
+
+Preferred web font:
+
+WOFF2
+
+Fallback:
+WOFF only when genuinely necessary.
+
+Create:
+
+/public/fonts/
+    /afrah-brand/
+    /display/
+    /ui/
+
+Typography personality:
+
+DISPLAY
+= architectural emotion
+
+SANS/UI
+= precision
+
+Headlines must feel editorial rather than advertising.
+
+Desktop display can reach approximately:
+80–130px
+
+But use fluid CSS:
+clamp()
+
+Do not blindly hardcode sizes.
+
+============================================================
+COPY SYSTEM
+============================================================
+
+THE COPY MUST BE:
+
+short
+poetic
+precise
+human
+architectural
+understandable
+global
+quiet
+
+NOT:
+
+long
+flowery
+pretentious
+generic
+sales-heavy
+corporate
+
+Do not use clichés such as:
+
+"Elevated living"
+"Where luxury meets comfort"
+"Redefining luxury"
+"Your journey begins here"
+"Designed for the extraordinary"
+"Where dreams become reality"
+
+HEADLINE RULE:
+
+Usually 1–5 words.
+
+The visual should often communicate more than the text.
+
+Some scenes may use:
+
+NO COPY.
+
+Possible copy architecture:
+
+emotional statement
++
+optional factual line
+
+Example structure:
+
+LIGHT, CONSIDERED.
+
+Full-height glazing draws daylight through the residence.
+
+Do NOT automatically use that wording.
+
+Write stronger Afrah-specific alternatives.
+
+============================================================
+STORY
+============================================================
+
+The story is universal and visually understandable:
+
+LAND
+→
+FORM
+→
+LIGHT
+→
+MATERIAL
+→
+ENTER
+→
+LIFE
+→
+EXPLORE
+→
+PLACE
+→
+HOME
+
+There are no fictional characters.
+
+The BUILDING is the main character.
+
+============================================================
+CHAPTER 00 — LOAD
+============================================================
+
+No loading spinner.
+
+Deep Afrah black.
+
+AFRAH.
+
+A thin architectural line.
+
+The line gradually reveals the actual geometric logic / footprint
+of the Afrah project.
+
+Tiny loading percentage if appropriate.
+
+0
+24
+61
+100
+
+At completion:
+
+2D line
+→
+depth
+→
+perspective
+→
+space.
+
+This becomes the first scene.
+
+Sound:
+almost silent.
+
+Possibly:
+- subtle room tone
+- architectural pencil/line texture
+- low-frequency spatial ambience
+
+Never trailer-like.
+
+============================================================
+CHAPTER 01 — LAND
+============================================================
+
+Quiet environment.
+
+Almost empty.
+
+Reveal:
+site
+orientation
+roads
+landscape
+paths
+building footprint
+
+Minimal copy.
+
+Do not explain everything.
+
+Create 10 copy options.
+
+Select the 3 strongest for review.
+
+============================================================
+CHAPTER 02 — FORM
+============================================================
+
+FIRST MAJOR CINEMATIC PEAK.
+
+Use the real Afrah model.
+
+Possible sequence:
+
+footprint
+→
+structure
+→
+floor plates
+→
+façade
+→
+glass
+→
+landscape
+
+Building should feel heavy.
+
+Not like floating Lego.
+
+Camera:
+slow architectural orbit.
+
+No wild spins.
+
+No overshoot gimmicks.
+
+Use inertia very carefully.
+
+============================================================
+CHAPTER 03 — LIGHT
+============================================================
+
+Reuse the existing building.
+
+Do not create unnecessary assets.
+
+Scroll influences time.
+
+Morning
+→
+midday
+→
+golden hour
+→
+dusk.
+
+Move:
+
+sun
+shadow
+reflection
+environment
+window emissive lighting
+
+Allow short visual pauses.
+
+At moments:
+NO TEXT.
+
+Time alone may appear:
+
+06:42
+12:10
+18:34
+19:21
+
+============================================================
+CHAPTER 04 — MATERIAL
+============================================================
+
+Remove spectacle.
+
+Editorial pause.
+
+Use full-quality closeups:
+
+STONE
+WOOD
+GLASS
+METAL
+FABRIC
+LANDSCAPE
+
+Use the material story only if it matches the actual property.
+
+Do not invent specifications.
+
+Possible layout:
+
+61.8% image
+38.2% editorial text
+
+Use the golden ratio ONLY when composition benefits.
+
+Do not turn it into a rigid grid rule.
+
+============================================================
+CHAPTER 05 — ENTER
+============================================================
+
+Building exterior.
+
+Camera approaches:
+
+entrance
+glass
+door
+window
+balcony
+
+Use the physical surface as a visual wipe.
+
+Example:
+
+REAL-TIME 3D
+→
+glass reflection
+→
+full screen
+→
+pre-rendered cinematic sequence
+→
+interior footage.
+
+Technology switch should be invisible to user.
+
+============================================================
+CHAPTER 06 — LIFE
+============================================================
+
+DO NOT depend on expensive generative video.
+
+Use:
+
+- real footage
+- licensed stock
+- original captures
+- architectural renders
+- Remotion compositions
+
+Prefer universal detail shots:
+
+sun through curtain
+balcony door
+hand touching stone
+water
+book
+table
+coffee
+tree movement
+fabric
+light moving over timber
+quiet evening
+window reflections
+
+Avoid overusing actors/models.
+
+Keep life believable.
+
+============================================================
+CHAPTER 07 — EXPLORE
+============================================================
+
+The website now changes from CINEMA to PRODUCT.
+
+Interactive Afrah building.
+
+Possible:
+
+hover floor
+→
+floor illuminates
+
+click
+→
+camera settles
+
+building separates subtly
+
+choose residence
+
+display:
+
+floor plan
+bedrooms
+area
+orientation
+view
+availability
+key data
+
+NO dashboard aesthetic.
+
+NO huge cards.
+
+============================================================
+CHAPTER 08 — PLACE
+============================================================
+
+Camera moves outward.
+
+Reveal architectural neighborhood map.
+
+Afrah remains the visual anchor.
+
+Add only meaningful categories:
+
+green space
+culture
+dining
+education
+transport
+water
+important landmarks
+
+Use real factual data.
+
+Do not fabricate distances.
+
+The cinematic map may be custom.
+
+Provide an ordinary accessible map option separately if needed.
+
+============================================================
+CHAPTER 09 — HOME
+============================================================
+
+Return visually to Chapter 01.
+
+But now:
+
+building exists.
+
+Dusk.
+
+Interior windows softly lit.
+
+Landscape alive.
+
+Small believable motion.
+
+Almost no copy.
+
+Generate final-line options.
+
+Target feeling:
+
+recognition
+warmth
+arrival
+
+Not marketing hype.
+
+============================================================
+FINAL CTA
+============================================================
+
+Primary:
+
+ARRANGE A PRIVATE VIEWING
+
+Possible secondary:
+
+EXPLORE RESIDENCES
+
+or:
+
+MAKE AN ENQUIRY
+
+CTA needs strong visual hierarchy but should remain understated.
+
+============================================================
+SITE ARCHITECTURE
+============================================================
+
+Create full Afrah experience:
+
+HOME
+RESIDENCES
+ARCHITECTURE
+INTERIORS
+LIFESTYLE
+AMENITIES
+LOCATION
+JOURNAL / STORIES
+ABOUT
+PRIVATE VIEWING / CONTACT
+
+HOME
+=
+cinematic film.
+
+INNER PAGES
+=
+premium architectural magazine.
+
+Do not duplicate all the cinematic effects on every page.
+
+============================================================
+GRID SYSTEM
+============================================================
+
+DESKTOP:
+
+12 columns
+
+1440px design reference.
+
+Initial margins:
+72–96px
+
+Initial gutters:
+20–24px
+
+Adjust from research.
+
+1920px:
+do not endlessly stretch layout.
+
+Use max content width.
+
+TABLET:
+8 columns
+
+MOBILE:
+4 columns
+
+Typography/content must remain editorial on mobile.
+
+Do not simply stack desktop components.
+
+============================================================
+SPACING
+============================================================
+
+Build design tokens.
+
+Possible foundational scale:
+
+4
+8
+12
+16
+24
+32
+48
+64
+80
+96
+128
+160
+192
+256
+
+Do not use every token everywhere.
+
+Luxury requires large differences in rhythm.
+
+Allow huge empty regions.
+
+Whitespace is a design element.
+
+============================================================
+MOTION SYSTEM
+============================================================
+
+Create reusable motion tokens:
+
+micro
+standard
+editorial
+cinematic
+
+Approximate starting ranges:
+
+MICRO:
+180–300ms
+
+STANDARD:
+300–600ms
+
+EDITORIAL:
+600–1000ms
+
+CINEMATIC:
+900–1800ms
+
+Scroll-linked sequences:
+duration is based on scroll distance, not fixed clock time.
+
+Possible cinematic pinned scenes:
+120–300vh
+
+Do not pin everything.
+
+Motion must communicate:
+
+depth
+hierarchy
+cause
+continuity
+material
+space
+
+============================================================
+EASING
+============================================================
+
+Avoid generic easeInOut everywhere.
+
+Create an Afrah motion language.
+
+Movement should:
+
+start gently
+gain confidence
+arrive precisely
+
+Heavy architecture should NOT bounce.
+
+No elastic building animation.
+
+Spring/elastic motion can be reserved for tiny UI interactions only.
+
+============================================================
+SMOOTH SCROLL
+============================================================
+
+Evaluate native scrolling first.
+
+If enhanced smooth scrolling is required,
+use a production-quality solution such as Lenis.
+
+Do not damage accessibility.
+
+GSAP ScrollTrigger should coordinate important scroll sequences.
+
+Avoid scroll hijacking that prevents users from navigating naturally.
+
+============================================================
+3D TECH STACK
+============================================================
+
+Preferred:
+
+Three.js
+React Three Fiber
+@react-three/drei
+GSAP
+GSAP ScrollTrigger
+
+Optional:
+gltfjsx
+Meshopt
+Draco
+KTX2 / Basis compression
+
+Use Blender for:
+
+model cleanup
+UV work
+camera tests
+material preparation
+baking
+LOD generation
+lighting reference
+pre-rendered sequences
+geometry optimization
+
+============================================================
+3D ASSET FORMAT
+============================================================
+
+WORKING MASTER:
+
+.blend
+
+Exchange when necessary:
+
+.fbx
+.obj
+
+BUT FINAL WEB DELIVERY SHOULD PREFER:
+
+.glb
+
+or:
+.gltf + external assets only when justified.
+
+Prefer GLB for deployment simplicity.
+
+Use:
+
+Draco or Meshopt
+for geometry compression when appropriate.
+
+Use KTX2/Basis for textures when beneficial.
+
+Do not ship raw 8K textures to browsers.
+
+============================================================
+WEB 3D BUDGET
+============================================================
+
+Create multiple quality levels.
+
+DESKTOP HIGH
+DESKTOP STANDARD
+MOBILE
+
+Avoid a single enormous scene.
+
+Suggested starting targets, then measure:
+
+critical GLB:
+as small as visual quality allows
+
+main architectural environment:
+prefer single-digit MB or low tens of MB,
+not 100MB+.
+
+Textures:
+1K / 2K web versions by default.
+
+4K only where the camera genuinely gets close enough to justify it.
+
+Mobile:
+aggressively reduce resolution and complexity.
+
+Use:
+
+LOD
+frustum culling
+lazy-loading
+texture compression
+mesh compression
+instancing
+
+============================================================
+3D ASSET SOURCES
+============================================================
+
+Prioritize properly licensed/free resources.
+
+High-priority source:
+
+Poly Haven
+
+Use for:
+HDRIs
+PBR textures
+models
+
+Also research as needed:
+
+ambientCG
+BlenderKit
+Sketchfab downloadable assets
+Fab free assets
+
+IMPORTANT:
+
+CHECK THE LICENSE OF EVERY ASSET.
+
+Create:
+
+/assets/licenses/
+
+Store:
+asset name
+source URL
+creator
+license
+download date
+usage restrictions
+
+Never assume "downloadable" means commercially unrestricted.
+
+============================================================
+HDRI PIPELINE
+============================================================
+
+MASTER HDRI:
+
+.hdr
+.exr
+
+Use for:
+
+day
+overcast
+golden hour
+dusk
+
+Do not download a random neon city HDRI.
+
+Architecture needs believable skies.
+
+Prepare lightweight runtime environments where appropriate.
+
+Maintain:
+
+/assets/hdri/day/
+/assets/hdri/dusk/
+/assets/hdri/interior/
+
+============================================================
+PBR TEXTURES
+============================================================
+
+Organize:
+
+basecolor
+normal
+roughness
+metallic
+ao
+displacement
+
+Prefer realistic, subtle material response.
+
+Avoid over-shiny luxury surfaces.
+
+Materials must feel tactile rather than CG.
+
+============================================================
+VIDEO PIPELINE
+============================================================
+
+REMOTION is the primary programmatic motion/video system.
+
+Set up a dedicated project:
+
+/video/
+    /remotion/
+        src/
+        public/
+        compositions/
+        transitions/
+        typography/
+        overlays/
+        audio/
+        exports/
+
+Install official Remotion agent skills so Codex has proper context
+for Remotion development.
+
+Use Remotion for:
+
+- cinematic architectural edit
+- scene bridges
+- masking
+- text
+- image sequences
+- motion graphics
+- material title sequences
+- day/dusk sequences if pre-rendered
+- building construction sequence if pre-rendered
+- speed ramps
+- overlays
+- light-leak layers only if subtle
+- grain
+- sound synchronization
+- social/project films later
+
+Do NOT use Remotion to fake every WebGL interaction.
+
+Interactive scenes remain WebGL.
+
+============================================================
+VIDEO MASTER FORMATS
+============================================================
+
+EDITING / ARCHIVE MASTER:
+
+ProRes 422 / 422 HQ
+or another high-quality mezzanine codec where available.
+
+Alpha/transparency masters when needed:
+
+ProRes 4444
+or
+PNG sequence
+or
+EXR sequence
+
+Do NOT deploy ProRes masters to the website.
+
+============================================================
+WEB VIDEO DELIVERY
+============================================================
+
+Create modern web encodes.
+
+PRIMARY COMPATIBILITY:
+
+MP4
+H.264
+
+OPTIONAL MORE EFFICIENT SOURCE:
+
+WebM
+VP9
+
+or AV1 where browser/project compatibility justifies it.
+
+Use <video> with multiple sources where useful.
+
+For cinematic backgrounds:
+
+autoplay
+muted
+playsinline
+loop only when appropriate
+
+Never depend on unmuted autoplay.
+
+============================================================
+VIDEO ASPECT RATIOS
+============================================================
+
+Prepare compositions intentionally.
+
+WEBSITE CINEMATIC MASTER:
+
+16:9
+3840 × 2160 master when source quality allows.
+
+STANDARD WEB:
+
+1920 × 1080
+
+WIDE ARCHITECTURAL / CINEMA SHOT:
+
+2.39:1 / approximately 21:9
+
+Examples:
+2560 × 1080
+or high-resolution equivalent.
+
+MOBILE:
+
+9:16
+1080 × 1920
+
+EDITORIAL PORTRAIT:
+
+4:5
+1080 × 1350
+
+SQUARE when useful:
+
+1:1
+1080 × 1080
+
+DO NOT simply crop desktop footage on mobile.
+
+Recompose camera/framing.
+
+============================================================
+WEB VIDEO PERFORMANCE
+============================================================
+
+Do not create one giant 200MB hero video.
+
+Break long sequences into:
+
+short shots
+chapters
+lazy-loaded clips
+
+Preload only what the next scene needs.
+
+Use poster frames.
+
+Set dimensions to avoid layout shift.
+
+Choose quality based on viewport and connection.
+
+If scroll-scrubbing video:
+
+test whether:
+- video seeking
+- image sequence
+- WebGL
+- canvas texture
+- pre-rendered frame sequence
+
+is most appropriate.
+
+Do not assume video is automatically best.
+
+============================================================
+IMAGE FORMATS
+============================================================
+
+MASTER:
+
+TIFF
+PNG
+high-quality JPEG
+EXR for rendered work
+
+WEB:
+
+AVIF preferred when appropriate
+WebP fallback
+JPEG for photography when efficient
+PNG only when transparency/lossless is necessary
+
+SVG:
+logos
+icons
+architectural vectors
+line drawings
+
+============================================================
+IMAGE SEQUENCES
+============================================================
+
+For frame-accurate scroll scenes evaluate:
+
+AVIF/WebP sequence
+or
+video scrubbing
+or
+canvas frames
+
+Do not load hundreds of full-resolution PNG files blindly.
+
+Create adaptive loading.
+
+============================================================
+SFX + SOUND DESIGN
+============================================================
+
+Sound is OPTIONAL and user-controlled.
+
+Provide visible:
+
+SOUND ON / OFF
+
+Do not surprise users.
+
+Useful categories:
+
+ROOM TONE
+
+AIR
+
+DISTANT CITY
+
+TREES
+
+SOFT WATER
+
+ARCHITECTURAL CLICK
+
+GLASS
+
+DOOR
+
+SUBTLE LOW IMPACT
+
+SOFT WHOOSH
+
+MATERIAL CONTACT
+
+AMBIENT INTERIOR
+
+SUBTLE BASS SWELL
+
+Avoid:
+
+trailer booms
+game sounds
+excessive whooshes
+cyber UI bleeps
+
+============================================================
+FREE / LOW-COST SFX RESEARCH
+============================================================
+
+Research:
+
+Mixkit
+ProductionCrate / FootageCrate
+Freesound
+
+License every asset.
+
+For Freesound:
+license varies per individual sound,
+so verify each asset.
+
+Never dump hundreds of sounds into the project.
+
+Build a curated Afrah sound palette.
+
+Target:
+
+approximately 10–20 excellent sounds.
+
+============================================================
+VFX SOURCES
+============================================================
+
+Research free/licensed options from:
+
+ProductionCrate / FootageCrate
+
+Potential categories:
+
+dust
+subtle atmosphere
+fog
+window reflections
+light textures
+film grain
+particles
+water
+soft optical effects
+
+Use extremely selectively.
+
+Do not turn architecture into a sci-fi movie.
+
+============================================================
+REAL / STOCK VIDEO
+============================================================
+
+Search properly licensed stock from sources such as:
+
+Pexels
+Mixkit
+Pixabay
+
+when appropriate.
+
+But do not let generic stock footage define Afrah.
+
+Prefer:
+
+architecture
+materials
+hands
+light
+environment
+nature
+interior details
+
+instead of smiling stock actors.
+
+============================================================
+AI VIDEO
+============================================================
+
+AI video generation is OPTIONAL.
+
+It must NOT be required for the core site.
+
+If access exists to:
+Veo / Flow
+or another legitimate generator,
+it may be used for experimental transitions or concept tests.
+
+But production must still function without paid AI credits.
+
+============================================================
+VIDEO EDITING / PROCESSING TOOLS
+============================================================
+
+Use:
+
+REMOTION
+for coded motion.
+
+FFmpeg
+for:
+
+- transcoding
+- compression
+- resize
+- extracting frames
+- audio conversion
+- making proxies
+- WebM/MP4 exports
+- analysing duration/bitrate
+
+Blender
+for:
+
+- 3D animation
+- architectural camera motion
+- rendered transitions
+- lighting
+- material animation
+
+DaVinci Resolve Free
+can be used optionally for:
+
+- manual grading
+- final sound balancing
+- cinematic review
+- colour matching
+
+Do not require paid Adobe products.
+
+============================================================
+REMOTION DESIGN KIT
+============================================================
+
+Create reusable Afrah components:
+
+<AfrahTitle />
+<ArchitecturalCaption />
+<MaterialCard />
+<FilmGrain />
+<SoftVignette />
+<MaskReveal />
+<ImagePush />
+<SlowZoom />
+<LightSweep />
+<LetterReveal />
+<ChapterMarker />
+<TimeCode />
+<SoundCue />
+
+All components must be restrained.
+
+Build a reusable motion vocabulary instead of custom randomness
+for every film.
+
+============================================================
+SOUND FILE FORMAT
+============================================================
+
+MASTER:
+
+WAV
+48kHz
+
+WEB DELIVERY:
+
+AAC
+MP3
+or Opus where appropriate.
+
+Do not repeatedly encode compressed sound files.
+
+Archive WAV masters.
+
+============================================================
+DESIGN ASSET LIBRARY
+============================================================
+
+Create:
+
+/assets/
+    /3d/
+    /textures/
+    /materials/
+    /hdri/
+    /images/
+    /video/
+    /audio/
+    /vfx/
+    /svg/
+    /icons/
+    /fonts/
+    /references/
+    /licenses/
+
+Every production asset must have traceable origin.
+
+============================================================
+ASSET MANIFEST
+============================================================
+
+Create:
+
+asset-manifest.json
+
+Each item:
+
+id
+name
+type
+path
+source
+license
+creator
+original_size
+optimized_size
+used_in
+notes
+
+============================================================
+STORYBOARD BEFORE CODE
+============================================================
+
+Before implementation create keyframes.
+
+Minimum:
+
+FRAME 01
+loader
+
+FRAME 02
+land
+
+FRAME 03
+structure begins
+
+FRAME 04
+completed architecture
+
+FRAME 05
+daylight
+
+FRAME 06
+dusk
+
+FRAME 07
+materials
+
+FRAME 08
+entrance transition
+
+FRAME 09
+life
+
+FRAME 10
+residence explorer
+
+FRAME 11
+location
+
+FRAME 12
+final building
+
+FRAME 13
+CTA
+
+For each storyboard frame define:
+
+- image
+- text
+- camera
+- lighting
+- sound
+- interaction
+- transition in
+- transition out
+- technology
+- asset source
+- performance risk
+
+Do not start building the final scene until its storyboard is
+approved.
+
+============================================================
+MOTION STORYBOARD FORMAT
+============================================================
+
+For every transition describe:
+
+FROM
+TO
+TRIGGER
+DURATION
+CAMERA
+FOREGROUND
+BACKGROUND
+TYPOGRAPHY
+SOUND
+PERFORMANCE FALLBACK
+
+Example:
+
+FROM:
+full exterior building.
+
+TO:
+interior footage.
+
+TRIGGER:
+scroll progress 0.72.
+
+CAMERA:
+slow 2m forward movement.
+
+SURFACE:
+window reflection fills viewport.
+
+TRANSITION:
+reflection becomes video luminance mask.
+
+SOUND:
+subtle environmental crossfade.
+
+MOBILE:
+simple crossfade instead of 3D camera transition.
+
+============================================================
+FIGMA / LAYOUT PROCESS
+============================================================
+
+Do NOT begin with complete high-fidelity pages.
+
+Order:
+
+1.
+content architecture
+
+2.
+low-fidelity composition
+
+3.
+typographic hierarchy
+
+4.
+visual keyframes
+
+5.
+motion annotations
+
+6.
+responsive compositions
+
+7.
+final high fidelity
+
+Create components/tokens for:
+
+colour
+type
+spacing
+grid
+buttons
+navigation
+labels
+image frames
+data
+forms
+motion
+
+============================================================
+PREMIUM DETAIL RULES
+============================================================
+
+Every element must be intentional.
+
+Buttons:
+few.
+
+Borders:
+subtle.
+
+Radius:
+small or none unless concept requires it.
+
+Drop shadows:
+rare.
+
+Icons:
+precise.
+
+Photography:
+large.
+
+Text:
+short.
+
+Animation:
+purposeful.
+
+============================================================
+NAVIGATION
+============================================================
+
+Keep navigation architectural.
+
+Desktop:
+
+AFRAH
+
+RESIDENCES
+ARCHITECTURE
+PLACE
+JOURNAL
+ENQUIRE
+MENU
+
+Do not overcrowd.
+
+Fullscreen menu can become an architectural experience.
+
+But navigation must remain immediately usable.
+
+============================================================
+MOBILE
+============================================================
+
+Mobile is NOT a reduced desktop screenshot.
+
+Redesign cinematic moments.
+
+Possible:
+
+desktop:
+live WebGL construction.
+
+mobile:
+optimized model + pre-rendered transition.
+
+desktop:
+3D interactive map.
+
+mobile:
+2D/2.5D map with optional 3D.
+
+Maintain:
+
+story
+quality
+clarity
+
+while reducing GPU/network cost.
+
+============================================================
+REDUCED MOTION
+============================================================
+
+Respect:
+
+prefers-reduced-motion.
+
+Provide:
+
+static frames
+crossfades
+simple transitions
+normal scrolling
+
+Do not lock accessibility behind cinematic animation.
+
+============================================================
+PERFORMANCE
+============================================================
+
+Performance is part of luxury.
+
+Target excellent Core Web Vitals.
+
+Do not preload the entire cinematic experience.
+
+LANDING SHELL:
+lightweight.
+
+Then load:
+
+next chapter
+then next chapter.
+
+Use:
+
+route splitting
+code splitting
+dynamic imports
+lazy loading
+intersection observers
+smart prefetch
+texture compression
+mesh compression
+responsive media
+
+Avoid:
+- enormous JS bundles
+- 8K browser textures
+- 100MB initial model
+- giant uncompressed video
+- dozens of custom fonts
+
+============================================================
+WEBGL PERFORMANCE
+============================================================
+
+Monitor:
+
+FPS
+GPU memory
+draw calls
+triangles
+texture memory
+DPR
+shader complexity
+
+Target:
+smooth 60fps where hardware permits.
+
+Gracefully degrade.
+
+DPR may be clamped for expensive scenes.
+
+Do not render invisible scenes continuously.
+
+============================================================
+ANALYTICS / HEATMAP SYSTEM
+============================================================
+
+After the experience is functional,
+install behavioural analytics.
+
+Preferred simple option:
+
+Microsoft Clarity
+
+Potential advanced option:
+
+PostHog
+
+Track:
+
+chapter_enter
+chapter_exit
+chapter_dwell
+scroll_depth
+day_dusk_toggle
+sound_toggle
+building_interaction
+floor_hover
+floor_select
+residence_select
+material_interaction
+location_interaction
+map_pin_click
+video_engagement
+private_viewing_click
+form_start
+form_complete
+
+Do not track sensitive personal information unnecessarily.
+
+============================================================
+ATTENTION TESTING
+============================================================
+
+We specifically want to know:
+
+Where do users pause?
+
+Where do users skip?
+
+Where do users replay?
+
+How deep do users scroll?
+
+Which building floors get explored?
+
+Do users discover DAY / DUSK?
+
+Do people understand that the 3D building is interactive?
+
+Where do mobile users abandon?
+
+Which CTA attracts attention?
+
+Use:
+
+scroll maps
+click maps
+attention maps
+session recordings
+
+Do not guess forever.
+
+Launch controlled prototypes and measure.
+
+============================================================
+DESIGN SUCCESS METRICS
+============================================================
+
+Do NOT judge success only through:
+"looks cool."
+
+Evaluate:
+
+1.
+Does the first 5 seconds create curiosity?
+
+2.
+Does the story remain understandable without reading paragraphs?
+
+3.
+Can a user find property information?
+
+4.
+Does the building remain the visual hero?
+
+5.
+Can users reach residences quickly?
+
+6.
+Do animations maintain performance?
+
+7.
+Does mobile preserve quality?
+
+8.
+Is the private-viewing path obvious?
+
+9.
+Do users spend meaningful time at intended attention peaks?
+
+10.
+Does the experience still feel sophisticated with motion disabled?
+
+============================================================
+INITIAL OUTPUT — DO THIS BEFORE CODING
+============================================================
+
+Your FIRST response/work product must NOT be the website.
+
+Produce:
+
+01_REFERENCE_AUDIT.md
+
+02_REFERENCE_COMPONENT_MATRIX.md
+
+03_AFRAH_STORY.md
+
+04_AFRAH_COPY_OPTIONS.md
+
+05_DESIGN_SYSTEM.md
+
+06_GRID_AND_SPACING.md
+
+07_COLOR_SYSTEM.md
+
+08_TYPOGRAPHY.md
+
+09_MOTION_SYSTEM.md
+
+10_STORYBOARD.md
+
+11_3D_PLAN.md
+
+12_VIDEO_REMOTION_PLAN.md
+
+13_SOUND_PLAN.md
+
+14_ASSET_REQUIREMENTS.md
+
+15_ASSET_SOURCES_AND_LICENSES.md
+
+16_PAGE_ARCHITECTURE.md
+
+17_RESPONSIVE_STRATEGY.md
+
+18_PERFORMANCE_BUDGET.md
+
+19_ANALYTICS_PLAN.md
+
+20_IMPLEMENTATION_ROADMAP.md
+
+21_GAPS_AND_DECISIONS_REQUIRED.md
+
+Only after these are complete should implementation start.
+
+============================================================
+SECOND OUTPUT — ASSET SEARCH
+============================================================
+
+Create an exact shopping/search list for FREE or legally usable
+assets we need.
+
+For example:
+
+HDRI:
+- overcast UK morning
+- neutral daylight
+- golden hour
+- blue-hour dusk
+
+PBR:
+- limestone/travertine
+- concrete
+- brushed metal
+- warm timber
+- clear/tinted glass
+
+3D:
+- European trees
+- understated street furniture
+- architectural landscaping
+- realistic vehicles
+- interior props
+
+SFX:
+- room ambience
+- exterior ambience
+- soft door
+- foliage
+- subtle transition
+- distant city
+- water
+
+FOOTAGE:
+- curtain
+- material closeup
+- tree movement
+- balcony
+- daylight interior
+- evening interior
+
+VFX:
+- subtle atmospheric haze
+- grain
+- reflection texture
+- dust if genuinely needed
+
+Do NOT download random assets merely to fill the folder.
+
+Everything must match Afrah.
+
+============================================================
+THIRD OUTPUT — PROTOTYPE
+============================================================
+
+Build only:
+
+LOADER
++
+LAND
++
+FORM
++
+LIGHT
+
+FIRST.
+
+That gives us enough to judge:
+
+visual quality
+3D quality
+scroll
+performance
+day/dusk
+typography
+colour
+sound
+creative direction
+
+Do not build the entire website before validating these four scenes.
+
+============================================================
+FOURTH OUTPUT
+============================================================
+
+Once approved:
+
+MATERIAL
+ENTER
+LIFE
+EXPLORE
+PLACE
+HOME
+CTA
+
+============================================================
+FINAL PRINCIPLE
+============================================================
+
+We are not trying to have the MOST effects.
+
+We are trying to have the RIGHT effects.
+
+Afrah should feel like:
+
+architecture
+cinema
+editorial design
+technology
+
+have been directed by the same person.
+
+Every detail needs a reason.
+
+Research first.
+Storyboard second.
+Assets third.
+Prototype fourth.
+Measure.
+Refine.
+Then build the complete experience.

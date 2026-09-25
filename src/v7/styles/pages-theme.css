@@ -1,0 +1,41 @@
+/* ERA-pattern pages (src/v6) re-themed to the Composites palette:
+   ink #121212 · bone #cfcaca · white #f4f2f0 · signal orange #f0801a · TASA Orbiter (OFL) · square corners. */
+@font-face { font-family: 'Orbit Display'; src: url('/fonts/tasaorbiterdisplay-regular-webfont.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Orbit Display'; src: url('/fonts/tasaorbiterdisplay-medium-webfont.woff2') format('woff2'); font-weight: 500; font-display: swap; }
+@font-face { font-family: 'Orbit Display'; src: url('/fonts/tasaorbiterdisplay-semibold-webfont.woff2') format('woff2'); font-weight: 600; font-display: swap; }
+
+:root {
+  --k: #081c32; --i: #f8f5f0; --b: #c5a48f; --bone: #f0eee8; --mist: #c4ced8;
+  --serif: 'Orbit Display', 'Helvetica Neue', Arial, sans-serif;
+  --sans: 'Orbit Display', 'Helvetica Neue', Arial, sans-serif;
+}
+body { background: var(--k); }
+.f-serif, .e-title h1, .e-editorial h2, .e-steps h2, .e-progress strong, .p-facts strong, .e-card-foot strong, .e-count strong, .e-places strong, .a-menu nav a, .p-plan h2, .enquiry-dialog h2, .p-form h2, .f-res-panel strong, .f-map-read strong {
+  font-family: var(--serif); font-weight: 500; text-transform: uppercase; letter-spacing: -0.01em;
+}
+.e-title h1 { font-size: clamp(56px, min(9.5vw, 19vh), 180px); line-height: 0.86; }
+.a-mark { font: 500 16px/1.05 var(--sans); letter-spacing: -0.01em; text-transform: lowercase; padding-left: 0; }
+
+/* square everything, Composites-style */
+.f-pill, .a-round, .e-chips button, .e-card, .e-heart, .e-filters, .e-hero, .e-editorial figure, .e-masonry button, .e-progress article,
+.e-progress figure, .e-steps article, .e-contact aside, .e-mapblock .f-map, .f-map-tools button, .f-res-steps button, .submit-button, .dialog-close,
+.e-lightbox img, .m-pin span, .m-pin i, .e-circle, .a-round sup, .e-tabs i { border-radius: 0 !important; }
+.f-pill { height: 46px; padding: 0 22px; font-weight: 600; letter-spacing: 0.12em; color: var(--k); }
+.f-pill:hover { background: var(--i); border-color: var(--i); color: var(--k); }
+.f-pill.ghost { color: var(--i); background: rgba(18, 18, 18, 0.4); border-color: rgba(244, 242, 240, 0.35); }
+.f-pill.sm { height: 36px; }
+.submit-button { color: var(--k); font-weight: 600; }
+
+/* surfaces */
+.e-card, .e-progress article, .e-contact aside { background: #102b49; }
+.e-card:hover { background: #183956; border-color: rgba(197, 164, 143, 0.55); }
+.e-card .plan { color: var(--bone); }
+.e-card-meta span:first-child, .e-eyebrow, .e-filters label, .e-specs dt, .f-res-panel dt, .m-pin em { color: var(--b); }
+.p-plan { background: var(--bone); }
+.e-circle { background: var(--b); color: var(--k); }
+.a-menu { background: var(--k); }
+.a-menu nav a { font-size: clamp(28px, 3.2vw, 52px); }
+.a-foot > span { font-family: var(--sans); font-weight: 500; letter-spacing: -0.02em; text-transform: lowercase; }
+.m-pin.home i, .m-pin.on i { background: var(--b); }
+.a-chapter b { background: var(--b); }
+input[type=range]::-webkit-slider-thumb { border-radius: 0; }

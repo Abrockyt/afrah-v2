@@ -1,0 +1,249 @@
+/* AFRAH / daylight edition. Natural mineral colours, real photography and sharp
+   architectural frames replace the previous monochrome treatment. */
+:root{
+  --metal:linear-gradient(110deg,#8d6a55 0%,#efcfaa 27%,#ae8063 55%,#f3d2ad 78%,#99745e 100%);
+  --grad:linear-gradient(115deg,#9c684b,#d2a37a 52%,#f0d5ae);
+  --section:clamp(100px,15vh,210px);
+}
+body::after{opacity:.018}
+.v-app{background:var(--bg)}
+main img,main video,.v-menu img,
+main :is(figure,.v-tilt,.v-sides-media,.v-carousel-stage,.v-rooms-stage,.v-index-media,.v-day-card,.v-res-card,.v-citymap-card):hover img,
+.v-stone,.v-framed-lights{filter:none!important}
+.v-accent,.v-silver{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.v-footer-word,.v-loader-word,.v-curtain span{background:var(--metal);-webkit-background-clip:text;background-clip:text;color:transparent}
+.v-curtain{background:linear-gradient(160deg,#102a38,#31505b 58%,#a47960)}
+.v-loader{background:radial-gradient(ellipse at 50% -10%,#335260,#102b39 65%,#0c2330);color:#f8efe2}
+.v-arcs circle{stroke:#c9aa88}
+
+/* Floating navigation: type alone, with an understated interaction line. */
+.v-corner{color:#fff;mix-blend-mode:difference}
+.v-corner-tr{gap:clamp(20px,2.2vw,42px);align-items:center;top:calc(var(--pad) + 4px)}
+.v-corner-tr .v-btn{position:relative;border:0!important;background:none!important;color:inherit!important;padding:10px 0;height:auto;min-height:36px;font-size:12px;letter-spacing:.09em}
+.v-corner-tr .v-btn::after{content:'';position:absolute;left:0;right:0;bottom:3px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease)}
+.v-corner-tr .v-btn:hover::after,.v-corner-tr .v-btn:focus-visible::after{transform:scaleX(1)}
+.v-btn-menu{padding-left:31px!important}
+.v-btn-menu i{left:0}
+.v-corner-tr em{border:0;background:currentColor;color:var(--bg);border-radius:50%;font-size:10px}
+
+.v-flight-pin{background:#335a6c;color:#fff}
+.v-flight-haze-scroll,.v-flight-photo-clouds,.v-flight-rays{position:absolute;inset:0;pointer-events:none}
+.v-flight-haze{position:absolute;inset:-4%;background:radial-gradient(ellipse 66% 50% at 52% 49%,rgba(211,183,180,.6),rgba(157,121,132,.86) 74%,rgba(78,67,87,.94)),linear-gradient(135deg,#d6b6a7,#665867);opacity:1}
+.v-flight-haze.play{animation:v-haze-reveal 7.2s cubic-bezier(.34,.01,.18,1) both}
+@keyframes v-haze-reveal{0%{opacity:1}20%{opacity:.97}48%{opacity:.75}72%{opacity:.36}100%{opacity:0}}
+.v-flight-photo-clouds{transform-origin:50% 40%}
+.v-flight-cloud-image{position:absolute;inset:-8%;background:url('/media/afrah-cloud-atlas.png') 50% 48%/cover no-repeat;filter:sepia(.3) saturate(.82) hue-rotate(-9deg);opacity:1}
+.v-flight-cloud-image::after{content:'';position:absolute;inset:-16%;background:url('/media/afrah-cloud-atlas.png') 47% 40%/cover no-repeat;filter:blur(13px);transform:scale(1.58) rotate(178deg);opacity:.38}
+.v-flight-cloud-image.play{animation:v-cloud-open 7.2s ease-in-out both}
+@keyframes v-cloud-open{0%{opacity:1;transform:scale(1.18) translateY(8vh)}45%{opacity:.9}100%{opacity:.22;transform:scale(.98) translateY(-8vh)}}
+.v-flight-rays::before{content:'';position:absolute;inset:-30% 0 0 -20%;background:conic-gradient(from 95deg at 5% 3%,transparent 0deg,rgba(255,232,190,.22) 7deg,transparent 15deg,rgba(255,231,193,.14) 23deg,transparent 32deg,rgba(255,226,185,.24) 41deg,transparent 53deg,rgba(255,232,200,.12) 62deg,transparent 75deg);filter:blur(18px);mix-blend-mode:screen;animation:v-rays-dim 7.2s ease-out both}
+@keyframes v-rays-dim{from{opacity:1}to{opacity:.12}}
+.v-flight-shade{background:linear-gradient(180deg,rgba(8,27,39,.19) 0%,transparent 30%,transparent 52%,rgba(9,28,38,.72) 100%)}
+.v-flight-hero,.v-flight-cap{mix-blend-mode:normal;color:#fff;text-shadow:0 2px 30px rgba(12,34,43,.3)}
+.v-flight-hero .v-silver,.v-flight-cap .v-silver{background:linear-gradient(120deg,#fff6e8,#e3bd98 55%,#fff6e8);-webkit-background-clip:text;background-clip:text;color:transparent}
+.v-flight-hero-foot .v-btn{background:rgba(15,45,59,.24);border-color:rgba(255,255,255,.8);backdrop-filter:blur(10px)}
+.v-flight-hero-foot .v-btn:hover{background:#f0d2aa;color:#193748}
+.v-flight-cap p{color:#f4efe5}
+.v-flight-cap h2{max-width:14ch}
+.v-flight-cap.right h2{margin-left:auto}
+.v-flight-rail i{background:#ecc79e}
+
+/* 00 / Prologue */
+.v-arrival{background:#e9e5da;color:#243b40;padding-block:clamp(100px,14vh,180px) 70px}
+.v-arrival-index,.v-arrival-end{display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(32,51,57,.32);padding-top:16px;font:700 11px/1.3 var(--ui);text-transform:uppercase;letter-spacing:.1em}
+.v-arrival-index span{color:#8b6955}
+.v-arrival-main{display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(40px,6vw,110px);align-items:center;padding-block:clamp(70px,10vw,170px)}
+.v-arrival-copy .v-title{font-size:clamp(4.1rem,8.5vw,10.5rem);margin:25px 0 50px;max-width:8ch}
+.v-arrival-copy p{font-size:clamp(1.05rem,1.35vw,1.4rem);line-height:1.58;max-width:35ch}
+.v-arrival-image{height:min(75vw,890px);max-height:88vh;box-shadow:24px 24px 0 #c7c9b8}
+.v-arrival-image img{object-position:55% center}
+.v-arrival-end{padding-bottom:0;color:#8b6955}
+.v-arrival-end span:nth-child(2){margin-left:auto;margin-right:8vw}
+
+/* 01 / A chapter index that changes its photograph with each hour. */
+.v-day-journey{background:#dce4d9;color:#213b3b;padding-block:var(--section)}
+.v-day-journey-head{display:grid;grid-template-columns:1.15fr .85fr;align-items:end;gap:24px;margin-bottom:clamp(50px,8vh,100px)}
+.v-day-journey-head .v-label{grid-column:1/-1;color:#766b58}
+.v-day-journey-head .v-title{font-size:clamp(4rem,7.5vw,9.3rem)}
+.v-day-journey-head p{justify-self:end;max-width:30ch;font-size:clamp(1.1rem,1.4vw,1.5rem)}
+.v-day-journey-layout{display:grid;grid-template-columns:1fr 1fr;gap:clamp(34px,6vw,100px);align-items:start}
+.v-day-journey-stage{position:sticky;top:12vh;height:78vh;min-height:560px;overflow:hidden;background:#91a7a0}
+.v-day-journey-stage::after{content:'';position:absolute;inset:45% 0 0;background:linear-gradient(transparent,rgba(12,31,40,.67))}
+.v-day-journey-stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transform:scale(1.08);transition:opacity .7s ease,transform 1.3s var(--ease)}
+.v-day-journey-stage img.on{opacity:1;transform:scale(1)}
+.v-day-journey-stage-caption{position:absolute;left:5%;right:5%;bottom:5%;z-index:1;color:#fff;display:flex;justify-content:space-between;align-items:end;gap:20px;text-transform:uppercase}
+.v-day-journey-stage-caption span{font-size:12px;letter-spacing:.13em}
+.v-day-journey-stage-caption strong{font:700 clamp(1.5rem,3.5vw,4rem)/.92 var(--display);text-align:right}
+.v-day-journey-list{border-top:1px solid rgba(32,51,57,.4)}
+.v-day-journey-list a{display:grid;grid-template-columns:6.5rem 1fr 24px;gap:15px;align-items:center;padding:clamp(19px,2.2vw,32px) 0;border-bottom:1px solid rgba(32,51,57,.32);color:#284449;transition:padding .4s var(--ease),color .3s,background .3s}
+.v-day-journey-list a:hover,.v-day-journey-list a.on{padding-left:16px;color:#9c6747;background:rgba(255,255,255,.29)}
+.v-day-journey-list time{font:400 clamp(1.1rem,1.8vw,2rem)/1 var(--serif)}
+.v-day-journey-list strong{display:block;font:700 clamp(1.6rem,2.5vw,3.1rem)/.96 var(--display);text-transform:uppercase}
+.v-day-journey-list small{display:block;margin-top:8px;font-size:13px;letter-spacing:.03em}
+
+/* 02 / Building day-to-night comparison. */
+.v-architecture-scene{height:125vh;min-height:760px;background:#a7b5ac;color:#fff}
+.v-architecture-day,.v-architecture-night{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 58%;transition:opacity 1.2s ease,transform 8s ease}
+.v-architecture-day{opacity:1}.v-architecture-night{opacity:0}
+.v-architecture-scene.night .v-architecture-day{opacity:0}
+.v-architecture-scene.night .v-architecture-night{opacity:1}
+.v-architecture-scene:hover :is(.v-architecture-day,.v-architecture-night){transform:scale(1.025)}
+.v-architecture-wash{position:absolute;inset:0;background:linear-gradient(90deg,rgba(18,43,49,.55),transparent 65%),linear-gradient(0deg,rgba(12,33,43,.58),transparent 48%,rgba(12,33,43,.22))}
+.v-architecture-head,.v-architecture-foot{position:absolute;left:0;right:0;z-index:2;display:flex;justify-content:space-between;align-items:center;gap:24px}
+.v-architecture-head{top:calc(var(--pad) + 65px)}
+.v-architecture-head span{font:700 11px/1 var(--ui);text-transform:uppercase;letter-spacing:.12em}
+.v-architecture-copy{position:absolute;left:0;top:29%;z-index:2;max-width:780px}
+.v-architecture-copy .v-title{margin:22px 0 30px;font-size:clamp(4rem,8vw,10rem)}
+.v-architecture-copy p{max-width:32ch;font-size:clamp(1.1rem,1.35vw,1.4rem)}
+.v-architecture-foot{bottom:6vh}
+.v-architecture-foot .v-switch{background:rgba(15,37,45,.55);border-color:rgba(255,255,255,.5)}
+.v-architecture-foot .v-switch i{background:#e7c29a}
+.v-architecture-foot .v-switch button[aria-pressed=true]{color:#243b40}
+.v-architecture-foot .v-text-link{margin:0}
+
+/* 03 / The river statement is a calm editorial spread. */
+.v-river{background:#25434a;color:#f5eee2}
+.v-river-top{color:#e2bea0}
+.v-river-text{font-size:clamp(2.6rem,5.8vw,7.2rem);line-height:.95;max-width:17ch;margin-left:0}
+.v-river-imgs{grid-template-columns:.8fr 1.2fr;gap:4vw;margin-top:9vh;align-items:end}
+.v-river-imgs .v-img:first-child{margin-top:0;aspect-ratio:4/5}
+.v-river-imgs .v-img:last-child{aspect-ratio:1.42}
+
+/* 04 / Landscape with a wide photograph and precise wayfinding. */
+.v-landscape-flow{background:#dce4d9;color:#233b35;padding-block:var(--section)}
+.v-landscape-flow-head{display:flex;justify-content:space-between;align-items:start;gap:30px;margin-bottom:7vh}
+.v-landscape-flow-head .v-title{text-align:right;font-size:clamp(4rem,8vw,10rem)}
+.v-landscape-flow-grid{display:grid;grid-template-columns:1.12fr .88fr;gap:clamp(40px,7vw,120px);align-items:stretch}
+.v-landscape-flow-grid .v-img{height:88vh;min-height:560px}
+.v-landscape-flow-copy{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;padding-block:4vh}
+.v-landscape-flow-line{width:100%;height:1px;background:#688170;margin-bottom:clamp(50px,10vh,130px)}
+.v-landscape-flow-copy p{font:400 clamp(1.6rem,2.5vw,3.1rem)/1.26 var(--serif);max-width:21ch;margin:26px 0 12px}
+.v-landscape-flow-notes{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;width:100%;margin-top:auto;border-top:1px solid #688170;padding-top:22px;font:700 11px/1.3 var(--ui);text-transform:uppercase;letter-spacing:.05em}
+.v-landscape-flow-notes b{display:block;margin-bottom:12px;color:#a16e52;font:400 22px/1 var(--serif)}
+
+/* 05 / A rectangular, interactive material reveal. */
+.v-material-focus{background:#eee4d2;color:#273b3c;padding-block:var(--section)}
+.v-material-focus-head{display:flex;justify-content:space-between;border-top:1px solid #8d978d;padding-top:15px;margin-bottom:6vh}
+.v-material-focus-grid{display:grid;grid-template-columns:.9fr 1.1fr;min-height:min(76vh,790px);background:#d4c7af}
+.v-material-focus-copy{display:flex;flex-direction:column;padding:clamp(30px,4vw,75px)}
+.v-material-focus-index{font:700 11px/1 var(--ui);text-transform:uppercase;letter-spacing:.14em;color:#936a50}
+.v-material-focus-copy h2{font:700 clamp(3.4rem,5.8vw,7.5rem)/.87 var(--display);text-transform:uppercase;max-width:9ch;margin:7vh 0 3vh;letter-spacing:-.035em}
+.v-material-focus-copy p{max-width:30ch;font-size:clamp(1rem,1.2vw,1.25rem)}
+.v-material-focus-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:auto;border-top:1px solid #839086}
+.v-material-focus-tabs button{text-align:left;padding:22px 8px 12px 0;border-bottom:2px solid transparent;text-transform:uppercase;font:700 12px/1.25 var(--ui);letter-spacing:.06em;transition:color .3s,border-color .3s}
+.v-material-focus-tabs button span{display:block;margin-bottom:10px;font:400 20px/1 var(--serif)}
+.v-material-focus-tabs button[aria-selected=true]{color:#995f3f;border-color:#995f3f}
+.v-material-focus-media{position:relative;min-height:600px;overflow:hidden;background:#607574}
+.v-material-focus-media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transform:scale(1.05);transition:opacity .7s,transform 1.2s var(--ease)}
+.v-material-focus-media img.on{opacity:1;transform:scale(1)}
+.v-material-focus-gridlines{position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,transparent calc(33.333% - .5px),rgba(255,255,255,.38) 33.333%,transparent calc(33.333% + .5px),transparent calc(66.666% - .5px),rgba(255,255,255,.38) 66.666%,transparent calc(66.666% + .5px)),linear-gradient(0deg,transparent calc(50% - .5px),rgba(255,255,255,.28) 50%,transparent calc(50% + .5px));opacity:.5}
+.v-material-focus-spec{position:absolute;right:24px;bottom:24px;background:#f4eee2;color:#233b3d;padding:12px 16px;font:700 11px/1 var(--ui);letter-spacing:.1em}
+.v-material-focus-facts{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;border-top:1px solid #8d978d;margin-top:6vh;padding-top:25px}
+.v-material-focus-facts span{font:700 11px/1.3 var(--ui);text-transform:uppercase;letter-spacing:.08em}
+.v-material-focus-facts b{display:block;margin-bottom:8px;font:400 clamp(2.8rem,5vw,6rem)/.9 var(--serif);letter-spacing:-.07em}
+
+/* Carry the palette and sharper image treatment through the remaining story. */
+.v-stack{background:#dce4d9;color:#223a36}
+.v-stack-card{background:#f0ede4;border-color:#87988b;box-shadow:0 24px 65px -45px #203b3a}
+.v-sides{background:#e1e8e4;color:#203a43}
+.v-hgallery{background:#584b48;color:#f5eee3}
+.v-services{background:#e3d9c8;color:#203339}
+.v-service{background:#eee8db;border-color:#b7a991}
+.v-mapteaser{border:0;background:#dce7e4}
+.v-mapteaser-copy{background:rgba(245,239,226,.89);border-color:#738c88;color:#203b40;box-shadow:0 24px 70px rgba(28,55,61,.16)}
+.v-mapteaser-copy .v-btn.solid{background:#234452;color:#f4eee4;border-color:#234452}
+.v-res-teaser{background:#193b4c;color:#f6eee1}
+.v-joys{background:#eee4d2;color:#253b3b}
+.v-quote{background:#294650;color:#f6eee4}
+.v-film-sec{background:#142e3d}
+.v-index{background:#1b3845;color:#f6eee4}
+.v-footer{background:#102b39;color:#f6eee4}
+.v-menu{background:linear-gradient(140deg,#173848,#2b4b4d 68%,#66574c);color:#f7eee1}
+.v-menu nav a:hover,.v-menu nav a[aria-current=page]{color:#f2c99f}
+.v-menu nav a span{color:#c5ad91}
+.v-mappage-title{color:#203b40}
+.v-citymap{background:#c8dbd9;color:#203b40}
+.v-citymap.night{background:#142f3c;color:#f2e9d8}
+.v-pin i{background:#254b53;color:#f6eee0;border-color:#f6eee0}
+.v-pin i::after{background:#254b53}
+.v-pin span{background:#f5eee1;color:#203b40}
+.v-pin:hover i,.v-pin.on i{background:#e2b88d;color:#203b40;border-color:#203b40}
+.v-citymap-filters button{background:rgba(244,239,226,.9);border-color:#37575b;color:#203b40}
+.v-citymap-filters button[aria-pressed=true]{background:#254b53;color:#fff}
+.v-citymap-tools button{background:#f4eee2;border-color:#37575b}
+.v-citymap-tools button:hover{background:#254b53;color:#fff}
+.v-citymap-card{background:#f4eee2;color:#203b40;border-color:#37575b}
+.v-sun{background:#c9dfe5;color:#203b40}
+.v-sun-copy{background:rgba(244,238,222,.83);border-color:#6b8987}
+.v-sun-controls{background:#203e4a;color:#f4eee2}
+.v-selector-stage{background:radial-gradient(ellipse at 50% 55%,#31586a 0%,#142e40 68%)}
+
+@media(max-width:1000px){
+  .v-arrival-main,.v-landscape-flow-grid,.v-material-focus-grid{gap:28px}
+  .v-material-focus-copy h2{font-size:clamp(2.9rem,5.5vw,6rem)}
+}
+@media(max-width:800px){
+  .v-corner-tr{gap:16px;top:var(--pad)}
+  .v-corner-tr .v-btn{font-size:11px}
+  .v-btn-menu{padding-left:24px!important}
+  .v-flight-track{height:720vh}
+  .v-flight-cloud-image,.v-flight-cloud-image::after{background-size:auto 100%}
+  .v-mega{font-size:clamp(3.7rem,15vw,7rem)}
+  .v-flight-hero{bottom:calc(var(--pad) + 80px)}
+  .v-arrival-main,.v-day-journey-head,.v-day-journey-layout,.v-landscape-flow-grid,.v-material-focus-grid{grid-template-columns:1fr}
+  .v-arrival-main{padding-block:70px}.v-arrival-copy .v-title{font-size:clamp(3.7rem,12vw,7rem);margin-bottom:30px}
+  .v-arrival-image{height:65vh;max-height:none;box-shadow:12px 12px 0 #c7c9b8}
+  .v-day-journey-head p{justify-self:start}.v-day-journey-stage{position:relative;top:auto;height:56vh;min-height:360px}
+  .v-day-journey-list a{grid-template-columns:5.4rem 1fr 20px}
+  .v-architecture-scene{height:100vh;min-height:690px}
+  .v-architecture-head{top:95px}.v-architecture-head span{display:none}
+  .v-architecture-copy{top:27%}.v-architecture-copy .v-title{font-size:clamp(3.7rem,12vw,6rem)}
+  .v-architecture-foot{align-items:flex-start;flex-direction:column;bottom:7vh}
+  .v-river-text{font-size:clamp(2.7rem,9vw,5rem)}
+  .v-river-imgs{grid-template-columns:1fr}.v-river-imgs .v-img:first-child{width:70%}
+  .v-landscape-flow-head{display:block}.v-landscape-flow-head .v-title{text-align:left;margin-top:25px}
+  .v-landscape-flow-grid .v-img{height:65vh;min-height:400px}.v-landscape-flow-copy{min-height:65vh}
+  .v-landscape-flow-line{margin-bottom:8vh}
+  .v-material-focus-grid{min-height:0}.v-material-focus-copy{min-height:500px}
+  .v-material-focus-copy h2{font-size:clamp(3.8rem,10vw,6.5rem)}
+  .v-material-focus-media{min-height:65vh}.v-material-focus-facts{grid-template-columns:repeat(2,1fr)}
+}
+@media(prefers-reduced-motion:reduce){
+  .v-flight-haze{opacity:0!important;animation:none!important}
+  .v-flight-cloud-image{opacity:.22!important;animation:none!important}
+  .v-flight-rays::before{opacity:.08;animation:none!important}
+}
+@media(max-width:520px){
+  .v-corner-tr .v-btn:not(.v-btn-menu){display:none}
+  .v-arrival-end span:nth-child(2){margin-right:5vw}
+  .v-day-journey-head .v-title,.v-landscape-flow-head .v-title{font-size:clamp(3.7rem,13vw,5rem)}
+  .v-day-journey-list a{grid-template-columns:4.2rem 1fr 18px;gap:8px}
+  .v-day-journey-list strong{font-size:1.55rem}.v-day-journey-list small{font-size:11px}
+  .v-material-focus-head .v-label:last-child{display:none}
+  .v-material-focus-copy{min-height:520px}
+  .v-material-focus-tabs button{font-size:10px}
+  .v-index nav{min-width:0}
+  .v-index nav a{grid-template-columns:3.7em minmax(0,1fr) 20px;gap:10px}
+  .v-index-title{min-width:0;font-size:clamp(1.45rem,6.6vw,2rem);overflow-wrap:anywhere}
+}
+/* Original Afrah cinematic scene: architecture stays readable behind the story. */
+.afrah-intro-video,.afrah-intro-bridge{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none;transition:opacity .7s ease}
+.afrah-intro-video.is-ended{opacity:0}.afrah-intro-bridge{z-index:1}
+.afrah-cinematic .v-flight-shade{background:linear-gradient(180deg,rgba(22,36,42,.16),transparent 35%,transparent 55%,rgba(14,29,34,.73))}
+.afrah-cinematic .v-flight-hero{bottom:155px;transition:opacity 1s,transform 1s}
+.afrah-cinematic .v-mega{font-size:clamp(3.8rem,7.2vw,8rem);line-height:.9;letter-spacing:-.035em;max-width:8ch}
+.afrah-cinematic .v-flight-hero-foot{grid-template-columns:1fr;gap:15px;max-width:340px;margin-top:22px}
+.afrah-cinematic .v-flight-hero-foot .v-label,.afrah-cinematic .v-flight-hero-foot .v-btn{display:none}
+.afrah-cinematic .v-flight-cap h2{font-size:clamp(3rem,5.7vw,6.5rem)}
+.afrah-cinematic .v-flight-cap{bottom:155px;max-width:42vw}
+.afrah-cinematic .v-flight-cap.right{right:auto;left:0;text-align:left}
+.afrah-cinematic .v-flight-cap.right p,.afrah-cinematic .v-flight-cap.right h2{margin-left:0}
+.afrah-cinematic:not(.has-arrived) .v-flight-hero{opacity:0;transform:translateY(20px);pointer-events:none}
+.afrah-scene-controls{position:absolute;z-index:5;left:var(--pad);right:var(--pad);bottom:100px;display:flex;align-items:center;gap:26px;color:#f3eee5;font:10px/1.2 var(--ui);text-transform:uppercase;letter-spacing:.09em}
+.afrah-scene-controls>div{display:flex;gap:18px}.afrah-scene-controls button{color:inherit;background:none;border:0;padding:8px 0;cursor:pointer;text-transform:inherit;letter-spacing:inherit;font:inherit;opacity:.65}
+.afrah-scene-controls button[aria-pressed=true]{opacity:1;border-bottom:1px solid currentColor}.afrah-scene-controls label{display:flex;align-items:center;gap:9px;margin-left:auto}.afrah-scene-controls select{border:0;background:transparent;color:inherit;font:inherit;padding:6px;cursor:pointer}.afrah-scene-controls option{color:#24383d;background:#ece9df}
+.afrah-skip-film{position:absolute;right:var(--pad);bottom:160px;z-index:6;background:none;color:#fff;border:0;font:11px var(--ui);text-transform:uppercase;letter-spacing:.1em;cursor:pointer}
+.afrah-scene-fallback{position:absolute;bottom:35%;left:var(--pad);z-index:6;color:white}.afrah-scene-fallback button{margin-left:15px;background:transparent;color:inherit;border:1px solid currentColor;padding:8px}
+.afrah-scene-controls :focus-visible,.afrah-skip-film:focus-visible{outline:2px solid #e9d5b0;outline-offset:5px}
+@media(max-width:700px){.afrah-cinematic .v-mega{font-size:16vw}.afrah-cinematic .v-flight-hero,.afrah-cinematic .v-flight-cap{bottom:175px;max-width:95vw}.afrah-cinematic .v-flight-hero-foot p{font-size:13px}.afrah-scene-controls{bottom:95px;gap:8px;flex-wrap:wrap}.afrah-scene-controls>div{gap:14px}.afrah-scene-controls label{margin-left:auto}.afrah-scene-controls>button{flex-basis:100%;text-align:left}.afrah-skip-film{bottom:165px}.afrah-cinematic .v-flight-cap h2{font-size:12vw}}
+@media(prefers-reduced-motion:reduce){.afrah-intro-video{display:none}.afrah-cinematic:not(.has-arrived) .v-flight-hero{opacity:1;transform:none}.afrah-scene-controls>button{display:none}}

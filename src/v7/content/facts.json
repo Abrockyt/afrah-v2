@@ -1,0 +1,504 @@
+{
+ "projects": [
+  {
+   "id": "lihdcxmrd2z6b7pkzz9v3tcq",
+   "title": "RENCO’s Advanced Composite Block Apartment",
+   "year": "2024",
+   "location": "West Palm Beach, FL, USA",
+   "company": "RENCO USA",
+   "category": "construction"
+  },
+  {
+   "id": "y3yi7f7q1zrsh94r77enlibj",
+   "title": "The Cité Scolaire Internationale Jacques Chirac",
+   "year": "2024",
+   "location": "Marseille, France",
+   "company": "General Contractor: Bouygues Bâtiment Sud-Est\nArchitects: Rudy Ricciotti, Carta, Reichen et Robert Associés",
+   "category": "construction"
+  },
+  {
+   "id": "r27wiibkezp3g604tbzmdfs6",
+   "title": "One Thousand Museum",
+   "year": "2020",
+   "location": "Miami, FL, USA",
+   "company": "Zaha Haddid",
+   "category": "construction"
+  },
+  {
+   "id": "swrp293p2j0pnzwaanna3lrq",
+   "title": "ABN AMRO",
+   "year": "In production (expected 2027)",
+   "location": "Foppingadreef, Amsterdam, Netherlands",
+   "company": "Holland Composites, Broekbakema Architects, BTC Architects",
+   "category": "renovation"
+  },
+  {
+   "id": "ndwo30okbe3sjh66tzamx1p7",
+   "title": "633 Folsom",
+   "year": "2020",
+   "location": "San Francisco, CA, USA",
+   "company": "Permasteelisa Group",
+   "category": "renovation"
+  },
+  {
+   "id": "br9aa1x87xklxqpq5ftbapsg",
+   "title": "Fa-Bo",
+   "year": "2015",
+   "location": "Nomi, Ishikawa Prefecture, Japan",
+   "company": "Kengo Kuma",
+   "category": "renovation"
+  },
+  {
+   "id": "sgweaal1kv9hoo221wq9n4ys",
+   "title": "Carbonhaus",
+   "year": "2022",
+   "location": "Dresden, Germany",
+   "company": "HENN",
+   "category": "construction"
+  },
+  {
+   "id": "dblgguyn8vx0ssn397iz8e90",
+   "title": "Residential Carbon Fibre Hurricane Damage Strengthening",
+   "year": "2022",
+   "location": "Outer Banks, NC, USA",
+   "company": "Structural Reinforcement Solutions",
+   "category": "renovation"
+  },
+  {
+   "id": "mqws47rxc9ruk20wmvm5tlc3",
+   "title": "Harkers Island Bridge Project",
+   "year": "2024",
+   "location": "Harkers Island, NC, USA",
+   "company": "Balfour Beatty",
+   "category": "renovation"
+  },
+  {
+   "id": "z6am2npluugb2sohazw32em1",
+   "title": "SUREbridge",
+   "year": "2024",
+   "location": "Norway",
+   "company": "SAMI Composites B.V. (FiberCore Europe), managed by MSS",
+   "category": "renovation"
+  },
+  {
+   "id": "ziuvm6y1sqsjlmv8emrrt8i0",
+   "title": "The White Bow",
+   "year": "2019",
+   "location": "Valencia, Spain",
+   "company": "Gurit Kerdyn",
+   "category": "construction"
+  },
+  {
+   "id": "mbs01g2m5lc8pfwtm0gvppi8",
+   "title": "Network Rail Flow Footbridge",
+   "year": "2023",
+   "location": "Shropshire, UK",
+   "company": "Network Rail, Knight Architects",
+   "category": "construction"
+  },
+  {
+   "id": "nln2xnbjx9vo4b7bwknqevm0",
+   "title": "The Carbon House",
+   "year": "2022",
+   "location": "Dammam, Saudi Arabia",
+   "company": "DAR under Aramco; Composite parts by BFG International",
+   "category": "construction"
+  },
+  {
+   "id": "hpv6zhm7ig0p2ml2pihdnsgv",
+   "title": "Steve Jobs Theater",
+   "year": "2017",
+   "location": "Cupertino, CA, USA",
+   "company": "PCT",
+   "category": "construction"
+  },
+  {
+   "id": "f821fznls3b88s9oy9wc4dsl",
+   "title": "Caerostris Wall E+",
+   "year": "2023",
+   "location": "France",
+   "company": "Caerostris / Groupe Solutions Composites",
+   "category": "construction"
+  },
+  {
+   "id": "d6mdl21aggzcreu7byf2dtde",
+   "title": "Swanston Square Apartment Tower",
+   "year": "2015",
+   "location": "Melbourne, Australia",
+   "company": "Developer: Grocon\nArchitect: ARM Architecture\nMain Contractor: Probuild\nStructural Engineer: Aurecon\nFaçade Fabrication: ShapeShift Technologies",
+   "category": "construction"
+  },
+  {
+   "id": "eisc68hlxdwz2bk7i9ssam8b",
+   "title": "Hill House",
+   "year": "2024",
+   "location": "North London, UK",
+   "company": "Composites Construction UK",
+   "category": "renovation"
+  },
+  {
+   "id": "xmhx03gp3xpx9tmbd17t0q4q",
+   "title": "One Blackfriars",
+   "year": "2018",
+   "location": "London, UK",
+   "company": "SimpsonHaugh and Partners",
+   "category": "construction"
+  },
+  {
+   "id": "z6yj2rs2v47x4b0hdnsr1b1n",
+   "title": "3D printed Home",
+   "year": "2022",
+   "location": "Austin, TX, USA",
+   "company": "Designtrait, Fazio Architects, Black + Vernooy, Michael Hsu Office of Architecture, Thoughtbarn, Jobe Corral Architects, Chioco Design, McKinney York Architects.",
+   "category": "construction"
+  },
+  {
+   "id": "kbqu71kxdcgw05u4lpwzut33",
+   "title": "UAE Pavilion at Expo 2020 Dubaï",
+   "year": "2020",
+   "location": "Dubai, UAE",
+   "company": "Santiago Calatrava; Composite panels by Premier Composite Technologies",
+   "category": "construction"
+  },
+  {
+   "id": "br6j39l5ql8x4i4ktjm3cz89",
+   "title": "Tempere Deck and Arena",
+   "year": "2021",
+   "location": "Tampere, Finland",
+   "company": "SRV",
+   "category": "construction"
+  },
+  {
+   "id": "ccf1pkh7niyvfvlhj46ntu54",
+   "title": "Statue of Liberty Museum and Secondary Screening Facility",
+   "year": "2019",
+   "location": "New York, NY, USA",
+   "company": "Altus Group, Chomarat",
+   "category": "renovation"
+  },
+  {
+   "id": "x8p9m4syopeq9hcai88sv57s",
+   "title": "Latitude @ The Berkeley Building",
+   "year": "2022",
+   "location": "Paris, France",
+   "company": "Studios Architecture, Sika",
+   "category": "renovation"
+  },
+  {
+   "id": "lp2krpb5pp8p5euw0tryqczi",
+   "title": "The Avenues Mall – Decorative Ceiling Crowlings",
+   "year": "2017",
+   "location": "Kuwait",
+   "company": "Gensler Engineering",
+   "category": "renovation"
+  },
+  {
+   "id": "hv8g6jx5v7c338znsspekpqu",
+   "title": "Wolverhampton Tower Blocks",
+   "year": "2022",
+   "location": "Wolverhampton, UK",
+   "company": "Composites Construction UK",
+   "category": "renovation"
+  },
+  {
+   "id": "ms7mqw8agakmobwib2zot3ji",
+   "title": "The Pulse of Amsterdam",
+   "year": "2024",
+   "location": "Amsterdam, Netherlands",
+   "company": "Architects: MVSA Architects and VMX Architects\nProduction: Holland Composites BV\nPET Foam Supplier: Armacell PET Foams\nStructural Engineering: Solico Engineering",
+   "category": "construction"
+  },
+  {
+   "id": "krldcx5y295yjygprdgoscwq",
+   "title": "Villa Bentivoglio",
+   "year": "2013",
+   "location": "Varignana, Italy",
+   "company": "DRACO, Tribiano, Italy",
+   "category": "renovation"
+  },
+  {
+   "id": "paxcq0mbvp2se86wrtr0j2fp",
+   "title": "San Francisco Museum of Modern Art – Expansion Façade",
+   "year": "2016",
+   "location": "San Francisco, CA, USA",
+   "company": "Snøhetta, EHDD",
+   "category": "renovation"
+  }
+ ],
+ "standards": [
+  {
+   "id": "ftaiws4nf3pwtinqvll340f2",
+   "title": "International Building Code (IBC) - Fibre-Reinforced Polymer",
+   "region": "North America",
+   "link": "https://codes.iccsafe.org/content/IBC2024P1/chapter-26-plastic#IBC2024P1_Ch26_Sec2613"
+  },
+  {
+   "id": "y025soy2y1nbjl79rq7vafrs",
+   "title": "International Building Code - Interior Finishes",
+   "region": "North America",
+   "link": "https://codes.iccsafe.org/content/IBC2024P1/chapter-8-interior-finishes"
+  },
+  {
+   "id": "u7quqmqrgqs81zt6589183et",
+   "title": "ASTM E-84 - Test Method for Surface Burning Characteristics of Building Materials",
+   "region": "North America",
+   "link": "https://www.astm.org/e0084-24.html"
+  },
+  {
+   "id": "tufgzjf5f0i7733vfrs69lzx",
+   "title": "NFPA 285 - Standard Fire Test Method for Evaluation of Fire Propagation Characteristics",
+   "region": "North America",
+   "link": "https://www.nfpa.org/codes-and-standards/nfpa-285-standard-development/285"
+  },
+  {
+   "id": "qp7fi5m6n8f0vxq1ry2yrrmw",
+   "title": "National Building Code of Canada 2020",
+   "region": "North America",
+   "link": "https://nrc.canada.ca/en/certifications-evaluations-standards/codes-canada/codes-canada-publications/national-building-code-canada-2020"
+  },
+  {
+   "id": "jonq8aeexu0oi7j2phuqs2ra",
+   "title": "Fire Classification of Construction Products and Building Elements",
+   "region": "Europe",
+   "link": "https://knowledge.bsigroup.com/products/fire-classification-of-construction-products-and-building-elements-classification-using-data-from-reaction-to-fire-tests?version=tracked"
+  },
+  {
+   "id": "jzkt54h8plzv8v49zu93vj7x",
+   "title": "Prospect for New Guidance in the Design of FRP",
+   "region": "Europe",
+   "link": ""
+  },
+  {
+   "id": "lnl70rcerdg7hkp1gsqc9gxr",
+   "title": "National Standards for Building Construction",
+   "region": "Asia",
+   "link": "https://www.chinesestandard.net/PDF.aspx/GB50368-2005"
+  },
+  {
+   "id": "d5z3i8bvjai9m19z10ajbs7m",
+   "title": "National Building Code of India 2026",
+   "region": "Asia",
+   "link": "https://www.bis.gov.in/standards/technical-department/national-building-code/"
+  },
+  {
+   "id": "xefp0u7mwy9hjpdkml1wpklj",
+   "title": "IIBH Japan",
+   "region": "Asia",
+   "link": "https://iibh.org/en/index.htm"
+  },
+  {
+   "id": "vwtftd5uxx4zi9efn7s673lf",
+   "title": "The National Construction Code in Australia",
+   "region": "Oceania",
+   "link": "https://ncc.abcb.gov.au/"
+  },
+  {
+   "id": "bbtso2umn8931s7g5nefac0t",
+   "title": "The Complete Guide to Building Regulations in South Africa",
+   "region": "Africa",
+   "link": "https://sans10400.org.za/"
+  },
+  {
+   "id": "z6bvapmuuipsxyd3q9flid0h",
+   "title": "American Concrete Institute (ACI)",
+   "region": "North America",
+   "link": "https://www.concrete.org/store/productdetail.aspx?ItemID=44011U22&Language=English&Units=US_Units"
+  },
+  {
+   "id": "ak7pfxv28az0b4y3czfyda2w",
+   "title": "Brazilian Ministry of Labor and Employment (MTE)",
+   "region": "South America",
+   "link": "https://www4.planalto.gov.br/legislacao"
+  },
+  {
+   "id": "lq0lmcquhob8lujx0396oh9f",
+   "title": "Argentine Institute of Standardization and Certification (IRAM)",
+   "region": "South America",
+   "link": "https://www.iram.org.ar/busqueda-avanzada-de-normas-iram/"
+  },
+  {
+   "id": "bgbsv0qx6db7uwxitindwb17",
+   "title": "Association Française de Génie Civil (AFGC)",
+   "region": "Europe",
+   "link": "https://www.afgc.asso.fr/publication/recommendations-for-the-use-of-frp-fibre-reinforced-polymer-rebars-for-reinforced-concrete-structures/"
+  },
+  {
+   "id": "h1hcblx6ei580jyd1lflp5fs",
+   "title": "BÜV eV",
+   "region": "Europe",
+   "link": "https://new.bauueberwachungsverein.de/experten/vorschriften"
+  },
+  {
+   "id": "z58ibmk360gzgyji5wakfg7t",
+   "title": "Brazilian Association of Technical Standards",
+   "region": "South America",
+   "link": "https://www.abntcatalogo.com.br/grd.aspx"
+  },
+  {
+   "id": "h6eqng7pa98399mnf2sonlzq",
+   "title": "Status and Future of the Structural Eurocode: Project Design of Fibre-Polymer Composite Structures",
+   "region": "Europe",
+   "link": "https://warwick.ac.uk/fac/sci/eng/people/toby_mottram/presentations/fpcc_24_toby_mottrams_paper.pdf"
+  },
+  {
+   "id": "n7yyyb1cte3kgs4dkkvrxuzc",
+   "title": "Cooling Technology Institute - STD 137",
+   "region": "North America",
+   "link": "https://cti-marketplace.myshopify.com/products/std-137"
+  },
+  {
+   "id": "ah59h94rcmi1d51j6phz8xit",
+   "title": "Saudi Building Code Home",
+   "region": "Middle East",
+   "link": "https://sbc.gov.sa/en/BC/Pages/BuildingCode/BCSelect.aspx/"
+  },
+  {
+   "id": "zebevlpxf64sfqnmpyag7jj1",
+   "title": "Cooling Technology Institute - STD 124",
+   "region": "North America",
+   "link": "https://cti-marketplace.myshopify.com/products/std-124"
+  },
+  {
+   "id": "vq88b9ayfj9achipdks496yi",
+   "title": "Design of Fibre-Polymer Composite Structures",
+   "region": "Europe",
+   "link": "https://eucia.eu/wp-content/uploads/2023/05/2023-Eucia-Publication-of-CEN-TS-19101-Design-of-fiber-polymer-composite-structures-31-March-2023.pdf"
+  }
+ ],
+ "histories": [
+  {
+   "id": "mxl20qxheoy3616p0d2rtcy4",
+   "title": "Bubble House Walt Disney",
+   "year": 1957,
+   "location": "Anaheim, California, USA",
+   "company": "Sponsored by Monsanto Company, the House of the Future was made possible by Monsanto, the Massachusetts Institute of Technology (MIT), and Walt Disney Imagineering."
+  },
+  {
+   "id": "s6isjh8nofwcajtxzpkr3dob",
+   "title": "Exterior Insulation & Finish Systems (EIFS)",
+   "year": 1960,
+   "location": "Stühlingen, Germany",
+   "company": "Sto Corp"
+  },
+  {
+   "id": "w16p6j7s7vo28ga9fjk3r4he",
+   "title": "Futuro House",
+   "year": 1968,
+   "location": "Finland",
+   "company": "Matti Suuronen"
+  },
+  {
+   "id": "nd6y307jw00dwzhdm0xbc4kq",
+   "title": "Presidential Palace Abu Dhabi",
+   "year": 1970,
+   "location": "Abu Dhabi, UAE",
+   "company": "Gulf Precast"
+  },
+  {
+   "id": "ume84azokgdaxu1g7e7fh3gi",
+   "title": "Pierre Colleu House",
+   "year": 1989,
+   "location": "85 chemin du lac - Crozes Hermitage 26600 - France",
+   "company": "Groupe Impact Design"
+  },
+  {
+   "id": "px8qapwvlq368yhb0rqkm011",
+   "title": "Gare Routière Hoofddorp",
+   "year": 2003,
+   "location": "Voorplein Spaarne Ziekenhuis, Hoofddorp (Amsterdam-Schiphol - Netherlands)",
+   "company": "Zonneveld & Engiplast."
+  },
+  {
+   "id": "ot26f5401h16238btastq5ew",
+   "title": "\"Deepdene\" - Richard Goodwin’s House (with ATL Composites)",
+   "year": 2010,
+   "location": "Sydney, Australia",
+   "company": "ATL Composites."
+  },
+  {
+   "id": "mr40fixbmdc1prncv92i6c9q",
+   "title": "Guanzhou Opera House",
+   "year": 2010,
+   "location": "Guangzhou, Guandong Province, China",
+   "company": "Zaha Hadid Architects / Composites Manufacturer: E-Grow, Shanghai, China"
+  },
+  {
+   "id": "yy6yfo46t97zd57hv1d982go",
+   "title": "Pasarela de Almunecar",
+   "year": 2011,
+   "location": "Madrid, Spain",
+   "company": "Acciona Construction. Burgos & Garrido Architectos."
+  },
+  {
+   "id": "vwjwe5v7ltngk3xaa45fy7yc",
+   "title": "Tilburg School for VAVO",
+   "year": 2012,
+   "location": "Tilburg, Netherlands",
+   "company": "Architect: Mariette Adriaanssen / Holland Composite."
+  },
+  {
+   "id": "gdm2tu5hazfvau9ohwj1ffb5",
+   "title": "The Stedelijk Museum",
+   "year": 2012,
+   "location": "Amsterdam, Netherlands",
+   "company": "Architect: Benthem Crouwel Architekten (BCA), San Jose, California, USA / Composites Manufacturer: Holland Composites, Lelystad, Netherlands"
+  },
+  {
+   "id": "m3q69wz4mss2w3vcjfxsdlzn",
+   "title": "Eco Casa \"Ian Wright\" (ATL Composites)",
+   "year": 2013,
+   "location": "Brisbane, Australia",
+   "company": "ATL Composites and Norman R. Wright and Sons."
+  },
+  {
+   "id": "p3h8nvpfqqg7tss1s0ojok9j",
+   "title": "Hy-fi: mycelium ephemeral building",
+   "year": 2014,
+   "location": "New York, USA",
+   "company": "The Living (David Benjamin) / Holcim Foundation."
+  },
+  {
+   "id": "wyhjlq2t8pcc7v3jk3ampomt",
+   "title": "University of Valencia - EDEM Business School",
+   "year": 2015,
+   "location": "Valencia, Spain",
+   "company": "Architect: D. Jose Marti, Principal Architect of R Studio Arquitectura, Valencia / Manufacturers: for Pultrusion: Polymec, in Murcia, Spain and Tecnipul Composites located in Barcelona, Spain; for the moulded parts: Miraplas, Alicante, Spain."
+  },
+  {
+   "id": "jiu43qfk620tj7xny47gt0qg",
+   "title": "House of Dior",
+   "year": 2015,
+   "location": "Seoul, Korea",
+   "company": "Christian de Portzamparc"
+  },
+  {
+   "id": "am37723nl82qmqh38d9z0stg",
+   "title": "Théâtre de l'Avre (Roye) Luc Boulais",
+   "year": 2016,
+   "location": "Roye, France",
+   "company": "Artificial Architecture."
+  },
+  {
+   "id": "szo8610nolnny0w6lnx77yxa",
+   "title": "Sainte-Trinité Orthodox Cathedral Domes",
+   "year": 2017,
+   "location": "Paris, France",
+   "company": "Architect: Jean-Michel Wilmotte  / Bouygues Bâtiment Ile de France Private Construction with composite parts by Multiplast S.A.S."
+  },
+  {
+   "id": "k3butc1b8ajr4nbdl4rgx31j",
+   "title": "Qatar Integrated Railway Project",
+   "year": 2018,
+   "location": "Qatar",
+   "company": "UNStudio"
+  },
+  {
+   "id": "d0761zzco4agm9f7rttey9r3",
+   "title": "High Speed Rail Station (HHR) King Abdullah",
+   "year": 2018,
+   "location": "Haramain, KSA",
+   "company": "Buro Happold and Foster + Partners"
+  }
+ ],
+ "generated": "2026-09-19T13:41:40.851Z"
+}

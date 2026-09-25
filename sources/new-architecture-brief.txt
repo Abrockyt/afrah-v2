@@ -1,0 +1,1528 @@
+# ============================================================
+# AFRAH — NEW 3D ARCHITECTURE + WEBGL PRODUCTION PROMPT
+# ============================================================
+
+You are acting as:
+
+- architectural concept designer
+- 3D art director
+- Blender technical artist
+- WebGL creative developer
+- Three.js / React Three Fiber engineer
+- shader developer
+- environment artist
+- lighting artist
+- material artist
+- motion designer
+- 3D performance engineer
+
+IMPORTANT:
+
+We are creating a COMPLETELY NEW Afrah architectural concept.
+
+Do NOT reuse:
+
+- any previous Afrah building
+- any previous façade
+- any previous floor plan
+- any previous building measurements
+- any old 3D model
+- any old renders
+- any old architecture
+- any previous site assumptions
+- any previous topology
+- any previous camera setup
+- any previous materials
+
+Start from zero.
+
+The new architecture must be designed specifically around the cinematic website experience.
+
+The building and website should be developed together.
+
+============================================================
+01 — ARCHITECTURAL GOAL
+============================================================
+
+Create a premium contemporary residential building suitable for a
+high-end international / UK-influenced audience.
+
+The architecture should feel:
+
+quiet
+precise
+timeless
+warm
+modern
+architectural
+luxurious without being flashy
+international
+human-scale
+material-driven
+
+AVOID:
+
+- futuristic sci-fi towers
+- Dubai-style exaggerated luxury
+- excessive glass
+- random twisting geometry
+- impossible cantilevers
+- generic skyscraper appearance
+- all-white modern villa clichés
+- excessive gold
+- parametric geometry just for spectacle
+
+The building must look believable enough that viewers can imagine it being built.
+
+============================================================
+02 — INITIAL SITE / BUILDING PARAMETERS
+============================================================
+
+These are CONCEPTUAL design dimensions, not construction documents.
+
+Use them as an initial design envelope and optimize if necessary.
+
+SITE:
+
+approximately:
+72m × 50m
+
+Approximate site area:
+3,600 m²
+
+BUILDING FOOTPRINT:
+
+approximately:
+46m × 28m
+
+Target building height:
+approximately 42–46m
+
+Storeys:
+
+Ground
++
+10 standard residential levels
++
+1 premium upper level / penthouse level
+
+Approximately:
+12 levels total including ground.
+
+GROUND FLOOR HEIGHT:
+
+approximately 4.8m
+
+STANDARD FLOOR-TO-FLOOR:
+
+approximately 3.25m
+
+PREMIUM / TOP FLOOR:
+
+approximately 3.6–3.8m
+
+PARAPET / ROOF ELEMENTS:
+
+approximately 1.2–1.5m where appropriate.
+
+Do not blindly follow numbers if the proportions become unattractive.
+
+Create architectural proportions first.
+
+Then document final dimensions.
+
+============================================================
+03 — CREATE 3 MASSING OPTIONS
+============================================================
+
+Before detailed modelling, create 3 architectural massing concepts.
+
+OPTION A:
+COURTYARD FRAME
+
+A strong rectangular volume with a landscaped internal courtyard.
+
+Character:
+calm
+European
+private
+architectural
+
+OPTION B:
+STEPPED TERRACES
+
+Upper levels gradually step back.
+
+Character:
+light
+landscape-focused
+premium terraces
+strong silhouette
+
+OPTION C:
+TWIN VOLUME
+
+Two connected architectural volumes separated by a vertical light slot / courtyard.
+
+Character:
+sculptural
+minimal
+strong visual identity
+
+For every option provide:
+
+- front elevation
+- side elevation
+- aerial view
+- street view
+- approximate dimensions
+- silhouette
+- advantages
+- disadvantages
+- website animation opportunities
+- performance implications
+
+Then recommend ONE direction.
+
+The recommendation should prioritize:
+
+architecture
+cinematic storytelling
+WebGL performance
+usable apartments
+recognizable silhouette
+strong day/dusk appearance
+
+============================================================
+04 — THE BUILDING MUST SUPPORT THE WEBSITE STORY
+============================================================
+
+The architecture must allow these scenes:
+
+LAND
+→
+FORM
+→
+LIGHT
+→
+MATERIAL
+→
+ENTER
+→
+EXPLORE
+→
+PLACE
+→
+HOME
+
+Design geometry so the building can be animated elegantly.
+
+For example:
+
+structure should be separable into:
+
+foundation
+core
+floor plates
+columns
+façade
+balconies
+glass
+roof
+landscape
+
+Do not create one welded mesh.
+
+============================================================
+05 — MODULAR BUILDING STRUCTURE
+============================================================
+
+Organize Blender hierarchy approximately:
+
+AFRAH_BUILDING
+    SITE
+    LANDSCAPE
+    FOUNDATION
+    CORE
+    STRUCTURE
+        COLUMNS
+        BEAMS
+        FLOOR_PLATES
+    FACADE
+        STONE
+        METAL
+        GLASS
+        BALCONIES
+        SCREENS
+    WINDOWS
+    INTERIORS_LOW_DETAIL
+    ROOF
+    LIGHTS
+    PROPS
+
+Each floor should also be individually addressable.
+
+Example:
+
+FLOOR_01
+FLOOR_02
+FLOOR_03
+...
+FLOOR_11
+
+This is required for the interactive residence explorer.
+
+============================================================
+06 — APARTMENT / FLOOR LOGIC
+============================================================
+
+Do not design every apartment in extreme detail initially.
+
+Create believable planning.
+
+Initial concept:
+
+Ground:
+arrival
+lobby
+concierge
+shared space
+landscape connection
+
+Typical residential levels:
+approximately 4–6 residences per floor.
+
+Upper levels:
+larger residences.
+
+Top:
+premium penthouses / large terraces.
+
+Create simplified floor layouts first.
+
+The website needs:
+
+- floor highlighting
+- apartment selection
+- orientation
+- balcony position
+- daylight direction
+
+Therefore each residence must have a unique selectable ID.
+
+Example:
+
+L05_A
+L05_B
+L05_C
+L05_D
+
+============================================================
+07 — FAÇADE LANGUAGE
+============================================================
+
+Develop a restrained architectural palette.
+
+PRIMARY:
+
+warm limestone / travertine-style stone
+
+SECONDARY:
+
+dark bronze or charcoal metal
+
+GLASS:
+
+neutral low-reflectivity glazing
+
+TIMBER:
+
+use sparingly in sheltered areas
+
+LANDSCAPE:
+
+natural greens
+
+Avoid:
+
+mirror glass towers
+gold reflective glass
+extreme black glass
+decorative geometry without purpose
+
+The façade should be recognizable from silhouette alone.
+
+============================================================
+08 — MATERIAL SYSTEM
+============================================================
+
+Build proper PBR materials.
+
+Required:
+
+STONE
+GLASS
+BRONZE / METAL
+TIMBER
+CONCRETE
+INTERIOR LIGHT
+LANDSCAPE
+PAVING
+WATER if used
+
+Each material should support:
+
+base color
+normal
+roughness
+metallic where applicable
+AO when needed
+displacement only where visually justified
+
+Do not overuse 4K/8K textures.
+
+MASTER asset may be high resolution.
+
+WEB version:
+
+normally 1K–2K.
+
+Use 4K only for extremely close hero shots.
+
+============================================================
+09 — 3D REFERENCE RESEARCH
+============================================================
+
+Before modelling, study public architectural references.
+
+Use the reference websites already defined in the Afrah project:
+
+ERA
+LIKOVA
+Silver Pinewood
+The Whiteley
+Bankside Yards
+
+Also research high-quality:
+
+- contemporary London residential buildings
+- boutique European residential architecture
+- limestone façades
+- modern courtyard residences
+- restrained balconies
+- premium apartment entrances
+- architectural landscaping
+
+Use scraping / browser research for:
+
+- proportions
+- camera framing
+- façade rhythm
+- material combinations
+- landscape density
+- lighting
+- composition
+- presentation style
+
+DO NOT download or copy proprietary building models.
+
+DO NOT copy a specific building.
+
+Create a new architectural synthesis.
+
+============================================================
+10 — REFERENCE CAPTURE SYSTEM
+============================================================
+
+For every useful architectural reference save:
+
+SOURCE
+SCREENSHOT
+WHAT WE LIKE
+WHAT WE DO NOT LIKE
+PROPORTION
+MATERIAL
+LIGHTING
+CAMERA
+WEBSITE USE
+
+Create:
+
+/research/architecture/
+
+/research/architecture/facades/
+
+/research/architecture/materials/
+
+/research/architecture/entrances/
+
+/research/architecture/landscape/
+
+/research/architecture/night/
+
+/research/architecture/3d-interaction/
+
+Create:
+
+architecture-reference-board.md
+
+============================================================
+11 — FREE / LEGAL 3D ASSETS
+============================================================
+
+Do not model everything from scratch.
+
+Use licensed modular assets intelligently.
+
+Preferred sources:
+
+Poly Haven
+ambientCG
+BlenderKit
+Sketchfab downloadable assets
+Fab free assets
+
+For every downloaded asset check:
+
+license
+commercial usage
+attribution requirements
+modification permission
+
+Maintain:
+
+/assets/licenses/
+
+Never scrape proprietary assets directly from award websites.
+
+============================================================
+12 — ASSETS WE CAN KITBASH
+============================================================
+
+We can legally kitbash suitable licensed assets for:
+
+trees
+shrubs
+grass
+benches
+street lights
+cars
+bicycles
+tables
+chairs
+interior props
+books
+plants
+decorative objects
+curtains
+lamps
+street furniture
+
+BUT:
+
+The primary Afrah architecture must remain original.
+
+============================================================
+13 — ASSET QUALITY LEVELS
+============================================================
+
+Every major asset should have:
+
+MASTER
+WEB_HIGH
+WEB_STANDARD
+MOBILE
+
+For example:
+
+Tree_Master.blend
+
+Tree_WebHigh.glb
+
+Tree_WebStandard.glb
+
+Tree_Mobile.glb
+
+Do not ship production-quality sculpt meshes directly to browsers.
+
+============================================================
+14 — BLENDER PIPELINE
+============================================================
+
+Use Blender as the primary 3D production environment.
+
+Workflow:
+
+reference board
+→
+blockout
+→
+massing
+→
+proportions
+→
+façade
+→
+materials
+→
+lighting
+→
+camera
+→
+optimization
+→
+export
+
+Create proper collections:
+
+00_REFERENCE
+01_SITE
+02_BUILDING
+03_STRUCTURE
+04_FACADE
+05_INTERIOR
+06_LANDSCAPE
+07_LIGHTS
+08_CAMERAS
+09_WEB_EXPORT
+
+============================================================
+15 — MODELING QUALITY
+============================================================
+
+Use physically believable dimensions.
+
+Maintain:
+
+correct scale
+clean normals
+clean topology
+logical pivots
+logical origins
+minimal hidden geometry
+
+Avoid:
+
+unnecessary subdivisions
+tiny invisible geometry
+millions of polygons
+duplicate surfaces
+
+Use bevels where necessary.
+
+Architecture should not look razor-sharp.
+
+============================================================
+16 — WEB EXPORT
+============================================================
+
+Primary final format:
+
+GLB
+
+Use:
+
+glTF 2.0
+
+Use Draco or Meshopt compression when beneficial.
+
+Use KTX2/Basis compressed textures when possible.
+
+Create exports:
+
+afrah-building-high.glb
+
+afrah-building-standard.glb
+
+afrah-building-mobile.glb
+
+============================================================
+17 — POLYGON / PERFORMANCE BUDGET
+============================================================
+
+Do not optimize blindly.
+
+Measure.
+
+Initial target ranges:
+
+HERO BUILDING HIGH:
+
+approximately:
+250K–600K triangles
+
+STANDARD:
+
+approximately:
+120K–300K
+
+MOBILE:
+
+approximately:
+60K–150K
+
+These are starting ranges.
+
+Reduce further if possible without visual loss.
+
+Landscape assets should use:
+
+LOD
+instancing
+shared materials
+
+============================================================
+18 — DRAW CALLS
+============================================================
+
+Reduce unnecessary draw calls.
+
+Reuse:
+
+materials
+textures
+geometry
+
+Use instancing for:
+
+trees
+lights
+chairs
+repeated façade elements
+
+Do not create hundreds of unique materials.
+
+============================================================
+19 — DAY LIGHTING
+============================================================
+
+DAY scene:
+
+soft architectural daylight.
+
+Possible environment:
+
+bright overcast
+or
+soft morning daylight.
+
+Avoid harsh game-engine lighting.
+
+Use:
+
+HDRI
++
+directional sun where needed.
+
+The stone must retain texture.
+
+Glass should not become white mirrors.
+
+============================================================
+20 — DUSK LIGHTING
+============================================================
+
+DUSK:
+
+blue-hour environment.
+
+Not midnight.
+
+Sky:
+
+deep blue-grey.
+
+Windows:
+
+warm amber light.
+
+Target emotional balance:
+
+cool environment
++
+warm interiors.
+
+Approximate window-light hue direction:
+
+2200K–3200K warm interior lighting.
+
+Do NOT make every window equally bright.
+
+Create variation.
+
+Some:
+off.
+
+Some:
+dim.
+
+Some:
+warm.
+
+This makes the building feel lived-in.
+
+============================================================
+21 — DAY / DUSK TRANSITION
+============================================================
+
+The building should NOT reload.
+
+Interpolate:
+
+environment intensity
+sun angle
+sky/environment
+glass response
+interior emissive values
+landscape lighting
+UI background
+text colors
+
+Target:
+
+smooth 1.5–2.5 second transition.
+
+Use GSAP or controlled shader uniforms.
+
+============================================================
+22 — SHADER SYSTEM
+============================================================
+
+Shaders must enhance architecture.
+
+Do not add shaders merely because WebGL supports them.
+
+Create a controlled Afrah shader library.
+
+Possible shaders:
+
+01.
+ARCHITECTURAL LINE REVEAL
+
+Purpose:
+loader / floor plan / building emergence.
+
+02.
+CONSTRUCTION REVEAL
+
+Purpose:
+progressively reveal structural components.
+
+Possible approach:
+
+world-space height mask
++
+noise modulation
+
+Use subtle noise.
+
+Do not make building dissolve like sci-fi.
+
+03.
+GLASS SHADER
+
+Features:
+
+Fresnel
+reflection
+roughness
+environment
+subtle tint
+controlled transparency
+
+Avoid exaggerated distortion.
+
+04.
+WINDOW LIGHT SHADER
+
+Allows:
+
+day emissive = near zero
+
+dusk emissive = warm.
+
+Add subtle random variation.
+
+05.
+SHADOW / LIGHT TRANSITION
+
+Animate environmental lighting across façade.
+
+06.
+MATERIAL REVEAL
+
+Used when transitioning:
+
+structure
+→
+finished architecture.
+
+07.
+ATMOSPHERIC DEPTH
+
+Very subtle:
+
+fog
+depth
+air perspective.
+
+08.
+SITE-LINE SHADER
+
+Architectural plan lines appear across land.
+
+09.
+FLOOR HIGHLIGHT SHADER
+
+Used in residence explorer.
+
+Hover:
+
+soft controlled illumination.
+
+No neon.
+
+10.
+REFLECTION TRANSITION
+
+Used when camera approaches glass.
+
+Glass reflection expands and becomes transition layer into video/interior.
+
+============================================================
+23 — SHADER STYLE
+============================================================
+
+Shaders must feel:
+
+architectural
+physical
+quiet
+precise
+
+Never:
+
+gaming
+cyberpunk
+holographic
+glitchy
+neon
+lava-like
+over-distorted
+
+============================================================
+24 — GLSL ORGANIZATION
+============================================================
+
+Create:
+
+/src/shaders/
+
+    architecturalReveal/
+        vertex.glsl
+        fragment.glsl
+
+    constructionReveal/
+
+    glass/
+
+    windowLighting/
+
+    siteLines/
+
+    floorHighlight/
+
+    atmosphere/
+
+    reflectionTransition/
+
+Create reusable uniform controls.
+
+============================================================
+25 — REACT THREE FIBER
+============================================================
+
+Use:
+
+Three.js
+React Three Fiber
+@react-three/drei
+
+Separate:
+
+SCENE
+CAMERA
+LIGHTS
+BUILDING
+ENVIRONMENT
+POSTPROCESSING
+INTERACTION
+
+Do not create one massive component.
+
+============================================================
+26 — WEBGL SCENE STRUCTURE
+============================================================
+
+Example:
+
+<AfrahScene>
+
+    <Environment />
+
+    <AfrahBuilding />
+
+    <Landscape />
+
+    <Lighting />
+
+    <CameraRig />
+
+    <InteractionSystem />
+
+    <DayDuskSystem />
+
+</AfrahScene>
+
+============================================================
+27 — CAMERA SYSTEM
+============================================================
+
+Camera movement is critical.
+
+Create a deliberate cinematic camera path.
+
+Never use random mouse-driven rotation as the primary experience.
+
+Mouse interaction:
+
+maximum subtle offset.
+
+Approximately:
+1–3 degrees.
+
+Scroll drives major movement.
+
+Example camera chapters:
+
+LAND:
+high wide shot
+
+FORM:
+slow orbit
+
+LIGHT:
+fixed architectural hero angle
+
+ENTER:
+slow approach
+
+EXPLORE:
+controlled interactive orbit
+
+PLACE:
+camera pulls upward
+
+HOME:
+return to emotional hero angle
+
+============================================================
+28 — CAMERA SPLINES
+============================================================
+
+Prototype camera paths in Blender.
+
+Export camera positions or recreate them as:
+
+CatmullRomCurve3
+or
+controlled keyframes.
+
+Avoid abrupt transitions.
+
+Maintain spatial continuity.
+
+============================================================
+29 — BUILDING FORMATION ANIMATION
+============================================================
+
+Do NOT animate:
+
+scale 0 → 1.
+
+Instead use meaningful construction hierarchy.
+
+Example:
+
+land
+→
+site lines
+→
+foundation
+→
+core
+→
+floor slabs
+→
+columns
+→
+façade
+→
+glass
+→
+balconies
+→
+landscape
+
+Each stage should overlap slightly.
+
+Animation should feel engineered.
+
+============================================================
+30 — FLOOR EXPLODED VIEW
+============================================================
+
+When user enters EXPLORE:
+
+building transitions from architecture
+to
+information model.
+
+Floors separate vertically.
+
+Separation should be small.
+
+Example:
+
+0.5m–1.5m visual separation.
+
+Do not explode floors 20 metres apart.
+
+Hover:
+
+selected floor brightens.
+
+Others become slightly quieter.
+
+============================================================
+31 — RESIDENCE SELECTION
+============================================================
+
+After floor selection:
+
+rotate / settle camera.
+
+Highlight selectable apartments.
+
+Avoid:
+
+complex game controls.
+
+Use:
+
+hover
+click
+simple drag
+keyboard accessibility.
+
+============================================================
+32 — LANDSCAPE
+============================================================
+
+Landscape is critical.
+
+Use:
+
+mature trees
+native-style planting
+grass
+stone paths
+subtle water only if concept needs it
+
+Do not surround the building with hundreds of identical trees.
+
+Create realistic variation.
+
+============================================================
+33 — VEHICLES
+============================================================
+
+Vehicles should support scale.
+
+They are not hero objects.
+
+Use low/medium-poly realistic models.
+
+Neutral colors.
+
+Do not fill the scene with supercars.
+
+============================================================
+34 — HUMAN SCALE
+============================================================
+
+Use minimal human figures only if needed.
+
+Prefer:
+
+silhouettes
+distant figures
+subtle movement.
+
+Avoid uncanny close-up 3D humans.
+
+Real video handles human emotion better.
+
+============================================================
+35 — POST PROCESSING
+============================================================
+
+Use extremely carefully.
+
+Possible:
+
+subtle SSAO
+tone mapping
+small bloom only for dusk windows
+depth fog
+very subtle vignette
+
+Avoid:
+
+strong bloom
+chromatic aberration
+RGB split
+heavy film grain
+game-like DOF.
+
+Architecture should remain clean.
+
+============================================================
+36 — TRANSITION INTO VIDEO
+============================================================
+
+For ENTER:
+
+camera approaches glass.
+
+Glass becomes full-frame.
+
+Use:
+
+reflection
++
+opacity
++
+video texture / HTML video transition
+
+Transition to:
+
+Remotion-rendered video
+or
+real interior footage.
+
+User should not notice:
+
+WebGL ended
+and
+video started.
+
+============================================================
+37 — REMOTION + 3D
+============================================================
+
+Use Blender for:
+
+photoreal pre-rendered 3D shots.
+
+Use Remotion for:
+
+editing
+masking
+typography
+sound
+transitions
+video compositing.
+
+Do NOT render expensive 3D in Remotion frame-by-frame unless technically justified.
+
+Better pipeline:
+
+Blender
+→
+EXR / PNG / video
+→
+Remotion
+→
+web delivery.
+
+============================================================
+38 — 3D PRE-RENDER FORMATS
+============================================================
+
+For high-quality rendered passes:
+
+EXR sequence
+
+or:
+
+PNG sequence when alpha is necessary.
+
+Editing master:
+
+ProRes 422 HQ.
+
+Alpha master:
+
+ProRes 4444.
+
+Web:
+
+MP4 H.264
+
+and optionally:
+
+WebM VP9 / AV1.
+
+============================================================
+39 — HDRI
+============================================================
+
+Create curated environments:
+
+DAY_CLEAR
+DAY_SOFT
+GOLDEN
+DUSK
+
+Preferred source:
+
+Poly Haven
+or another clearly licensed source.
+
+Do not randomly use different HDRIs between scenes.
+
+Lighting continuity matters.
+
+============================================================
+40 — 3D ASSET MANIFEST
+============================================================
+
+Create:
+
+3d-asset-manifest.json
+
+Each asset must contain:
+
+name
+type
+source
+license
+polycount
+texture resolution
+master path
+web path
+LOD levels
+scene usage
+file size
+notes
+
+============================================================
+41 — DEBUG CONTROLS
+============================================================
+
+Create development-only controls for:
+
+camera position
+camera FOV
+sun angle
+sun intensity
+HDRI rotation
+window emissive
+fog amount
+material roughness
+building reveal
+floor separation
+day/dusk progress
+
+Use Leva or equivalent only in development.
+
+Do not ship debug UI.
+
+============================================================
+42 — PERFORMANCE MONITORING
+============================================================
+
+During development monitor:
+
+FPS
+GPU frame time
+CPU frame time
+draw calls
+triangles
+texture memory
+initial download
+scene load time
+
+Target:
+
+60 FPS on capable desktop hardware.
+
+Provide scalable degradation.
+
+============================================================
+43 — MOBILE FALLBACK
+============================================================
+
+Do not force the full desktop 3D scene onto all phones.
+
+Mobile can use:
+
+simplified GLB
+lower DPR
+smaller textures
+fewer lights
+simplified shadows
+simplified landscaping
+
+For extremely expensive sequences:
+
+use pre-rendered video instead.
+
+Story must remain the same.
+
+Technology can change.
+
+============================================================
+44 — LOADING
+============================================================
+
+Do not wait for the entire site before showing anything.
+
+Load:
+
+shell
+→
+loader scene
+→
+critical building geometry
+→
+next assets progressively.
+
+The loader itself must be lightweight.
+
+Do not make a 30MB loader for a 3D website.
+
+============================================================
+45 — FINAL REQUIRED OUTPUTS
+============================================================
+
+Before creating final 3D assets, deliver:
+
+01_ARCHITECTURE_CONCEPT.md
+
+02_SITE_DIMENSIONS.md
+
+03_MASSING_OPTIONS.md
+
+04_SELECTED_MASSING.md
+
+05_FLOOR_PROGRAM.md
+
+06_FACADE_SYSTEM.md
+
+07_MATERIAL_PALETTE.md
+
+08_ASSET_RESEARCH.md
+
+09_3D_ASSET_LIST.md
+
+10_SHADER_PLAN.md
+
+11_LIGHTING_PLAN.md
+
+12_DAY_DUSK_PLAN.md
+
+13_CAMERA_STORYBOARD.md
+
+14_BUILDING_ANIMATION.md
+
+15_INTERACTION_PLAN.md
+
+16_BLENDER_STRUCTURE.md
+
+17_GLTF_EXPORT_PLAN.md
+
+18_PERFORMANCE_BUDGET.md
+
+19_MOBILE_STRATEGY.md
+
+20_ASSET_LICENSES.md
+
+============================================================
+46 — FIRST PROTOTYPE
+============================================================
+
+Do NOT model every room.
+
+Prototype ONLY:
+
+SITE
++
+BUILDING EXTERIOR
++
+LANDSCAPE BLOCKOUT
++
+DAY LIGHT
++
+DUSK LIGHT
++
+FORM ANIMATION
++
+ONE HERO CAMERA
+
+Then export to WebGL.
+
+Test it in the browser.
+
+Only continue when:
+
+proportions
+materials
+lighting
+camera
+performance
+
+are approved.
+
+============================================================
+47 — CORE PRINCIPLE
+============================================================
+
+Do not design architecture merely as a background for the website.
+
+Do not design a website merely as a viewer for a 3D model.
+
+Design them together.
+
+Architecture should create opportunities for:
+
+shadow
+depth
+framing
+camera movement
+light
+material
+interaction
+silhouette
+story.
+
+The final result should feel like one creative system:
+
+ARCHITECTURE
++
+CINEMA
++
+WEBGL
++
+EDITORIAL DESIGN.

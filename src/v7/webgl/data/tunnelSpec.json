@@ -1,0 +1,10 @@
+{
+ "source": "scraper/reference/tunnel/timeline.json + samples/outro (201 checkpoints, 1440x810); p is over the 9vh pin, our stage spans 10vh (pRef = min(1, p*10/9))",
+ "runwayVh": 5.5, "pinFraction": 0.9,
+ "contour": { "in": [0.0, 0.12], "out": [0.18, 0.24] },
+ "solid": { "rise": [0.17, 0.23] },
+ "portal": { "on": 0.2, "reachP": 0.571, "k": 0.032, "aspect": 0.93, "cxDrift": [0.511, 0.464], "cyDrift": [0.49, 0.46], "fillAt": 0.55 },
+ "light": { "start": 0.55, "text1Y": [[0.55, 0.049], [0.95, -0.025]] },
+ "sheet": { "rise": [0.675, 0.775] },
+ "fadeAll": [0.9, 0.925]
+}

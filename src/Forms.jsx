@@ -1,0 +1,21 @@
+import {useEffect,useRef,useState} from 'react';
+import {ArrowRight,ArrowUpRight,X,Check} from 'lucide-react';
+function FloorPlan({unit}){
+ return <svg className="floor-plan" viewBox="0 0 560 420" role="img" aria-label={`Illustrative two-bedroom layout, residence ${unit}`}><g fill="none" stroke="currentColor"><path strokeWidth="6" d="M45 40H510V360H45Z M45 218H270V360 M270 40V145 M270 190V218H510 M380 218V360 M155 218V290"/><path strokeWidth="1" d="M45 385H510M45 377V393M510 377V393 M80 40V28H240V40 M300 40V28H465V40 M45 360V347H230V360 M400 360V347H485V360"/><path strokeWidth="2" d="M65 80H115V175H65Z M122 88H205V165H122Z M330 75H460V158H330Z M355 235H285V325H355Z M397 235H491V325H397Z M65 238H138V283H65Z M181 238H240V277H181Z"/><circle cx="228" cy="132" r="23"/><path strokeWidth="1" d="M270 145Q315 145 315 190H270 M155 290Q190 290 190 325H155"/></g><g fill="currentColor" fontFamily="Inter,Arial" fontSize="10" letterSpacing="1"><text x="90" y="198">LIVING</text><text x="355" y="187">DINING</text><text x="287" y="345">BEDROOM 01</text><text x="402" y="345">BEDROOM 02</text><text x="65" y="312">BATH</text><text x="203" y="312">HALL</text><text x="218" y="409">PRIVATE TERRACE</text></g></svg>;
+}
+
+function Dialog({children,title,onClose,className=''}){
+ const ref=useRef(),previous=useRef(document.activeElement);
+ useEffect(()=>{const el=ref.current;el.showModal();return()=>{el.close();previous.current?.focus?.()};},[]);
+ return <dialog data-lenis-prevent ref={ref} className={`dialog ${className}`} aria-label={title} onCancel={onClose} onClick={e=>{if(e.target===ref.current)onClose()}}><button className="dialog-close icon-button" onClick={onClose} aria-label="Close"><X size={23}/></button>{children}</dialog>;
+}
+
+function Enquiry({residence,onClose,embedded=false}){
+ const [status,setStatus]=useState('idle'),[reference,setReference]=useState(''),[error,setError]=useState('');
+ async function submit(e){e.preventDefault();setStatus('sending');setError('');const values=Object.fromEntries(new FormData(e.currentTarget));try{const res=await fetch('/api/enquiries',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...values,residence})});const data=await res.json();if(!res.ok)throw Error(data.error||'Please try again.');setReference(data.reference);setStatus('sent');}catch(e){setError('We couldn’t save your enquiry. Please try again.');setStatus('idle');}}
+ const Wrapper=embedded?'div':Dialog;
+ return <Wrapper title={embedded?undefined:"Arrange a private viewing"} onClose={onClose} className="enquiry-dialog">{status==='sent'?<div className="success"><Check size={35}/><span className="eyebrow">ENQUIRY RECEIVED</span><h2>Thank you.</h2><p>Your preferences have been saved.</p><p className="small">Your reference: {reference}</p><button className="text-link" onClick={onClose}>Return to Afrah <ArrowRight size={18}/></button></div>:<><span className="eyebrow">A PERSONAL INTRODUCTION</span><h2>Come in.</h2><p>Arrange a private viewing, or tell us what you’re looking for.</p><form onSubmit={submit}><label>Your name<input name="name" autoComplete="name" required maxLength={120} placeholder="Full name"/></label><label>Email address<input type="email" name="email" autoComplete="email" required maxLength={200} placeholder="you@example.com"/></label><label>Phone <span className="optional">optional</span><input type="tel" name="phone" autoComplete="tel" maxLength={50} placeholder="Country code and number"/></label><label>I'm interested in<select name="interest" defaultValue={residence?'residence':'viewing'}><option value="viewing">A private viewing</option><option value="residence">A residence</option><option value="information">Further information</option></select></label>{residence&&<p className="small">Residence {residence}</p>}<label className="consent"><input type="checkbox" name="consent" value="yes" required/><span>I agree to my details being used to respond to this enquiry.</span></label>{error&&<p className="form-error" role="alert">{error}</p>}<button className="submit-button" disabled={status==='sending'}>{status==='sending'?'Saving…':'Send enquiry'}<ArrowUpRight size={19}/></button><p className="form-note">Your details are kept private and used only for your enquiry.</p></form></>}</Wrapper>;
+}
+
+
+export {FloorPlan,Dialog,Enquiry};

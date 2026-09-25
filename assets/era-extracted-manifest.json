@@ -1,0 +1,218 @@
+[
+  {
+    "name": "portrait",
+    "source": "https://era.estate/assets/images/media/landing/art-deco/image-1@xxl.webp",
+    "local": "/era/portrait.webp",
+    "bytes": 135576,
+    "width": 868,
+    "height": 1390,
+    "temporaryStudyAsset": true
+  },
+  {
+    "name": "tower",
+    "source": "https://era.estate/assets/images/media/landing/architecture/architecture_building@xxl.webp",
+    "local": "/era/tower.webp",
+    "bytes": 243882,
+    "width": 1050,
+    "height": 1878,
+    "temporaryStudyAsset": true
+  },
+  {
+    "name": "hero",
+    "source": "https://era.estate/assets/images/media/landing/intro/image-1@xxl.webp",
+    "local": "/era/hero.webp",
+    "bytes": 369894,
+    "width": 2016,
+    "height": 2030,
+    "temporaryStudyAsset": true
+  },
+  {
+    "name": "sky",
+    "source": "https://era.estate/assets/images/media/landing/architecture/architecture_bg@xxl.webp",
+    "local": "/era/sky.webp",
+    "bytes": 227480,
+    "width": 2016,
+    "height": 3022,
+    "temporaryStudyAsset": true
+  },
+  {
+    "name": "detail",
+    "source": "https://era.estate/assets/images/media/landing/architecture/image-4@xxl.webp",
+    "local": "/era/detail.webp",
+    "bytes": 13906,
+    "width": 406,
+    "height": 266,
+    "temporaryStudyAsset": true
+  },
+  {
+    "name": "sculpture",
+    "source": "https://era.estate/assets/images/media/landing/interiors/deco@xxl.webp",
+    "local": "/era/sculpture.webp",
+    "bytes": 53624,
+    "width": 896,
+    "height": 741,
+    "temporaryStudyAsset": true
+  },
+  {
+    "name": "arch",
+    "source": "https://era.estate/assets/images/media/landing/architecture/image-2@xxl.webp",
+    "local": "/era/arch.webp",
+    "bytes": 298772,
+    "width": 2016,
+    "height": 1134,
+    "temporaryStudyAsset": true
+  },
+  {
+    "name": "garden",
+    "source": "https://era.estate/assets/images/media/landing/touch/labirint@xxl.webp",
+    "local": "/era/garden.webp",
+    "bytes": 649978,
+    "width": 2016,
+    "height": 1260,
+    "temporaryStudyAsset": true
+  },
+  {
+    "name": "hall",
+    "source": "https://era.estate/assets/images/media/landing/interiors/image-5@xxl.webp",
+    "local": "/era/hall.webp",
+    "bytes": 213848,
+    "width": 1300,
+    "height": 1625,
+    "temporaryStudyAsset": true
+  },
+  {
+    "name": "lounge",
+    "source": "https://era.estate/assets/images/media/landing/interiors/image-2@xxl.webp",
+    "local": "/era/lounge.webp",
+    "bytes": 108682,
+    "width": 1300,
+    "height": 1625,
+    "temporaryStudyAsset": true
+  },
+  {
+    "name": "lobby",
+    "source": "https://era.estate/assets/images/media/landing/interiors/image-3@xxl.webp",
+    "local": "/era/lobby.webp",
+    "bytes": 191772,
+    "width": 1300,
+    "height": 1552,
+    "temporaryStudyAsset": true
+  },
+  {
+    "name": "gallery",
+    "source": "https://era.estate/assets/images/media/landing/interiors/image-4@xxl.webp",
+    "local": "/era/gallery.webp",
+    "bytes": 202178,
+    "width": 1300,
+    "height": 1625,
+    "temporaryStudyAsset": true
+  },
+  {
+    "name": "residenceTowers",
+    "source": "https://era.estate/assets/images/media/landing/apartments/buildings@xxl.webp",
+    "local": "/era/residenceTowers.webp",
+    "bytes": 55426,
+    "width": 567,
+    "height": 588,
+    "temporaryStudyAsset": true
+  },
+  {
+    "name": "interior",
+    "source": "https://era.estate/assets/images/media/landing/interiors/image-1@xxl.webp",
+    "local": "/era/interior.webp",
+    "bytes": 101544,
+    "width": 1300,
+    "height": 1625,
+    "temporaryStudyAsset": true
+  },
+  {
+    "name": "residenceSky",
+    "source": "https://era.estate/assets/images/media/landing/apartments/background@xxl.webp",
+    "local": "/era/residenceSky.webp",
+    "bytes": 89978,
+    "width": 2016,
+    "height": 1512,
+    "temporaryStudyAsset": true
+  },
+  {
+    "name": "ceiling",
+    "source": "https://era.estate/assets/images/media/landing/touch/ceilings@xxl.webp",
+    "local": "/era/ceiling.webp",
+    "bytes": 407910,
+    "width": 2016,
+    "height": 2688,
+    "temporaryStudyAsset": true
+  },
+  {
+    "name": "mini",
+    "source": "https://era.estate/assets/images/media/menu/header-image@xxl.webp",
+    "local": "/era/mini.webp",
+    "bytes": 11982,
+    "width": 367,
+    "height": 228,
+    "temporaryStudyAsset": true
+  },
+  {
+    "name": "park",
+    "source": "https://era.estate/assets/images/media/landing/joy/carousel/image-5@xxl.webp",
+    "local": "/era/park.webp",
+    "bytes": 99350,
+    "width": 1302,
+    "height": 1322,
+    "temporaryStudyAsset": true
+  },
+  {
+    "name": "finale",
+    "source": "https://era.estate/assets/images/media/landing/new-era/background@xxl.webp",
+    "local": "/era/finale.webp",
+    "bytes": 234588,
+    "width": 2016,
+    "height": 2044,
+    "temporaryStudyAsset": true
+  },
+  {
+    "source": "https://era.estate/assets/fonts/Decart-Regular.woff2",
+    "local": "/era/Decart-Regular.woff2",
+    "temporaryStudyAsset": true
+  },
+  {
+    "source": "https://era.estate/assets/fonts/Gilroy-Medium.woff",
+    "local": "/era/Gilroy-Medium.woff",
+    "temporaryStudyAsset": true
+  },
+  {
+    "source": "https://era.estate/assets/fonts/Gilroy-Bold.woff",
+    "local": "/era/Gilroy-Bold.woff",
+    "temporaryStudyAsset": true
+  },
+  {
+    "source": "https://era.estate/assets/splash-v2/city-1.obj",
+    "local": "/era/city-1.obj",
+    "bytes": 91740,
+    "temporaryStudyAsset": true
+  },
+  {
+    "source": "https://era.estate/assets/splash-v2/city-2.obj",
+    "local": "/era/city-2.obj",
+    "bytes": 121657,
+    "temporaryStudyAsset": true
+  },
+  {
+    "source": "https://era.estate/assets/splash-v2/city-3.obj",
+    "local": "/era/city-3.obj",
+    "bytes": 15086,
+    "temporaryStudyAsset": true
+  },
+  {
+    "source": "https://era.estate/assets/splash-v2/city-4.obj",
+    "local": "/era/city-4.obj",
+    "bytes": 4503,
+    "temporaryStudyAsset": true
+  },
+  {
+    "source": "https://era.estate/assets/splash-v2/city-5.obj",
+    "local": "/era/city-5.obj",
+    "bytes": 4766,
+    "temporaryStudyAsset": true
+  }
+]

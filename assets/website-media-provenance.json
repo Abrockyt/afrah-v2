@@ -1,0 +1,88 @@
+{
+  "date": "2026-09-23T19:00:46.237Z",
+  "instruction": "User explicitly requested temporary public-site imagery for local study. Replace before public launch.",
+  "assets": [
+    {
+      "id": "interior",
+      "source": "https://silver-pinewood.com/assets/images/media/landing/15.space/top%40xxxl.webp",
+      "local": "/media/interior.webp",
+      "bytes": 352646,
+      "status": "temporary private study media",
+      "productionRights": "unverified",
+      "replaceBeforePublication": true
+    },
+    {
+      "id": "lounge",
+      "source": "https://silver-pinewood.com/assets/images/media/landing/15.space/middle%40xxxl.webp",
+      "local": "/media/lounge.webp",
+      "bytes": 143510,
+      "status": "temporary private study media",
+      "productionRights": "unverified",
+      "replaceBeforePublication": true
+    },
+    {
+      "id": "detail",
+      "source": "https://silver-pinewood.com/assets/images/media/landing/15.space/bottom%40xxxl.webp",
+      "local": "/media/detail.webp",
+      "bytes": 493150,
+      "status": "temporary private study media",
+      "productionRights": "unverified",
+      "replaceBeforePublication": true
+    },
+    {
+      "id": "nature",
+      "source": "https://silver-pinewood.com/assets/images/media/landing/3.bor/image-1%40xxxl.webp",
+      "local": "/media/nature.webp",
+      "bytes": 33986,
+      "status": "temporary private study media",
+      "productionRights": "unverified",
+      "replaceBeforePublication": true
+    },
+    {
+      "id": "garden",
+      "source": "https://silver-pinewood.com/assets/images/media/landing/7.free-days/background%40xxxl.webp",
+      "local": "/media/garden.webp",
+      "bytes": 742578,
+      "status": "temporary private study media",
+      "productionRights": "unverified",
+      "replaceBeforePublication": true
+    },
+    {
+      "id": "dining",
+      "source": "https://silver-pinewood.com/assets/images/media/landing/11.good-time/image-1%40xxxl.webp",
+      "local": "/media/dining.webp",
+      "bytes": 54622,
+      "status": "temporary private study media",
+      "productionRights": "unverified",
+      "replaceBeforePublication": true
+    },
+    {
+      "id": "living",
+      "source": "https://d3bmshaq69jyp8.cloudfront.net/media/mediaitem/1180/attachment/large-d8b3859a721f20f818006441b4835345.jpeg",
+      "local": "/media/living.webp",
+      "status": "temporary private study media",
+      "replaceBeforePublication": true
+    },
+    {
+      "id": "interior-film-source",
+      "source": "https://player.vimeo.com/external/515287908.hd.mp4?s=09fe7e8e57ee871e08d472c3e4e9b00fa8005f79&profile_id=175",
+      "local": "/media/interior-source.mp4",
+      "status": "temporary private study footage, cut using Remotion",
+      "replaceBeforePublication": true
+    },
+    {
+      "id": "environment",
+      "source": "https://raw.githack.com/pmndrs/drei-assets/456060a26bbeb8fdf79326f224b6d99b8bcce736/hdri/rooitou_park_1k.hdr",
+      "local": "/media/environment.hdr",
+      "status": "Drei-distributed Rooitou Park environment"
+    },
+    {
+      "id": "architecture-posters",
+      "local": [
+        "/media/architecture-day.webp",
+        "/media/architecture-dusk.webp"
+      ],
+      "status": "Rendered from the original AFRAH procedural model"
+    }
+  ]
+}

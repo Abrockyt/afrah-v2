@@ -1,0 +1,182 @@
+{
+ "source": "scraper/reference: layout/scroll_map.json (title pin 3vh, timeline pin to contact), history/transition_timeline.json (201 samples), history/spatial_timeline.json (51 samples + field captures)",
+ "runwayVh": 14.17,
+ "runwayPx810": 11478,
+ "headline": {
+  "fsH": 0.154,
+  "lineHeight": 0.75,
+  "color": "#cec9c9",
+  "lines": [
+   {
+    "y": 0.175,
+    "x": 0.089
+   },
+   {
+    "y": 0.302,
+    "x": 0.022
+   },
+   {
+    "y": 0.429,
+    "x": 0.356
+   },
+   {
+    "y": 0.557,
+    "x": 0.244
+   },
+   {
+    "y": 0.684,
+    "x": 0.422
+   }
+  ],
+  "riseFromY": [
+   0.36,
+   0.49,
+   0.61,
+   0.73,
+   0.85
+  ],
+  "riseEnd": 0.0254,
+  "exitStart": 0.205
+ },
+ "wipe": {
+  "start": 0.0931,
+  "end": 0.1609,
+  "boundaryFromY": 0.89
+ },
+ "feather": {
+  "riseStart": 0.09,
+  "riseEnd": 0.17,
+  "centerX": 0.5,
+  "centerY": 0.33,
+  "heightH": 0.46
+ },
+ "timeline": {
+  "start": 0.2117,
+  "end": 0.993,
+  "records": 19,
+  "spacingW": 0.36,
+  "activeW": 0.3,
+  "activeH": 0.42,
+  "altY": 0.06,
+  "sideX": [
+   0.25,
+   0.75
+  ],
+  "caption": {
+   "yearY": 0.81,
+   "yearFsH": 0.0233,
+   "titleY": 0.84,
+   "titleFsH": 0.0467,
+   "centerX": 0.5
+  },
+  "ticks": {
+   "x": 0.02,
+   "y": 0.905,
+   "boxW": 0.1,
+   "boxH": 0.05,
+   "fsH": 0.0163,
+   "stepW": 0.05
+  },
+  "changePoints": [
+   {
+    "p": 0.243,
+    "index": 0
+   },
+   {
+    "p": 0.2742,
+    "index": 1
+   },
+   {
+    "p": 0.3055,
+    "index": 2
+   },
+   {
+    "p": 0.3523,
+    "index": 3
+   },
+   {
+    "p": 0.3836,
+    "index": 4
+   },
+   {
+    "p": 0.4305,
+    "index": 5
+   },
+   {
+    "p": 0.4617,
+    "index": 6
+   },
+   {
+    "p": 0.493,
+    "index": 7
+   },
+   {
+    "p": 0.5399,
+    "index": 8
+   },
+   {
+    "p": 0.5711,
+    "index": 9
+   },
+   {
+    "p": 0.618,
+    "index": 10
+   },
+   {
+    "p": 0.6492,
+    "index": 11
+   },
+   {
+    "p": 0.6805,
+    "index": 12
+   },
+   {
+    "p": 0.7274,
+    "index": 13
+   },
+   {
+    "p": 0.7586,
+    "index": 14
+   },
+   {
+    "p": 0.7899,
+    "index": 15
+   },
+   {
+    "p": 0.8368,
+    "index": 16
+   },
+   {
+    "p": 0.868,
+    "index": 17
+   },
+   {
+    "p": 0.9149,
+    "index": 18
+   }
+  ],
+  "note": "changePoints measured from 51 field samples (record changes every ~0.048 of the field range starting at 0.04); positions between change points interpolate the fractional index linearly",
+  "sideXByIndex": [
+   0.75,
+   0.75,
+   0.75,
+   0.75,
+   0.25,
+   0.25,
+   0.25,
+   0.25,
+   0.75,
+   0.75,
+   0.75,
+   0.75,
+   0.47,
+   0.47,
+   0.47,
+   0.47,
+   0.47,
+   0.47,
+   0.47
+  ],
+  "sideNote": "sides from measured active boxes at records 1,3 (right), 7 (left), 16 (centre-left); others PROBABLE"
+ }
+}

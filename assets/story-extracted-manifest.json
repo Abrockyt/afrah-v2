@@ -1,0 +1,86 @@
+[
+  {
+    "source": "https://likova.space/assets/images/media/landing/1.intro/background@xxl.webp?v=1782384571",
+    "local": "/story/likova-sky.webp",
+    "bytes": 16438,
+    "temporaryStudyAsset": true
+  },
+  {
+    "source": "https://likova.space/assets/images/media/landing/1.intro/building@xxl.webp?v=1782384571",
+    "local": "/story/likova-building.webp",
+    "bytes": 356690,
+    "temporaryStudyAsset": true
+  },
+  {
+    "source": "https://likova.space/assets/images/media/landing/1.intro/building-lights@xxl.webp?v=1782384571",
+    "local": "/story/likova-lights.webp",
+    "bytes": 389650,
+    "temporaryStudyAsset": true
+  },
+  {
+    "source": "https://likova.space/assets/images/media/landing/2.idea/image-1@xxl.webp?v=1782384571",
+    "local": "/story/idea-detail.webp",
+    "bytes": 67484,
+    "temporaryStudyAsset": true
+  },
+  {
+    "source": "https://likova.space/assets/images/media/landing/2.idea/image-2@xxl.webp?v=1782384571",
+    "local": "/story/idea-space.webp",
+    "bytes": 55464,
+    "temporaryStudyAsset": true
+  },
+  {
+    "source": "https://likova.space/assets/images/media/landing/2.idea/cube@xxl.webp?v=1782384571",
+    "local": "/story/likova-cube.webp",
+    "bytes": 296140,
+    "temporaryStudyAsset": true
+  },
+  {
+    "source": "https://silver-pinewood.com/media/cache/intro_background_xxl/assets/images/media/landing/1.intro/background%40xxxl.webp",
+    "local": "/story/silver-hero.webp",
+    "bytes": 124472,
+    "temporaryStudyAsset": true
+  },
+  {
+    "source": "https://silver-pinewood.com/media/cache/location_card_image2_xxl/assets/images/media/landing/5.location-content/image-2%40xxxl.webp",
+    "local": "/story/forest.webp",
+    "bytes": 46246,
+    "temporaryStudyAsset": true
+  },
+  {
+    "source": "https://silver-pinewood.com/media/cache/location_card_image1_xxl/assets/images/media/landing/5.location-content/image-1%40xxxl.webp",
+    "local": "/story/water.webp",
+    "bytes": 33604,
+    "temporaryStudyAsset": true
+  },
+  {
+    "source": "https://silver-pinewood.com/media/cache/location_card_image1_xxl/assets/images/media/landing/5.location-content/image-3%40xxxl.webp",
+    "local": "/story/cycle.webp",
+    "bytes": 23790,
+    "temporaryStudyAsset": true
+  },
+  {
+    "source": "https://silver-pinewood.com/media/cache/location_card_image2_xxl/assets/images/media/landing/5.location-content/image-4%40xxxl.webp",
+    "local": "/story/sailing.webp",
+    "bytes": 111912,
+    "temporaryStudyAsset": true
+  },
+  {
+    "source": "https://silver-pinewood.com/media/cache/territory_image_xxl/uploads/image_1754649169.webp",
+    "local": "/story/courtyard.webp",
+    "bytes": 368104,
+    "temporaryStudyAsset": true
+  },
+  {
+    "source": "https://www.composites.archi/fonts/tasaorbiterdisplay-regular-webfont.woff2",
+    "local": "/story/tasa-regular.woff2",
+    "bytes": 17312,
+    "temporaryStudyAsset": true
+  },
+  {
+    "source": "https://www.composites.archi/fonts/tasaorbiterdisplay-bold-webfont.woff2",
+    "local": "/story/tasa-bold.woff2",
+    "bytes": 14040,
+    "temporaryStudyAsset": true
+  }
+]

@@ -1,0 +1,2 @@
+const fs=require('node:fs/promises');
+(async()=>{await fs.copyFile('public/media/bedroom.webp','public/media/living.webp');const data=JSON.parse(await fs.readFile('research/whiteley/live-media.json','utf8'));const res=await fetch(data.videos[0]);if(!res.ok)throw Error(res.status);const b=Buffer.from(await res.arrayBuffer());await fs.writeFile('public/media/interior-source.mp4',b);console.log('Public reference footage: '+b.length+' bytes');})();

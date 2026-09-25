@@ -1,0 +1,262 @@
+{
+ "source": "Poly Haven (https://polyhaven.com) via official API",
+ "license": "CC0 1.0",
+ "assets": [
+  {
+   "id": "kloofendal_48d_partly_cloudy_puresky",
+   "name": "Kloofendal 48d Partly Cloudy (Pure Sky)",
+   "authors": [
+    "Greg Zaal",
+    "Jarod Guest"
+   ],
+   "license": "CC0-1.0",
+   "url": "https://polyhaven.com/a/kloofendal_48d_partly_cloudy_puresky",
+   "type": "hdri",
+   "role": "day",
+   "file": "public/v5/hdri/day.hdr",
+   "bytes": 1435119
+  },
+  {
+   "id": "overcast_soil_puresky",
+   "name": "Overcast Soil (Pure Sky)",
+   "authors": [
+    "Jarod Guest",
+    "Sergej Majboroda"
+   ],
+   "license": "CC0-1.0",
+   "url": "https://polyhaven.com/a/overcast_soil_puresky",
+   "type": "hdri",
+   "role": "overcast",
+   "file": "public/v5/hdri/overcast.hdr",
+   "bytes": 1195816
+  },
+  {
+   "id": "belfast_sunset_puresky",
+   "name": "Belfast Sunset (Pure Sky)",
+   "authors": [
+    "Greg Zaal",
+    "Dimitrios Savva",
+    "Jarod Guest"
+   ],
+   "license": "CC0-1.0",
+   "url": "https://polyhaven.com/a/belfast_sunset_puresky",
+   "type": "hdri",
+   "role": "golden",
+   "file": "public/v5/hdri/golden.hdr",
+   "bytes": 1190247
+  },
+  {
+   "id": "qwantani_dusk_2_puresky",
+   "name": "Qwantani Dusk 2 (Pure Sky)",
+   "authors": [
+    "Greg Zaal",
+    "Jarod Guest"
+   ],
+   "license": "CC0-1.0",
+   "url": "https://polyhaven.com/a/qwantani_dusk_2_puresky",
+   "type": "hdri",
+   "role": "blue",
+   "file": "public/v5/hdri/blue.hdr",
+   "bytes": 4612798
+  },
+  {
+   "id": "kloppenheim_02_puresky",
+   "name": "Kloppenheim 02 (Pure Sky)",
+   "authors": [
+    "Greg Zaal",
+    "Jarod Guest"
+   ],
+   "license": "CC0-1.0",
+   "url": "https://polyhaven.com/a/kloppenheim_02_puresky",
+   "type": "hdri",
+   "role": "night",
+   "file": "public/v5/hdri/night.hdr",
+   "bytes": 5563538
+  },
+  {
+   "id": "marble_01",
+   "name": "Marble 01",
+   "authors": [
+    "Rob Tuytel"
+   ],
+   "license": "CC0-1.0",
+   "url": "https://polyhaven.com/a/marble_01",
+   "type": "texture",
+   "role": "stone",
+   "files": {
+    "Diffuse": {
+     "file": "public/v5/tex/stone_diffuse.webp",
+     "bytes": 451214
+    },
+    "nor_gl": {
+     "file": "public/v5/tex/stone_nor.webp",
+     "bytes": 55380
+    },
+    "Rough": {
+     "file": "public/v5/tex/stone_rough.webp",
+     "bytes": 82872
+    }
+   }
+  },
+  {
+   "id": "granite_tile",
+   "name": "Granite Tile",
+   "authors": [
+    "Charlotte Baglioni"
+   ],
+   "license": "CC0-1.0",
+   "url": "https://polyhaven.com/a/granite_tile",
+   "type": "texture",
+   "role": "granite",
+   "files": {
+    "Diffuse": {
+     "file": "public/v5/tex/granite_diffuse.webp",
+     "bytes": 195100
+    },
+    "nor_gl": {
+     "file": "public/v5/tex/granite_nor.webp",
+     "bytes": 131470
+    },
+    "Rough": {
+     "file": "public/v5/tex/granite_rough.webp",
+     "bytes": 307846
+    }
+   }
+  },
+  {
+   "id": "asphalt_02",
+   "name": "Asphalt 02",
+   "authors": [
+    "Rob Tuytel"
+   ],
+   "license": "CC0-1.0",
+   "url": "https://polyhaven.com/a/asphalt_02",
+   "type": "texture",
+   "role": "asphalt",
+   "files": {
+    "Diffuse": {
+     "file": "public/v5/tex/asphalt_diffuse.webp",
+     "bytes": 455686
+    },
+    "nor_gl": {
+     "file": "public/v5/tex/asphalt_nor.webp",
+     "bytes": 539202
+    },
+    "Rough": {
+     "file": "public/v5/tex/asphalt_rough.webp",
+     "bytes": 427426
+    }
+   }
+  },
+  {
+   "id": "concrete_floor_02",
+   "name": "Concrete Floor 02",
+   "authors": [
+    "Rob Tuytel"
+   ],
+   "license": "CC0-1.0",
+   "url": "https://polyhaven.com/a/concrete_floor_02",
+   "type": "texture",
+   "role": "concrete",
+   "files": {
+    "Diffuse": {
+     "file": "public/v5/tex/concrete_diffuse.webp",
+     "bytes": 473748
+    },
+    "nor_gl": {
+     "file": "public/v5/tex/concrete_nor.webp",
+     "bytes": 244106
+    },
+    "Rough": {
+     "file": "public/v5/tex/concrete_rough.webp",
+     "bytes": 215340
+    }
+   }
+  },
+  {
+   "id": "rectangular_paving",
+   "name": "Rectangular Paving",
+   "authors": [
+    "Dimitrios Savva"
+   ],
+   "license": "CC0-1.0",
+   "url": "https://polyhaven.com/a/rectangular_paving",
+   "type": "texture",
+   "role": "paving",
+   "files": {
+    "Diffuse": {
+     "file": "public/v5/tex/paving_diffuse.webp",
+     "bytes": 141586
+    },
+    "nor_gl": {
+     "file": "public/v5/tex/paving_nor.webp",
+     "bytes": 161248
+    },
+    "Rough": {
+     "file": "public/v5/tex/paving_rough.webp",
+     "bytes": 77500
+    }
+   }
+  },
+  {
+   "id": "metal_plate",
+   "name": "Metal Plate",
+   "authors": [
+    "Rob Tuytel"
+   ],
+   "license": "CC0-1.0",
+   "url": "https://polyhaven.com/a/metal_plate",
+   "type": "texture",
+   "role": "metal",
+   "files": {
+    "nor_gl": {
+     "file": "public/v5/tex/metal_nor.webp",
+     "bytes": 235510
+    },
+    "Rough": {
+     "file": "public/v5/tex/metal_rough.webp",
+     "bytes": 346748
+    }
+   }
+  },
+  {
+   "id": "shrub_04",
+   "name": "Shrub 04",
+   "authors": [
+    "Rico Cilliers"
+   ],
+   "license": "CC0-1.0",
+   "url": "https://polyhaven.com/a/shrub_04",
+   "type": "model",
+   "original": "research/assets-original/polyhaven/shrub_04/",
+   "bytes": 1904632,
+   "runtime": "public/v5/models/shrub_04/ (1k textures, 27k tris, instanced on terraces)"
+  },
+  {
+   "id": "shrub_01",
+   "name": "Shrub 01",
+   "authors": [
+    "Rico Cilliers"
+   ],
+   "license": "CC0-1.0",
+   "url": "https://polyhaven.com/a/shrub_01",
+   "type": "model",
+   "original": "research/assets-original/polyhaven/shrub_01/",
+   "bytes": 6874632,
+   "status": "rejected \u2014 too dense for instancing (156k / 70k tris); original kept for reference only"
+  },
+  {
+   "id": "potted_plant_02",
+   "name": "Potted Plant 02",
+   "authors": [
+    "Rico Cilliers"
+   ],
+   "license": "CC0-1.0",
+   "url": "https://polyhaven.com/a/potted_plant_02",
+   "type": "model",
+   "original": "research/assets-original/polyhaven/potted_plant_02/",
+   "bytes": 2628045,
+   "status": "rejected \u2014 too dense for instancing (156k / 70k tris); original kept for reference only"
+  }
+ ]
+}
