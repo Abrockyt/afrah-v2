@@ -56,7 +56,7 @@ export default function EraOpening() {
   return <section className="runway" ref={runwayRef} id="home"><div className="stage era-opening hero" ref={stageRef}>
     <p className="hero__tag">RESIDENCES ABOVE THE CITY</p>
     <h1 className="hero__mark" ref={markRef} aria-label="AFRAH">{chars('AFRAH')}</h1>
-    <p className="hero__meta"><span>Architecture for living</span><span>Downtown · 52 floors</span></p>
+    <p className="hero__meta"><span>Architecture for living</span><span>On the river bend · 64 floors</span></p>
     {CAPS.map((c) => <div className="hero__cap" data-at={c.at} key={c.at}><p className="hero__cap-line"><span>{c.line}</span></p><p className="hero__cap-sub">{c.sub}</p></div>)}
     <div className="hero__scrollcue" aria-hidden="true"><span>Scroll</span><i /></div>
     <div className="hero__above" aria-hidden="true"><h2>{chars('ABOVE THE CLOUDS')}</h2><p className="hero__above-sub">Every residence opens onto the sky.</p></div>

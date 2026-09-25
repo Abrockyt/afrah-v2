@@ -31,7 +31,7 @@ function chapterState() {
   }
   const contact = document.getElementById('contact');
   if (contact && contact.getBoundingClientRect().top < window.innerHeight * 0.7) return { label: 'Viewing', p: 1, id: 'contact' };
-  for (const [id, label] of [['interiors', 'Interiors'], ['garden', 'Garden'], ['map-teaser', 'Place'], ['joy', 'Living']]) {
+  for (const [id, label] of [['interiors', 'Interiors'], ['ceilings', 'Interiors'], ['apartments', 'Apartments'], ['garden', 'Garden'], ['map-teaser', 'Place'], ['joy', 'Living'], ['art-deco', 'Art Deco'], ['new-era', 'A new era'], ['cases', 'Living']]) {
     const el = document.getElementById(id);
     if (el) { const r = el.getBoundingClientRect(); if (r.top <= 100 && r.bottom > 100) return { label, p: 0, id }; }
   }
