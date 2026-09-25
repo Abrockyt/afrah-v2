@@ -31,7 +31,7 @@ export class ReferenceBuildingScene {
     }).catch(e=>{this.error=e;console.warn('Reference building could not load',e);});
   }
   update(camera){
-    const preview=store.activeStage==='hero'&&sectionProgress('hero')>.62;
+    const preview=false;
     const mode=preview?'arrival':store.activeStage;
     const on=mode==='arrival'||mode==='building';this.group.visible=on&&!!this.model;if(!on)return;
     const p=preview?0:mode==='arrival'?sectionProgress('arrival'):sectionProgress('building');

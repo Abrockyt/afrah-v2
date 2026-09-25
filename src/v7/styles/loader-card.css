@@ -15,8 +15,17 @@
   .loader__pct{left:50vw;top:56.8vh}
 }
 
-/* Hero: a true circle that grows from where it sits (no oval morph) */
-.era-opening{--rise:-40vh;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-size:100% 140%;mask-size:100% 140%;-webkit-mask-position:0 var(--rise);mask-position:0 var(--rise)}
-.era-opening__picture{--d:min(38vw,79vh);width:var(--d)!important;height:var(--d)!important;left:calc(50% - var(--d) / 2)!important;top:calc(51.5vh - var(--d) / 2)!important;transform-origin:50% 50%;will-change:transform}
-.era-opening__aperture{border-radius:50%!important}
-@media (max-width:600px){.era-opening__picture{--d:min(70vw,57vh);top:calc(60vh - var(--d) / 2)!important}}
+/* Hero — above the clouds (text over the WebGL sky) */
+.hero{background:transparent}
+.hero::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(to bottom,rgba(5,14,28,.45) 0%,transparent 26%,transparent 62%,rgba(5,14,28,.55) 100%);z-index:1}
+.hero__tag{position:absolute;left:0;right:0;top:24vh;margin:0;text-align:center;z-index:2;font:500 11px/1 var(--font-display);letter-spacing:.34em;color:rgba(248,245,240,.85)}
+.hero__mark{position:absolute;left:0;right:0;top:50%;margin:0;transform:translateY(-58%);text-align:center;z-index:2;white-space:nowrap;
+  font:300 clamp(96px,21vw,420px)/.86 var(--font-display);letter-spacing:.12em;padding-left:.12em;color:#f8f5f0;text-shadow:0 10px 60px rgba(10,20,40,.25);will-change:transform,letter-spacing}
+.hero__char{display:inline-block;overflow:hidden;vertical-align:top}
+.hero__char>span{display:inline-block}
+.hero__meta{position:absolute;left:var(--gutter);right:var(--gutter);bottom:7vh;margin:0;display:flex;justify-content:space-between;z-index:2;font:500 11px/1 var(--font-display);letter-spacing:.18em;text-transform:uppercase;color:rgba(248,245,240,.8)}
+.hero__above{position:absolute;left:0;right:0;top:38vh;text-align:center;z-index:2}
+.hero__above h2{margin:0;font:300 clamp(40px,6.4vw,124px)/.95 var(--font-display);letter-spacing:.06em;color:#f8f5f0}
+.hero__above-sub{margin:22px 0 0;font:500 12px/1 var(--font-display);letter-spacing:.24em;text-transform:uppercase;color:rgba(248,245,240,.85)}
+.hero .era-opening__map{z-index:3}
+@media (max-width:600px){.hero__mark{font-size:24vw}.hero__meta{flex-direction:column;gap:10px;bottom:16vh}.hero__tag{top:26vh;font-size:9px}}
