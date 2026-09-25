@@ -7,7 +7,6 @@ import { ReferenceBuildingScene } from './scenes/ReferenceBuildingScene';
 import { HistoryScene, HISTORY_BG } from './scenes/HistoryScene';
 import { ZeusScene, ZEUS_BG } from './scenes/ZeusScene';
 import { HeroCloudScene } from './scenes/HeroCloudScene';
-import { DAY_HAZE } from './objects/Community';
 import { store, sectionProgress, range, smooth, resolveActiveStage } from '../core/store';
 import HS from './data/historySpec.json';
 
@@ -162,9 +161,7 @@ export class SceneManager {
     this.wipe.tick(t);
     // Fog belongs to the history helix only
     const fog = this.scene.fog;
-    if (store.activeStage === 'history') { fog.color.set(HISTORY_BG); fog.near = 6; fog.far = 14.5; }
-    else if (store.activeStage === 'arrival' || store.activeStage === 'building') { fog.color.set(DAY_HAZE); fog.near = 60; fog.far = 190; }
-    else { fog.near = 1e4; fog.far = 1e4 + 1; }
+    if (store.activeStage === 'history') { fog.near = 6; fog.far = 14.5; } else { fog.near = 1e4; fog.far = 1e4 + 1; }
     const r = this.renderer;
     // Overlay mode: during the history timeline the canvas floats above the
     // DOM panels (transparent background) so the feather sits in front of them.
@@ -198,7 +195,7 @@ export class SceneManager {
     }
     // Inside the tunnel only the portal lights the ribs
     if(!act('tunnel'))this.tunnel.group.userData.glow.intensity=0;
-    const wantLights = act('tunnel') && sectionProgress('tunnel')<.82 ? .16 : act('hero') ? .65 : act('arrival') || act('building') ? .3 : 1;
+    const wantLights = act('tunnel') && sectionProgress('tunnel')<.82 ? .16 : act('hero') || act('arrival') || act('building') ? .65 : 1;
     if (wantLights !== this.lightScale) {
       this.lightScale = wantLights;
       this.lights.hemi.intensity = 0.9 * wantLights; this.lights.key.intensity = 1.6 * wantLights;

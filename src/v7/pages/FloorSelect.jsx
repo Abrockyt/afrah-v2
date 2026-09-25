@@ -15,7 +15,7 @@ import '../styles/floor-select.css';
 // to it and the plan draws itself in the panel. Pick a residence on the plan
 // for its details.
 
-const BANDS = 13;
+const BANDS = 9;
 const FIRST_LABEL = 3;                                   // storey number of the first residential floor
 const TOP_Y = BAND_TOP + BANDS * BAND;
 const FLOORS = Math.floor((TOP_Y - FIRST_RES_FLOOR_Y) / FLOOR);
@@ -158,8 +158,7 @@ export default function FloorSelectPage() {
   const [unit, setUnit] = useState(null);
   const [tip, setTip] = useState(-1);
   const label = (i) => i + FIRST_LABEL;
-  // sample residences repeat up the tower; ids follow the real storey number
-  const unitsOn = (i) => { const f = label(i), src = 2 + ((f - 2) % 25); return UNITS.filter((u) => u.floor === src).map((u) => ({ ...u, floor: f, id: `${String(f).padStart(2, '0')}.${u.id.slice(-1)}` })); };
+  const unitsOn = (i) => UNITS.filter((u) => u.floor === label(i));
 
   const api = useTower(canvasRef,
     (i, e) => { setTip(i); if (e && tipRef.current) { const r = canvasRef.current.getBoundingClientRect(); tipRef.current.style.transform = `translate(${e.clientX - r.left + 18}px, ${e.clientY - r.top - 14}px)`; } },
