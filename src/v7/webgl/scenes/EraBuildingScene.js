@@ -91,6 +91,7 @@ export class EraBuildingScene {
     // callout anchor → CSS variables on the tower stage
     if (mode === 'building') {
       const A = a.anchor && b.anchor ? this.anchor.copy(a.anchor).lerp(b.anchor, t) : (b.anchor || a.anchor);
+    camera.updateMatrixWorld();
       this.el = this.el || document.querySelector('.stage--tower');
       if (this.el) {
         if (A) {

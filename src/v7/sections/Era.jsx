@@ -99,33 +99,40 @@ export function EraJoy() {
 }
 
 /* ── 3D map teaser ────────────────────────────────────────────────────── */
-const ROADS = [
-  'M-20 120 C 260 160, 420 90, 700 150 S 1180 260, 1460 210',
-  'M-20 520 C 240 470, 520 560, 760 500 S 1200 420, 1460 470',
-  'M180 -20 C 220 200, 150 420, 260 620 S 330 900, 300 920',
-  'M980 -20 C 940 180, 1060 380, 1000 560 S 900 820, 960 920',
-  'M-20 330 L 1460 360', 'M560 -20 L 620 920', 'M760 -20 C 780 300, 700 560, 820 920',
+const PINS = [
+  ['park', 'Central park', '4 min on foot'],
+  ['river', 'River embankment', '2 min on foot'],
+  ['arena', 'Arena & sports park', '9 min'],
+  ['metro', 'Metro station', '7 min'],
+  ['old', 'Old town', '12 min'],
 ];
-const PLACES = [[420, 230, 'Central park', '4 min'], [1040, 300, 'International school', '6 min'], [1150, 610, 'Metro station', '7 min'], [860, 150, 'Old town', '12 min']];
+// The place, in 3D: the district in morning light (EraMapScene draws it on the
+// persistent canvas). Pins and routes are placed on the ground every frame.
 export function EraMap() {
-  const ref = useRef(null);
-  useReveals(ref, (el) => {
-    gsap.fromTo(el.querySelectorAll('.era-map__roads path'), { strokeDashoffset: 1 }, { strokeDashoffset: 0, stagger: 0.1, ease: 'none', scrollTrigger: { trigger: el, start: 'top 80%', end: 'center center', scrub: 0.6 } });
-    gsap.fromTo(el.querySelectorAll('.era-map__place'), { autoAlpha: 0, scale: 0.6 }, { autoAlpha: 1, scale: 1, stagger: 0.12, duration: 0.6, ease: 'back.out(2)', scrollTrigger: { trigger: el, start: 'top 45%' } });
+  const { runwayRef, stageRef } = useStage('place', {
+    runway: 5,
+    build: (tl, { q }) => {
+      tl.fromTo(q('.era-map__copy [data-rise]'), { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.06, stagger: 0.02 }, 0.04)
+        .fromTo(q('.era-map__copy .era-w > span'), { yPercent: 105 }, { yPercent: 0, duration: 0.06, stagger: 0.01, ease: 'power3.out' }, 0.05)
+        .fromTo(q('.era-map__pin3d--home'), { autoAlpha: 0, scale: 0.4 }, { autoAlpha: 1, scale: 1, duration: 0.05, ease: 'back.out(2)' }, 0.1)
+        .fromTo(q('.era-map__place3d'), { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.05, stagger: 0.04 }, 0.2)
+        .fromTo(q('.era-map__routes3d line'), { strokeDashoffset: 400 }, { strokeDashoffset: 0, duration: 0.12, stagger: 0.04 }, 0.22)
+        .to(q('.era-map__copy'), { autoAlpha: 0, y: -30, duration: 0.06 }, 0.9);
+    },
+    onProgress: () => setTheme('light'),
   });
   return (
-    <section className="era-map" ref={ref} id="map-teaser">
-      <svg className="era-map__svg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-        <path className="era-map__river" d="M-40 780 C 200 700, 380 820, 620 760 S 1040 640, 1480 700 L 1480 940 L -40 940 Z" />
-        <g className="era-map__roads">{ROADS.map((d, i) => <path key={i} d={d} pathLength="1" />)}</g>
-        <g className="era-map__routes">{PLACES.map(([x, y], i) => <line key={i} x1="720" y1="450" x2={x} y2={y} />)}</g>
-        {PLACES.map(([x, y, n, t]) => <g className="era-map__place" key={n} transform={`translate(${x} ${y})`}><circle r="5" /><text x="14" y="-6">{n}</text><text className="t" x="14" y="12">{t}</text></g>)}
-        <g className="era-map__pin" transform="translate(720 450)"><circle className="halo" r="46" /><circle className="halo halo--2" r="46" /><path d="M0 -34 C 14 -34, 22 -24, 22 -12 C 22 4, 0 22, 0 22 C 0 22, -22 4, -22 -12 C -22 -24, -14 -34, 0 -34 Z" /><text y="-6">A</text></g>
-      </svg>
-      <div className="era-map__copy">
-        <span className="t-small" data-rise>07 / The place</span>
-        <h2 data-words>{words('AT THE CENTRE')}<br />{words('OF EVERYTHING')}</h2>
-        <a className="era-pill" href="/map" data-rise><span className="era-pill__icon">3D</span>OPEN THE 3D MAP <b>↗</b></a>
+    <section className="runway" ref={runwayRef} id="map-teaser">
+      <div className="stage era-map" ref={stageRef}>
+        <svg className="era-map__routes3d" width="100%" height="100%" aria-hidden="true">{PINS.map(([id]) => <line key={id} data-route={id} />)}</svg>
+        <div className="era-map__pin3d era-map__pin3d--home" data-pin="home" aria-hidden="true"><i className="halo" /><i className="halo halo--2" /><b>A</b></div>
+        {PINS.map(([id, n, t]) => <div className="era-map__place3d" data-pin={id} key={id}><i /><span>{n}</span><em>{t}</em></div>)}
+        <div className="era-map__copy">
+          <span className="t-small" data-rise>07 / The place</span>
+          <h2>{words('AT THE CENTRE')}<br />{words('OF EVERYTHING')}</h2>
+          <p className="era-map__lede" data-rise>A river bend, a park on the doorstep and the old town a short walk away. Scroll to turn the city.</p>
+          <a className="era-pill" href="/map" data-rise><span className="era-pill__icon">3D</span>OPEN THE 3D MAP <b>↗</b></a>
+        </div>
       </div>
     </section>
   );

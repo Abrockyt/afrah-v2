@@ -5,6 +5,7 @@ import { IntroScene } from './scenes/IntroScene';
 import { TunnelScene } from './scenes/TunnelScene';
 import { EraBuildingScene } from './scenes/EraBuildingScene';
 import { EraWorld } from './objects/EraWorld';
+import { EraMapScene } from './scenes/EraMapScene';
 import { HistoryScene, HISTORY_BG } from './scenes/HistoryScene';
 import { ZeusScene, ZEUS_BG } from './scenes/ZeusScene';
 import { HeroCloudScene } from './scenes/HeroCloudScene';
@@ -60,6 +61,7 @@ export class SceneManager {
     this.tunnel = new TunnelScene(this.scene, this.envMap);
     this.world = new EraWorld(this.scene, this.renderer);
     this.building = new EraBuildingScene(this.world);
+    this.map = new EraMapScene(this.world);
     this.heroClouds = new HeroCloudScene(this.scene, this.world);
     this.history = new HistoryScene(this.scene);
     this.zeus = new ZeusScene(this.scene);
@@ -163,7 +165,7 @@ export class SceneManager {
     this.wipe.tick(t);
     // Fog belongs to the history helix only
     const fog = this.scene.fog;
-    const inWorld = store.activeStage === 'hero' || store.activeStage === 'arrival' || store.activeStage === 'building' || (!store.activeStage && store.scroll < 4);
+    const inWorld = store.activeStage === 'hero' || store.activeStage === 'arrival' || store.activeStage === 'building' || store.activeStage === 'place' || (!store.activeStage && store.scroll < 4);
     if (store.activeStage === 'history') { fog.color.set(HISTORY_BG); fog.near = 6; fog.far = 14.5; }
     else if (inWorld) { fog.color.copy(this.world.fogColor); fog.near = this.world.fogNear; fog.far = this.world.fogFar; }
     else { fog.near = 1e4; fog.far = 1e4 + 1; }
@@ -208,6 +210,7 @@ export class SceneManager {
     }
     this.heroClouds.update(this.camera, t);
     this.building.update(this.camera, t);
+    this.map.update(this.camera, t);
     this.world.update(this.camera, t, inWorld);
     this.history.update(this.camera, t);
     this.zeus.update(this.camera, t);

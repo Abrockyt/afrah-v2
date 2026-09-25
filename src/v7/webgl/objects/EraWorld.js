@@ -26,6 +26,8 @@ void main(){
 export const MOODS = {
   // Baahubali: warm golden light through a rose haze
   golden: { horizon: '#f2cfb0', mid: '#d9aea6', top: '#7d7b9c', sun: '#ffd09a', sunCol: '#ffc98f', fog: '#e2c3b4', hemiSky: '#ffe9d4', hemiGround: '#6d5f58', sunI: 2.6, hemiI: 1.15, ground: .9, evening: 0 },
+  // the place chapter: a clear, cool morning
+  morning: { horizon: '#f6e3cf', mid: '#bfd5e6', top: '#6d9ccc', sun: '#fff0da', sunCol: '#fff1d6', fog: '#e3e8eb', hemiSky: '#eef4fb', hemiGround: '#8b8578', sunI: 2.4, hemiI: 1.25, ground: 1, evening: 0 },
   // the building chapter: last light, rooms coming on
   dusk: { horizon: '#e79a74', mid: '#8a6d80', top: '#1d2640', sun: '#ff9a62', sunCol: '#ff8f5a', fog: '#6e5a66', hemiSky: '#c6a8b8', hemiGround: '#231d24', sunI: 1.9, hemiI: .55, ground: .45, evening: 1 },
 };
