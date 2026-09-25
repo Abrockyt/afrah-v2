@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { sectionProgress, store, range } from '../../core/store';
 import { HISTORY_ITEMS } from '../../content/history';
+import { createFeather } from '../objects/ProceduralFeather';
 
 // Composites-style history helix: image planes wound on a vertical helix that
 // turns and rises with scroll. The plane nearest the reading point is fully
@@ -35,6 +36,13 @@ export class HistoryScene {
       this.group.add(mesh);
     });
     this.mouse = new THREE.Vector2();
+    // A white feather turns slowly at the heart of the helix
+    this.pivot = new THREE.Group();
+    this.pivot.position.set(0, -1, -2.5);
+    const feather = createFeather({ color: '#fbfaf8', roughness: 0.75 });
+    feather.position.set(-0.5, 0.2, 0); feather.rotation.set(0, 0, -0.27); feather.scale.setScalar(1.8);
+    this.pivot.add(feather);
+    this.group.add(this.pivot);
   }
 
   // t is the helix phase: plane n reaches the reading point when t = 3.84 - n.
@@ -64,6 +72,7 @@ export class HistoryScene {
     const N = this.planes.length;
     const t = (3.84 - (N - 1) - 2.5) + (N - 1 + 5) * range(p, 0.14, 0.97);
     const idx = this.layout(t);
+    this.pivot.rotation.y = -1.5 - p * 2.4 + Math.sin(time * 0.3) * 0.04;
     if (idx !== this.current) { this.current = idx; store.ch.historyIndex = idx; }
 
     // scroll speed bends the planes (shared geometry)

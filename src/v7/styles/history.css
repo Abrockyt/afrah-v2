@@ -22,13 +22,15 @@
 .hx__timeline-strip{display:flex;gap:7vw;padding:0 50vw 0 var(--gutter);width:max-content;will-change:transform}
 .hx__timeline-strip span{font:500 12px/1 var(--font-display);letter-spacing:.14em;color:#3b3530}
 
-/* ── Sculpture room ─────────────────────────────────────── */
+/* ── Sculpture room (Silver Pinewood lobby layout) ─────── */
 .statue{color:#f2efea;background:transparent}
-.statue__copy{position:absolute;right:var(--gutter);top:50%;transform:translateY(-50%);width:min(30vw,440px);z-index:3}
-.statue__kicker{display:block;color:#c5a48f;margin-bottom:26px}
-.statue__title{margin:0 0 28px;font:400 clamp(44px,5.2vw,96px)/.95 var(--font-display);letter-spacing:-.03em}
-.statue__body{font:400 14px/1.65 var(--font-display);color:rgba(242,239,234,.72);max-width:34ch}
-.statue__hint{position:absolute;right:var(--gutter);bottom:8vh;z-index:3;color:rgba(242,239,234,.5)}
+.statue__intro{position:absolute;right:var(--gutter);top:22vh;z-index:3;margin:0;width:min(28vw,420px);
+  font:500 11px/1.55 var(--font-display);letter-spacing:.06em;text-transform:uppercase;color:rgba(242,239,234,.82)}
+.statue__intro .line{display:block;overflow:hidden}.statue__intro .line__in{display:block}
+.statue__word{position:absolute;right:var(--gutter);bottom:4vh;z-index:3;margin:0;display:flex;overflow:hidden;
+  font:400 clamp(90px,17vw,330px)/.82 var(--font-display);letter-spacing:-.04em;color:#c49a7e}
+.statue__word span{display:inline-block}
+.statue__hint{position:absolute;left:var(--gutter);bottom:6vh;z-index:3;color:rgba(242,239,234,.45)}
 
 /* Cave exit sheet: feathered mask instead of a straight clip */
 .bridge__dark{--rise:100vh;clip-path:none!important;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-size:100% 140%;mask-size:100% 140%;-webkit-mask-position:0 var(--rise);mask-position:0 var(--rise)}
@@ -39,6 +41,6 @@
   .hx__line{white-space:normal}
   .hx__item{max-width:80vw;bottom:15vh}
   .hx__item-title{font-size:8vw}
-  .statue__copy{left:var(--gutter);right:var(--gutter);width:auto;top:auto;bottom:16vh;transform:none}
-  .statue__title{font-size:11vw}
+  .statue__intro{left:var(--gutter);right:var(--gutter);width:auto;top:16vh;font-size:10px}
+  .statue__word{font-size:26vw}
 }
