@@ -1,4 +1,4 @@
-import {useEffect, useMemo, useState} from 'react';
+import {useEffect, useMemo, useState, lazy, Suspense} from 'react';
 import {Dialog, Enquiry} from '../Forms';
 import {Residences, PlaceMap} from './Film';
 import {PLACES} from './era';
@@ -83,12 +83,9 @@ function ResidencesPage() {
   </main>;
 }
 
+const FloorSelectPage = lazy(() => import('../v7/pages/FloorSelect'));
 function SelectPage() {
-  return <main className="e-page e-full">
-    <PageTitle crumbs="Select a level">Select a level</PageTitle>
-    <Residences head="Visual selection" link={false}/>
-    <div className="e-under"><Link to="/residences" className="f-pill ghost">Select by criteria</Link></div>
-  </main>;
+  return <Suspense fallback={<main className="e-page"/>}><FloorSelectPage/></Suspense>;
 }
 
 function MapPage() {

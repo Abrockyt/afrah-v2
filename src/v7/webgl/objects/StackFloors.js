@@ -1,50 +1,56 @@
 import * as THREE from 'three';
 
-// Turns the reference building into a high-rise using its own geometry and
-// materials: the base (entrance floors) is kept up to BAND_TOP, a two-floor
-// band of the facade (BAND_BOTTOM…BAND_TOP, one exact floor-pair high) is
-// repeated upward, and the original crown (parapets, taller blocks, roof) is
-// set back on top. Every piece shares the original geometry; the cuts are
-// clipping planes, so the facade pattern runs on without seams.
-const BAND_BOTTOM = 2.03, BAND_TOP = 2.96, BAND = BAND_TOP - BAND_BOTTOM;
+// Builds high-rises from the reference building's own geometry and materials:
+// the entrance floors are the base (up to BAND_TOP), the facade's exact
+// two-floor band (BAND_BOTTOM…BAND_TOP) repeats upward, and the original crown
+// (parapets, taller blocks, roof) sits on top. Pieces share the source
+// geometry; the cuts are horizontal clipping planes, so any number of copies
+// can stand anywhere on the ground and the facade runs on without seams.
+export const BAND_BOTTOM = 2.03, BAND_TOP = 2.96, BAND = BAND_TOP - BAND_BOTTOM;
+export const FLOOR = BAND / 2;                       // one storey
+export const FIRST_RES_FLOOR_Y = 1.57;               // first residential storey above the entrance
+export const BASE_HEIGHT = 4.56;
 const PARTS = ['Walls', 'Windows', 'Roof'];
 
-export function stackFloors(model, renderer, extraBands = 14) {
-  renderer.localClippingEnabled = true;
+export function towerHeight(bands) { return BASE_HEIGHT + bands * BAND; }
+
+function clipped(material, below, above) {
+  const planes = [];
+  if (below !== null) planes.push(new THREE.Plane(new THREE.Vector3(0, -1, 0), below));   // keep y <= below
+  if (above !== null) planes.push(new THREE.Plane(new THREE.Vector3(0, 1, 0), -above));   // keep y >= above
+  const c = material.clone(); c.clippingPlanes = planes; return c;
+}
+
+// Returns a Group containing one tower (meshes only, no lights), standing at
+// the source model's origin. Materials are cached per (source, cut) so every
+// tower of the same height shares them.
+export function buildTower(model, bands, cache = new Map()) {
   model.updateMatrixWorld(true);
+  const tower = new THREE.Group();
   const sources = [];
   model.traverse((o) => { if (o.isMesh && PARTS.includes(o.name)) sources.push(o); });
-
-  const clip = (mesh, below, above) => {
-    const planes = [];
-    if (below !== null) planes.push(new THREE.Plane(new THREE.Vector3(0, -1, 0), below));   // keep y <= below
-    if (above !== null) planes.push(new THREE.Plane(new THREE.Vector3(0, 1, 0), -above));   // keep y >= above
-    const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
-    const cloned = mats.map((m) => { const c = m.clone(); c.clippingPlanes = planes; c.clipShadows = true; return c; });
-    mesh.material = Array.isArray(mesh.material) ? cloned : cloned[0];
+  const mat = (src, key, below, above) => {
+    const k = `${src.uuid}|${key}`;
+    if (!cache.has(k)) cache.set(k, clipped(src.userData.sourceMaterial || src.material, below, above));
+    return cache.get(k);
   };
-
-  const holder = new THREE.Group();
-  holder.name = 'StackedFloors';
+  const piece = (src, dy, m) => { const mesh = new THREE.Mesh(src.geometry, m); mesh.applyMatrix4(src.matrixWorld); mesh.position.y += dy; mesh.name = src.name; tower.add(mesh); };
   sources.forEach((src) => {
-    // repeated bands
-    for (let k = 1; k <= extraBands; k++) {
+    if (!src.userData.sourceMaterial) src.userData.sourceMaterial = src.material;
+    if (src.name !== 'Roof') piece(src, 0, mat(src, 'base', BAND_TOP, null));
+    for (let k = 1; k <= bands; k++) {
       if (src.name === 'Roof') continue;
-      const copy = new THREE.Mesh(src.geometry, src.material);
-      copy.applyMatrix4(src.matrixWorld);
-      copy.position.y += k * BAND;
-      clip(copy, BAND_TOP + k * BAND, BAND_BOTTOM + k * BAND);
-      holder.add(copy);
+      piece(src, k * BAND, mat(src, `band${k}`, BAND_TOP + k * BAND, BAND_BOTTOM + k * BAND));
     }
-    // crown on top
-    const top = new THREE.Mesh(src.geometry, src.material);
-    top.applyMatrix4(src.matrixWorld);
-    top.position.y += extraBands * BAND;
-    clip(top, null, BAND_TOP + extraBands * BAND);
-    holder.add(top);
-    // the original becomes the base
-    clip(src, BAND_TOP, null);
+    piece(src, bands * BAND, mat(src, `top${bands}`, null, BAND_TOP + bands * BAND));
   });
-  model.add(holder);
-  return { height: 4.56 + extraBands * BAND, band: BAND };
+  tower.userData.height = towerHeight(bands);
+  tower.userData.bands = bands;
+  return tower;
+}
+
+// Hides the original building meshes (the model keeps its lights and camera
+// markers) so towers built from it can stand in its place.
+export function hideSourceBuilding(model) {
+  model.traverse((o) => { if (o.isMesh && (PARTS.includes(o.name) || o.name === 'Parking_Lines')) o.visible = false; });
 }
