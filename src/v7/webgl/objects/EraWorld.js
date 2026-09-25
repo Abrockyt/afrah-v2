@@ -65,11 +65,42 @@ export class EraWorld {
     this.fogColor = new THREE.Color('#e2c3b4');
     this.fogNear = 30; this.fogFar = 220;
     this.mood = null;
-    this.ready = loadEraDistrict(renderer).then((d) => { this.district = d; this.group.add(d.group); this.setMood('golden'); })
+    this.ready = loadEraDistrict(renderer).then((d) => {
+      this.district = d; this.group.add(d.group);
+      this.bakeSkies(renderer);
+      this.setMood('golden');
+    })
       .catch((e) => { this.error = e; console.warn('ERA district could not load', e); });
   }
 
+  // Reflections come from our own sky: one prefiltered environment per mood,
+  // swapped onto the district's materials when the mood changes.
+  bakeSkies(renderer) {
+    const pm = new THREE.PMREMGenerator(renderer);
+    const scene = new THREE.Scene();
+    const mat = this.sky.material.clone();
+    mat.uniforms = THREE.UniformsUtils.clone(this.sky.material.uniforms);
+    const dome = new THREE.Mesh(new THREE.SphereGeometry(1, 48, 24), mat); dome.frustumCulled = false; scene.add(dome);
+    this.envs = {};
+    for (const name of Object.keys(MOODS)) {
+      const m = MOODS[name], u = mat.uniforms;
+      u.uHorizon.value.set(m.horizon); u.uMid.value.set(m.mid); u.uTop.value.set(m.top); u.uSunCol.value.set(m.sunCol); u.uGround.value = m.ground;
+      this.envs[name] = pm.fromScene(scene, 0, 0.05, 10).texture;
+    }
+    pm.dispose(); mat.dispose(); dome.geometry.dispose();
+    this.envMood = null;
+  }
+
+  useEnv(name) {
+    if (!this.envs || this.envMood === name) return;
+    this.envMood = name;
+    const env = this.envs[name];
+    Object.values(this.district.materials).forEach((m) => { if (m.envMap !== undefined) m.envMap = env; });
+    this.district.waterMat && (this.district.waterMat.envMap = env);
+  }
+
   setMood(name, k = 1) {
+    this.useEnv(k < 0.5 ? 'golden' : name);
     const a = MOODS.golden, b = MOODS[name] || a, u = this.sky.material.uniforms;
     const mix = (x, y) => new THREE.Color(x).lerp(new THREE.Color(y), k);
     u.uHorizon.value.copy(mix(a.horizon, b.horizon)); u.uMid.value.copy(mix(a.mid, b.mid)); u.uTop.value.copy(mix(a.top, b.top));
