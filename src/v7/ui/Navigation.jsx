@@ -14,6 +14,7 @@ const CHAPTERS = [
   { id: 'cases', label: 'Residences', sections: ['cases'] },
   { id: 'tunnel', label: 'The passage', sections: ['tunnel'] },
   { id: 'history', label: 'History', sections: ['history'] },
+  { id: 'statue', label: 'Heritage', sections: ['statue'] },
   { id: 'contact', label: 'Viewing', sections: [] },
 ];
 

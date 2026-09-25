@@ -14,6 +14,7 @@ uniform vec2 uDir;
 uniform float uAspect;
 uniform float uSeed;
 uniform float uFringe;
+uniform float uWipeTime;
 vec3 wmod289(vec3 x){return x - floor(x*(1.0/289.0))*289.0;}
 vec2 wmod289(vec2 x){return x - floor(x*(1.0/289.0))*289.0;}
 vec3 wpermute(vec3 x){return wmod289(((x*34.0)+1.0)*x);}
@@ -67,8 +68,14 @@ float wipeMask(vec2 uv){
   float lobes = wsnoise(p * 1.1 + uSeed) * 0.05 + wsnoise(p * 2.3 - uSeed) * 0.03;
   vec2 perp = vec2(-d.y, d.x);
   float feathers = wfeathers(p, d, perp, uSeed) * uFringe * 2.4;
+  // Composites-style displacement: streaks running along the wipe direction
+  // (brush / barb texture) that drift slowly, over a sharp front.
+  float along = dot(p, d), across = dot(p, perp);
+  float streak = wsnoise(vec2(across * 26.0, along * 1.4 - uWipeTime * 0.12 + uSeed));
+  float fine = wsnoise(vec2(across * 88.0, along * 2.6 + uSeed * 1.7));
+  float disp = streak * 0.03 + fine * 0.012 + feathers * (0.35 + 0.65 * (fine * 0.5 + 0.5));
   float front = uProgress * 1.5 - 0.25;
-  return smoothstep(front - 0.02, front + 0.02, t + lobes + feathers);
+  return smoothstep(front - 0.004, front + 0.004, t + lobes + disp);
 }
 `;
 
@@ -103,6 +110,7 @@ export class FeatherWipe {
       uAspect: { value: 1.78 },
       uSeed: { value: 1.3 },
       uFringe: { value: 0.09 },
+      uWipeTime: { value: 0 },
     };
     this.material = new THREE.ShaderMaterial({
       vertexShader: vert, fragmentShader: frag, depthTest: false, depthWrite: false,
@@ -124,13 +132,14 @@ export class FeatherWipe {
     this.shared.uDir.value.set(dir[0], dir[1]).normalize();
     this.shared.uSeed.value = seed; this.shared.uFringe.value = fringe;
   }
+  tick(time) { this.shared.uWipeTime.value = time; }
   render(renderer, aspect) {
     this.shared.uAspect.value = aspect;
     renderer.render(this.scene, this.camera);
   }
 
-  cover(renderer,aspect,progress,color,reverse=false){
-    this.set(color,color,progress,[0,1],2.7,.12);
+  cover(renderer,aspect,progress,color,reverse=false,dir=[0,1]){
+    this.set(color,color,progress,dir,2.7,.12);
     this.material.uniforms.uCover.value=1;
     this.material.uniforms.uReverse.value=reverse?1:0;
     this.render(renderer,aspect);

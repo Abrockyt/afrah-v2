@@ -1,48 +1,54 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import {useStage} from '../core/useStage';
 import {gsap} from '../core/ScrollManager';
-import {setTheme} from '../core/store';
+import {setTheme,store} from '../core/store';
+import {HISTORY_ITEMS,HISTORY_TITLE,HISTORY_INTRO} from '../content/history';
 import {Lines} from '../ui/Reveal';
 import {CONTACT} from '../content/copy';
 
-const MOMENTS=[
-  ['01','Origin','/v3/silver/time-1.webp'],
-  ['02','Material','/v3/silver/arch-intro.webp'],
-  ['03','Form','/v3/silver/gallery-3.webp'],
-  ['04','Arrival','/v3/silver/lobby-space.webp'],
-  ['05','Life','/v3/silver/time-4.webp'],
-];
-
-// One WebGL sculpture stays in place while the photographs revolve through
-// actual CSS perspective. Scroll position, not timers or click state, controls
-// the whole composition, so reversing the wheel reverses the choreography.
+// Composites-style history: a huge title rises word by word and is wiped
+// away by its mask, the intro lines slide in and out, then the WebGL helix
+// (HistoryScene) turns through the milestones while the year strip slides
+// underneath and the current milestone's year and title are shown.
 export function History(){
+  const itemRef=useRef(null);
   const {runwayRef,stageRef}=useStage('history',{
-    runway:7,
-    build:(tl,{q,stage})=>{
-      const cards=q('.memory__card'),num=q('.memory__number')[0],title=q('.memory__title')[0],bar=q('.memory__bar i')[0];
-      let last=-1;
-      const apply=p=>{
-        const a=p*(MOMENTS.length-1),w=stage.clientWidth,h=stage.clientHeight;
-        cards.forEach((el,i)=>{
-          const d=i-a,ad=Math.abs(d),near=Math.max(0,1-ad),x=w*(.7+d*.38),y=h*(.58+Math.sin(d*1.25)*.055);
-          el.style.transform=`translate3d(${x}px, ${y}px, ${-ad*240}px) translate(-50%,-50%) rotateY(${-d*17}deg) rotateZ(${Math.sin(d*.7)*3}deg) scale(${.72+near*.28})`;
-          el.style.opacity=String(Math.max(0,1-ad*.38));
-          el.style.visibility=ad>2.4?'hidden':'visible';el.style.zIndex=String(10-Math.round(ad));
-        });
-        const idx=Math.min(MOMENTS.length-1,Math.round(a));if(idx!==last){last=idx;num.textContent=`${MOMENTS[idx][0]} / 05`;title.textContent=MOMENTS[idx][1];}
-        bar.style.transform=`scaleX(${p})`;
-      };
-      tl.to({}, {duration:1,onUpdate:()=>apply(tl.progress())},0);apply(0);
+    runway:11,
+    build:(tl,{q})=>{
+      const strip=q('.hx__timeline-strip')[0];
+      tl.fromTo(q('.hx__title .hx__word > span'),{yPercent:100},{yPercent:0,duration:.08,stagger:.006,ease:'power2.out'},.01)
+        .fromTo(q('.hx__title-mask'),{height:'100%'},{height:'0%',duration:.1,ease:'power1.inOut'},.12)
+        .fromTo(q('.hx__intro .hx__line'),{yPercent:200,autoAlpha:0},{yPercent:0,autoAlpha:1,duration:.05,stagger:.007},.13)
+        .to(q('.hx__intro'),{autoAlpha:0,x:-20,duration:.03},.21)
+        .fromTo(q('.hx__item'),{autoAlpha:0},{autoAlpha:1,duration:.04},.21)
+        .fromTo(q('.hx__timeline'),{autoAlpha:0},{autoAlpha:1,duration:.04},.14)
+        .fromTo(strip,{x:0},{x:()=>-(strip.scrollWidth-strip.parentElement.clientWidth),duration:.83,ease:'none'},.14)
+        .to(q('.hx__item, .hx__timeline'),{autoAlpha:0,duration:.03},.965);
     },
-    onProgress:()=>setTheme('dark'),
+    onProgress:()=>setTheme('light'),
   });
-  return <section className="runway" id="history" ref={runwayRef}><div className="stage stage--memory" ref={stageRef}>
-    <div className="memory__label"><span className="t-small">05 / The story</span><h2>Moments<br/>that stay.</h2></div>
-    <div className="memory__spatial">{MOMENTS.map(([n,t,image])=><figure className="memory__card" key={n}><img src={image} alt={`${t} — architectural and residential study photograph`} loading="lazy"/><figcaption>{n} / {t}</figcaption></figure>)}</div>
-    <div className="memory__caption"><span className="memory__number">01 / 05</span><strong className="memory__title">Origin</strong></div>
-    <div className="memory__bar"><i/></div>
-    <span className="memory__cue t-small">Scroll through the moments ↓</span>
+  // The helix reports which milestone is at the reading point.
+  useEffect(()=>{
+    let last=-2;
+    const tick=()=>{
+      const i=store.ch.historyIndex;
+      if(i===undefined||i===last||!itemRef.current)return;
+      last=i;const it=HISTORY_ITEMS[i];if(!it)return;
+      const el=itemRef.current;
+      el.querySelector('.hx__item-year').textContent=it.year;
+      const t=el.querySelector('.hx__item-title');
+      t.innerHTML=it.title.split(' ').map(w=>`<span class="hx__word"><span>${w}</span></span>`).join(' ');
+      gsap.fromTo(t.querySelectorAll('.hx__word > span'),{yPercent:100},{yPercent:0,duration:.6,stagger:.04,ease:'power3.out',overwrite:true});
+    };
+    gsap.ticker.add(tick);return()=>gsap.ticker.remove(tick);
+  },[]);
+  const years=[...HISTORY_ITEMS].reverse();
+  return <section className="runway" id="history" ref={runwayRef}><div className="stage hx" ref={stageRef}>
+    <div className="hx__title-wrap"><div className="hx__title-mask"><h2 className="hx__title">{HISTORY_TITLE.map((line,i)=><span className="hx__title-line" key={i}>{line.split(' ').map((w,j)=><span className="hx__word" key={j}><span>{w}</span></span>)}</span>)}</h2></div></div>
+    <div className="hx__intro">{HISTORY_INTRO.map((l,i)=><span className="hx__line" key={i}>{l||'\u00a0'}</span>)}</div>
+    <div className="hx__item" ref={itemRef} aria-live="polite"><span className="hx__item-year"/><h3 className="hx__item-title"/></div>
+    <div className="hx__timeline" aria-hidden="true"><div className="hx__timeline-strip">{years.map((it,i)=><span key={i}>{it.year}</span>)}</div></div>
+    <span className="hx__kicker t-small">05 / The story</span>
   </div></section>;
 }
 

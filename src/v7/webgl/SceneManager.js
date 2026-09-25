@@ -4,7 +4,8 @@ import { FeatherWipe } from './transitions/FeatherWipe';
 import { IntroScene } from './scenes/IntroScene';
 import { TunnelScene } from './scenes/TunnelScene';
 import { ReferenceBuildingScene } from './scenes/ReferenceBuildingScene';
-import { SculptureScene } from './scenes/SculptureScene';
+import { HistoryScene, HISTORY_BG } from './scenes/HistoryScene';
+import { ZeusScene, ZEUS_BG } from './scenes/ZeusScene';
 import { store, sectionProgress, range, smooth, resolveActiveStage } from '../core/store';
 import HS from './data/historySpec.json';
 
@@ -25,8 +26,17 @@ export class SceneManager {
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = 1.0;
     this.renderer.autoClear = false;
+    // Shadows only come from the sculpture room's cursor light.
+    this.renderer.shadowMap.enabled = true;
+    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
     this.scene = new THREE.Scene();
+    // Fog is always present (pushed far away) so switching it on for the
+    // history helix never recompiles materials.
+    this.scene.fog = new THREE.Fog(HISTORY_BG, 1e4, 1e4 + 1);
+    this.pointer = new THREE.Vector2(); store.pointer = this.pointer;
+    this.onPointer = (e) => { this.pointer.set((e.clientX / window.innerWidth) * 2 - 1, 1 - (e.clientY / window.innerHeight) * 2); };
+    window.addEventListener('pointermove', this.onPointer, { passive: true });
     this.camera = new THREE.PerspectiveCamera(38, 16 / 9, 0.05, 200);
     this.camera.position.set(0, 0, 4.2);
 
@@ -47,10 +57,11 @@ export class SceneManager {
     this.intro = new IntroScene(this.scene, this.envMap, this.wipe);
     this.tunnel = new TunnelScene(this.scene, this.envMap);
     this.building = new ReferenceBuildingScene(this.scene, this.envMap, this.renderer);
-    this.sculpture = new SculptureScene(this.scene);
+    this.history = new HistoryScene(this.scene);
+    this.zeus = new ZeusScene(this.scene);
     this.last = 0;
     this.bg = { from: INK, to: INK, p: 0, dir: [0, 1], seed: 1.3, fringe: 0.09 };
-    this.ready = Promise.all([this.warmup(),this.building.ready,this.sculpture.ready]);
+    this.ready = Promise.all([this.warmup(), this.building.ready, this.zeus.ready.then(() => this.warmupLate())]);
   }
 
   // Compile every program while the loader is up so no stage stalls on first
@@ -80,6 +91,18 @@ export class SceneManager {
     return true;
   }
 
+  // Compile the sculpture room and helix once the model is in, still under the loader.
+  async warmupLate() {
+    const groups = [this.history.group, this.zeus.group];
+    groups.forEach((g) => { g.visible = true; });
+    try {
+      if (this.renderer.compileAsync) await this.renderer.compileAsync(this.scene, this.camera);
+      this.renderer.render(this.scene, this.camera);
+    } catch (e) { console.warn('late warmup failed', e); }
+    groups.forEach((g) => { g.visible = false; });
+    return true;
+  }
+
   resize(w, h) {
     this.renderer.setSize(w, h, false);
     this.camera.aspect = w / h;
@@ -103,13 +126,15 @@ export class SceneManager {
     else if (act('fusion')) { bg.from = INK; bg.to = BONE; bg.dir = [0.5, 0.86]; bg.seed = 4.1; bg.fringe = 0.2; bg.p = range(sectionProgress('fusion'), 0.84, 1.0); }
     else if (act('protect') || act('defy')) { bg.from = BONE; }
     else if (act('building')) {bg.from=INK;}
-    else if (act('tunnel')) { bg.from = '#040608'; }
+    else if (act('tunnel')) { bg.from = sectionProgress('tunnel') > 0.8 ? INK : '#040608'; }
     else if (act('why')) { bg.from = INK2; }
     else if (act('bridge')) { bg.from = INK2; }
-    else if (act('history')) { bg.from = INK; }
+    else if (act('history')) { bg.from = HISTORY_BG; }
+    else if (act('statue')) { bg.from = ZEUS_BG; }
+    else if (!store.activeStage && s.building?.st && s.tunnel?.st && store.scroll > s.building.st.end && store.scroll < s.tunnel.st.start) { bg.from = BONE; }
     else if (store.scroll < 4) { bg.from = INK; }
     // Theme for the navigation follows the dominant colour
-    const light = (bg.from === BONE && bg.p < 0.5) || (bg.to === BONE && bg.p >= 0.5);
+    const light = ((bg.from === BONE || bg.from === HISTORY_BG) && bg.p < 0.5) || (bg.to === BONE && bg.p >= 0.5);
     store.themeHint = light ? 'light' : 'dark';
   }
 
@@ -130,6 +155,10 @@ export class SceneManager {
     this.computeBackground();
     const bg = this.bg;
     this.wipe.set(bg.from, bg.to, bg.p, bg.dir, bg.seed, bg.fringe);
+    this.wipe.tick(t);
+    // Fog belongs to the history helix only
+    const fog = this.scene.fog;
+    if (store.activeStage === 'history') { fog.near = 6; fog.far = 14.5; } else { fog.near = 1e4; fog.far = 1e4 + 1; }
     const r = this.renderer;
     // Overlay mode: during the history timeline the canvas floats above the
     // DOM panels (transparent background) so the feather sits in front of them.
@@ -170,7 +199,8 @@ export class SceneManager {
       this.lights.fill.intensity = 0.5 * wantLights; this.lights.rim.intensity = 0.8 * wantLights;
     }
     this.building.update(this.camera, t, r);
-    this.sculpture.update(this.camera,t);
+    this.history.update(this.camera, t);
+    this.zeus.update(this.camera, t);
     mark('rigs');
     mark('composition');
     r.render(this.scene, this.camera);
@@ -184,10 +214,23 @@ export class SceneManager {
       if(p<.1)this.wipe.cover(r,this.camera.aspect,range(p,0,.1),INK,true);
       if(p>.88)this.wipe.cover(r,this.camera.aspect,range(p,.88,1),INK);
     }
+    // Composites-style cuts around the passage, the story and the sculpture
+    // room: the outgoing colour is wiped away by a feathered edge.
+    if(stage==='tunnel' && sectionProgress('tunnel')<.08)
+      this.wipe.cover(r,this.camera.aspect,range(sectionProgress('tunnel'),0,.08),BONE,true);
+    if(stage==='history'){
+      const p=sectionProgress('history');
+      if(p<.05)this.wipe.cover(r,this.camera.aspect,range(p,0,.05),INK,true,[1,0]);
+      if(p>.965)this.wipe.cover(r,this.camera.aspect,range(p,.965,1),ZEUS_BG,false,[0,-1]);
+    }
+    if(stage==='statue' && sectionProgress('statue')<.08)
+      this.wipe.cover(r,this.camera.aspect,range(sectionProgress('statue'),0,.08),ZEUS_BG,true,[0,-1]);
+    if(stage==='statue' && sectionProgress('statue')>.68)
+      this.wipe.cover(r,this.camera.aspect,range(sectionProgress('statue'),.68,.78),INK,false,[1,0]);
     if(stage==='building' && sectionProgress('building')<.1)
       this.wipe.cover(r,this.camera.aspect,range(sectionProgress('building'),0,.1),INK,true);
     mark('render');
   }
 
-  dispose() { this.renderer.dispose(); }
+  dispose() { window.removeEventListener('pointermove', this.onPointer); this.renderer.dispose(); }
 }

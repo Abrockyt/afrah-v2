@@ -1,0 +1,44 @@
+/* History (Composites-style) and the sculpture room. */
+
+/* ── History ────────────────────────────────────────────── */
+.hx{color:#141414;background:transparent}
+.hx__kicker{position:absolute;top:14vh;left:var(--gutter);z-index:3;color:#6d5a4c}
+.hx__title-wrap{position:absolute;inset:0;z-index:2;pointer-events:none}
+.hx__title-mask{position:absolute;left:0;right:0;top:0;height:100%;overflow:hidden}
+.hx__title{position:absolute;left:var(--gutter);top:50vh;transform:translateY(-50%);margin:0;
+  font:400 clamp(52px,7.6vw,150px)/.9 var(--font-display);letter-spacing:-.03em;text-transform:uppercase;color:#141414}
+.hx__title-line{display:block}
+.hx__word{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.04em}
+.hx__word>span{display:inline-block;will-change:transform}
+.hx__title-line .hx__word+.hx__word{margin-left:.22em}
+.hx__intro{position:absolute;right:var(--gutter);top:50%;transform:translateY(-50%);width:min(34vw,470px);z-index:3;
+  font:400 14px/1.6 var(--font-display);color:#2a2622}
+.hx__line{display:block;overflow:hidden;white-space:nowrap}
+.hx__item{position:absolute;left:var(--gutter);bottom:17vh;z-index:3;max-width:40vw}
+.hx__item-year{display:block;font:500 12px/1 var(--font-display);letter-spacing:.16em;color:#6d5a4c;margin-bottom:14px}
+.hx__item-title{margin:0;font:400 clamp(30px,3.4vw,64px)/.95 var(--font-display);letter-spacing:-.02em;text-transform:uppercase}
+.hx__item-title .hx__word+.hx__word{margin-left:.2em}
+.hx__timeline{position:absolute;left:0;right:0;bottom:6vh;z-index:3;overflow:hidden;border-top:1px solid rgba(20,20,20,.18);padding-top:14px}
+.hx__timeline-strip{display:flex;gap:7vw;padding:0 50vw 0 var(--gutter);width:max-content;will-change:transform}
+.hx__timeline-strip span{font:500 12px/1 var(--font-display);letter-spacing:.14em;color:#3b3530}
+
+/* ── Sculpture room ─────────────────────────────────────── */
+.statue{color:#f2efea;background:transparent}
+.statue__copy{position:absolute;right:var(--gutter);top:50%;transform:translateY(-50%);width:min(30vw,440px);z-index:3}
+.statue__kicker{display:block;color:#c5a48f;margin-bottom:26px}
+.statue__title{margin:0 0 28px;font:400 clamp(44px,5.2vw,96px)/.95 var(--font-display);letter-spacing:-.03em}
+.statue__body{font:400 14px/1.65 var(--font-display);color:rgba(242,239,234,.72);max-width:34ch}
+.statue__hint{position:absolute;right:var(--gutter);bottom:8vh;z-index:3;color:rgba(242,239,234,.5)}
+
+/* Cave exit sheet: feathered mask instead of a straight clip */
+.bridge__dark{--rise:100vh;clip-path:none!important;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-size:100% 140%;mask-size:100% 140%;-webkit-mask-position:0 var(--rise);mask-position:0 var(--rise)}
+
+@media (max-width:760px){
+  .hx__title{font-size:12vw}
+  .hx__intro{left:var(--gutter);right:var(--gutter);width:auto;top:auto;bottom:22vh;transform:none;font-size:12px}
+  .hx__line{white-space:normal}
+  .hx__item{max-width:80vw;bottom:15vh}
+  .hx__item-title{font-size:8vw}
+  .statue__copy{left:var(--gutter);right:var(--gutter);width:auto;top:auto;bottom:16vh;transform:none}
+  .statue__title{font-size:11vw}
+}

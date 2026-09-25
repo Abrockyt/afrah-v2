@@ -11,6 +11,7 @@ import EraOpening from './sections/EraOpening';
 import { Living, PlaceChapter } from './sections/Living';
 import { Tunnel } from './sections/Middle';
 import { History, Contact } from './sections/History';
+import { Statue } from './sections/Statue';
 
 // AFRAH film, built on the Composites-style engine (ported from elegant-hypatia,
 // all original code): one persistent canvas, pinned stages, feathered wipes.
@@ -31,6 +32,7 @@ export default function App() {
         <Building />
         <Living /><Tunnel />
         <History />
+        <Statue />
         <PlaceChapter />
         <Contact />
       </main>

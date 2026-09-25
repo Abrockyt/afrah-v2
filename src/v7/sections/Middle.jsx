@@ -5,6 +5,9 @@ import { Lines, showLines, hideLines, fade } from '../ui/Reveal';
 import { WHY, BRIDGE, STANDARDS } from '../content/copy';
 import T from '../webgl/data/tunnelSpec.json';
 import { standardsList } from '../content/adapters';
+import { featherEdgeMask } from '../ui/featherEdge';
+
+const DARK_EDGE = featherEdgeMask(2.3);
 
 /* ---------------------------------------------------------- Why composites */
 // Six benefit nodes scattered around a centred heading; they fly in from the
@@ -76,11 +79,15 @@ export function Tunnel() {
       const [[p0, y0], [p1, y1]] = T.light.text1Y;
       tl.fromTo(a, { y: () => y0 * H() }, { y: () => y1 * H(), duration: at(p1) - at(p0), ease: 'none' }, at(p0));
       tl.to(a.querySelectorAll('[data-accent]'), { color: '#8c4a12', duration: 0.05 * PF }, at(0.62));
-      tl.fromTo(dark, { clipPath: 'inset(100% 0 0 0)' }, { clipPath: 'inset(0% 0 0 0)', duration: at(T.sheet.rise[1]) - at(T.sheet.rise[0]), ease: 'none' }, at(T.sheet.rise[0]));
+      // The dark sheet rises with a feathered top edge (mask 1.4 viewports tall,
+      // top 0.26 of it the feather band), from fully below to fully over.
+      tl.fromTo(dark, { '--rise': () => `${H()}px` }, { '--rise': () => `${-0.36 * H()}px`, duration: at(T.sheet.rise[1]) - at(T.sheet.rise[0]), ease: 'power1.inOut' }, at(T.sheet.rise[0]));
       showLines(tl, b, at(T.sheet.rise[0] - 0.03), { dur: 0.04 * PF, stagger: 0.015 * PF });
       tl.to([a, b], { autoAlpha: 0, duration: at(T.fadeAll[1]) - at(T.fadeAll[0]) }, at(T.fadeAll[0]));
+      // Hand over on the same navy (the canvas is navy here too): no sheet
+      // retreat and no empty frame; the History wipe takes it from there.
       tl.set(light,{autoAlpha:0},.82)
-        .to(dark,{clipPath:'inset(0% 0 100% 0)',duration:.14,ease:'power1.inOut'},.85);
+        .to(dark,{autoAlpha:0,duration:.04,ease:'none'},.84);
     },
     onProgress: (p) => setTheme(p / PF > T.light.start && p / PF < (T.sheet.rise[0] + T.sheet.rise[1]) / 2 ? 'light' : 'dark'),
   });
@@ -88,7 +95,7 @@ export function Tunnel() {
     <section className="runway" ref={runwayRef} id="tunnel">
       <div className="stage" ref={stageRef}>
         <div className="bridge__light"><div className="stage__inner"><Lines lines={BRIDGE.light} className="bridge__a t-h1" /></div></div>
-        <div className="bridge__dark"><div className="stage__inner"><Lines lines={BRIDGE.dark} className="bridge__b t-h1" /></div></div>
+        <div className="bridge__dark" style={{ WebkitMaskImage: DARK_EDGE, maskImage: DARK_EDGE }}><div className="stage__inner"><Lines lines={BRIDGE.dark} className="bridge__b t-h1" /></div></div>
       </div>
     </section>
   );
