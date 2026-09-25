@@ -44,15 +44,18 @@ const BAKED = /^(Bld_|BC_|Poi_|poi_|Lnd_crosswalk|Lnd_grass|Lnd_asphalt$)/;
 // With `hole`, fragments inside that model-space rectangle (x0, z0, x1, z1)
 // are dropped: city blocks give way to the second phase of towers.
 export const HOLE = new THREE.Vector4(28, -322, 312, -44);
+// world → ERA model metres, kept current by tick() wherever the quarter is placed
+const TO_MODEL = new THREE.Matrix4();
 function bake(mat, tex, strength = 1, lift = 0, hole = false) {
   mat.onBeforeCompile = (sh) => {
     sh.uniforms.uBake = {value: tex};
     sh.uniforms.uBakeK = {value: new THREE.Vector2(strength, lift)};
     sh.uniforms.uHole = {value: HOLE};
+    sh.uniforms.uToModel = {value: TO_MODEL};
     sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying vec2 vBakeUv; varying vec3 vModel;')
       .replace('#include <uv_vertex>', '#include <uv_vertex>\nvBakeUv = uv; vModel = (modelMatrix * vec4(position, 1.0)).xyz;');
-    sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nuniform sampler2D uBake; uniform vec2 uBakeK; uniform vec4 uHole; varying vec2 vBakeUv; varying vec3 vModel;')
-      .replace('#include <clipping_planes_fragment>', '#include <clipping_planes_fragment>\n' + (hole ? `{ vec2 m = vModel.xz / ${S.toFixed(4)} + vec2(${CENTRE.x.toFixed(1)}, ${CENTRE.z.toFixed(1)}); if (m.x > uHole.x && m.x < uHole.z && m.y > uHole.y && m.y < uHole.w) discard; }` : ''))
+    sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nuniform sampler2D uBake; uniform vec2 uBakeK; uniform vec4 uHole; uniform mat4 uToModel; varying vec2 vBakeUv; varying vec3 vModel;')
+      .replace('#include <clipping_planes_fragment>', '#include <clipping_planes_fragment>\n' + (hole ? `{ vec2 m = (uToModel * vec4(vModel, 1.0)).xz; if (m.x > uHole.x && m.x < uHole.z && m.y > uHole.y && m.y < uHole.w) discard; }` : ''))
       .replace('#include <map_fragment>', '#include <map_fragment>\n vec3 bk = texture2D(uBake, vBakeUv).rgb; diffuseColor.rgb *= mix(vec3(1.0), bk * (1.0 - uBakeK.y) + uBakeK.y, uBakeK.x);');
   };
   mat.customProgramCacheKey = () => 'bake' + strength + '_' + lift + (hole ? 'h' : '');
@@ -102,8 +105,9 @@ async function build(renderer) {
         m.emissive = new THREE.Color('#ffc58c'); m.emissiveIntensity = 0;
         // rooms light up one by one, never the whole facade at once
         m.onBeforeCompile = (sh) => {
-          sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying vec3 vFacade;')
-            .replace('#include <worldpos_vertex>', '#include <worldpos_vertex>\nvFacade = (modelMatrix * vec4(transformed, 1.0)).xyz / ' + S.toFixed(4) + ';');
+          sh.uniforms.uToModel = {value: TO_MODEL};
+          sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying vec3 vFacade; uniform mat4 uToModel;')
+            .replace('#include <worldpos_vertex>', '#include <worldpos_vertex>\nvFacade = (uToModel * modelMatrix * vec4(transformed, 1.0)).xyz;');
           sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nvarying vec3 vFacade;')
             .replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>
               float floorId = floor(vFacade.y / 3.4);
@@ -235,12 +239,12 @@ async function build(renderer) {
   holder.scale.setScalar(S);
   holder.position.set(-CENTRE.x * S, 0, -CENTRE.z * S);
   holder.add(root, towers, treeGroup, pools);
-  holder.matrixAutoUpdate = true;
+  holder.updateMatrixWorld(); TO_MODEL.copy(holder.matrixWorld).invert();
 
   return {
     group: holder, envMap, glassMats, waterMat, materials: mats,
     // evening: 0 = golden hour, 1 = dusk with rooms lit
     setEvening(k) { glassMats.forEach((m) => { m.emissiveIntensity = k * 1.1; }); },
-    tick(t) { waterMat.uniforms.uTime.value = t; },
+    tick(t) { waterMat.uniforms.uTime.value = t; holder.updateMatrixWorld(); TO_MODEL.copy(holder.matrixWorld).invert(); },
   };
 }

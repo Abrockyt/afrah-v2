@@ -5,6 +5,7 @@ import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
 import {UnrealBloomPass} from 'three/addons/postprocessing/UnrealBloomPass.js';
 import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
 import {loadGLB, loadTrees, makeTrees, environment, disposeTree, TOWERS_CENTER, TALL_TOWER} from '../v4/three/era';
+import {loadEraDistrict} from '../v7/webgl/objects/EraDistrict';
 
 // ERA tower + district (study copies from research/era-3d-map, see reuse-assets/manifest.json),
 // re-skinned in the AFRAH night palette: black ground, ivory stone, bronze fins, rooms that glow.
@@ -201,12 +202,17 @@ export function eraMap(el, getP, {pins, interactive = true, api = {}} = {}) {
   controls.target.copy(HOME.target); s.owned.push(() => controls.dispose());
   let done = false;
   s.owned.push(() => { done = true; });
-  Promise.all([loadGLB('era-city.glb'), loadTrees()]).then(([root, pts]) => {
-    if (done) return disposeTree(root);
-    const skin = nightSkin(root, {glow: 1.3, map: true}); s.scene.add(root);
-    s.hemi.intensity = 1.1; s.moon.intensity = .9;
-    const trees = makeTrees(pts, 'night'); trees.material.color.set('#2a2c24'); s.scene.add(trees);
-    s.owned.push(() => { disposeTree(root); disposeTree(trees); skin.dispose(); });
+  // Morning: ERA's own district with its baked textures, a clear sky and haze.
+  const sky = new THREE.Color('#cfdde8');
+  s.scene.background = sky; s.scene.fog = new THREE.Fog('#dfe6ea', 4200, 11000);
+  s.hemi.color.set('#eef4fb'); s.hemi.groundColor.set('#8b8578'); s.hemi.intensity = 1.3;
+  s.moon.color.set('#fff0da'); s.moon.intensity = 2.4; s.rim.color.set('#ffe2c4'); s.rim.intensity = .5;
+  s.scene.environmentIntensity = .7; s.bloomPass.strength = .12; s.r.toneMappingExposure = 1;
+  let district = null;
+  loadEraDistrict(s.r).then(d => {
+    if (done) return;
+    district = d; d.group.scale.setScalar(1); d.group.position.set(0, 0, 0); d.setEvening(0);
+    s.scene.add(d.group);
     el.classList.add('ready');
   });
   let flight = null;
@@ -217,7 +223,8 @@ export function eraMap(el, getP, {pins, interactive = true, api = {}} = {}) {
   api.zoom = k => { const d = s.camera.position.clone().sub(controls.target).multiplyScalar(k); fly(controls.target.clone().add(d), controls.target.clone(), .7); };
   const intro = setTimeout(api.home, 300); s.owned.push(() => clearTimeout(intro));
   const v = new THREE.Vector3(), up = new THREE.Vector3(0, 1, 0);
-  s.run(dt => {
+  s.run((dt, t) => {
+    district?.tick(t);
     if (flight) { flight.t = Math.min(1, flight.t + dt / flight.dur); const k = ease(flight.t); s.camera.position.lerpVectors(flight.p0, flight.p1, k); controls.target.lerpVectors(flight.t0, flight.t1, k); if (flight.t >= 1) flight = null; }
     else if (!interactive) { const off = s.camera.position.clone().sub(controls.target).applyAxisAngle(up, dt * .025); s.camera.position.copy(controls.target).add(off); }
     controls.update();
