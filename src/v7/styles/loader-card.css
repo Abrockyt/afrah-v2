@@ -29,3 +29,29 @@
 .hero__above-sub{margin:22px 0 0;font:500 12px/1 var(--font-display);letter-spacing:.24em;text-transform:uppercase;color:rgba(248,245,240,.85)}
 .hero .era-opening__map{z-index:3}
 @media (max-width:600px){.hero__mark{font-size:24vw}.hero__meta{flex-direction:column;gap:10px;bottom:16vh}.hero__tag{top:26vh;font-size:9px}}
+
+/* Hero — film subtitles, one per shot */
+.hero::after{background:linear-gradient(to bottom,rgba(30,18,24,.28) 0%,transparent 24%,transparent 66%,rgba(30,18,24,.42) 100%)}
+.hero__cap{position:absolute;left:var(--gutter);right:var(--gutter);bottom:15vh;text-align:center;z-index:2;opacity:1}
+.hero__cap-line{margin:0;overflow:hidden;font:300 clamp(26px,3.2vw,58px)/1.05 var(--font-display);letter-spacing:.02em;color:#fbf7f2;text-shadow:0 6px 40px rgba(40,20,20,.35)}
+.hero__cap-line>span{display:inline-block;transform:translateY(110%)}
+.hero__cap-sub{margin:16px 0 0;font:500 11px/1 var(--font-display);letter-spacing:.3em;text-transform:uppercase;color:rgba(251,247,242,.82);opacity:0}
+.hero__scrollcue{display:none!important;position:absolute;left:50%;bottom:4.5vh;z-index:2;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;font:500 10px/1 var(--font-display);letter-spacing:.3em;text-transform:uppercase;color:rgba(251,247,242,.8)}
+.hero__scrollcue i{display:block;width:1px;height:46px;background:linear-gradient(rgba(251,247,242,.9),rgba(251,247,242,0));animation:cue 2.4s cubic-bezier(.6,0,.3,1) infinite;transform-origin:top}
+@keyframes cue{0%{transform:scaleY(0)}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+@media (max-width:600px){.hero__cap{bottom:22vh}}
+.hero__mark{text-shadow:none}
+.hero::before{content:'';position:absolute;inset:0;pointer-events:none;z-index:1;background:radial-gradient(60% 42% at 50% 46%,rgba(70,44,56,.28),rgba(70,44,56,0) 70%)}
+
+/* Tower chapter — callout pinned to the part of the building being explained */
+.stage--tower{--ax:50%;--ay:40%;--aon:0}
+.stage--tower::before{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(14,10,20,.5),rgba(14,10,20,0) 46%),linear-gradient(0deg,rgba(14,10,20,.45),rgba(14,10,20,0) 40%)}
+.tower__shot{z-index:2}
+.tower__callout{position:absolute;left:var(--ax);top:var(--ay);z-index:2;opacity:0;pointer-events:none;--draw:0;transition:left .08s linear,top .08s linear}
+.stage--tower[style*="--aon: 0"] .tower__callout{visibility:hidden}
+.tower__dot{position:absolute;left:-7px;top:-7px;width:14px;height:14px;border-radius:50%;border:1px solid #fbf5ee;box-sizing:border-box}
+.tower__dot::after{content:'';position:absolute;inset:4px;border-radius:50%;background:#e0a67c;animation:dotPulse 2.4s ease-in-out infinite}
+@keyframes dotPulse{0%,100%{transform:scale(1)}50%{transform:scale(.55)}}
+.tower__lead{position:absolute;left:7px;top:0;height:1px;width:calc(min(16vw,220px) * var(--draw));background:rgba(251,245,238,.85);transform-origin:left}
+.tower__label{position:absolute;left:calc(min(16vw,220px) + 20px);top:-7px;white-space:nowrap;font:500 11px/1 var(--font-display);letter-spacing:.22em;text-transform:uppercase;color:#fbf5ee;opacity:var(--draw)}
+@media (max-width:600px){.tower__lead{width:calc(18vw * var(--draw))}.tower__label{left:calc(18vw + 14px);font-size:9px}}

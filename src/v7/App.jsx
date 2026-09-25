@@ -28,8 +28,9 @@ export default function App() {
       <div id="hist-fg" />
       <Navigation onSound={() => toggleSound()} />
       <main id="page">
-        <EraOpening /><Arrival /><Opening />
+        <EraOpening /><Arrival />
         <Building />
+        <Opening />
         <Living />
         <EraArchitecture /><EraStatement /><EraJoy /><EraMap /><EraGarden /><EraInteriors />
         <History />

@@ -3,7 +3,8 @@ import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment
 import { FeatherWipe } from './transitions/FeatherWipe';
 import { IntroScene } from './scenes/IntroScene';
 import { TunnelScene } from './scenes/TunnelScene';
-import { ReferenceBuildingScene } from './scenes/ReferenceBuildingScene';
+import { EraBuildingScene } from './scenes/EraBuildingScene';
+import { EraWorld } from './objects/EraWorld';
 import { HistoryScene, HISTORY_BG } from './scenes/HistoryScene';
 import { ZeusScene, ZEUS_BG } from './scenes/ZeusScene';
 import { HeroCloudScene } from './scenes/HeroCloudScene';
@@ -57,13 +58,14 @@ export class SceneManager {
     this.wipe = new FeatherWipe();
     this.intro = new IntroScene(this.scene, this.envMap, this.wipe);
     this.tunnel = new TunnelScene(this.scene, this.envMap);
-    this.building = new ReferenceBuildingScene(this.scene, this.envMap, this.renderer);
-    this.heroClouds = new HeroCloudScene(this.scene, this.envMap);
+    this.world = new EraWorld(this.scene, this.renderer);
+    this.building = new EraBuildingScene(this.world);
+    this.heroClouds = new HeroCloudScene(this.scene, this.world);
     this.history = new HistoryScene(this.scene);
     this.zeus = new ZeusScene(this.scene);
     this.last = 0;
     this.bg = { from: INK, to: INK, p: 0, dir: [0, 1], seed: 1.3, fringe: 0.09 };
-    this.ready = Promise.all([this.warmup(), this.building.ready, this.heroClouds.ready, this.zeus.ready.then(() => this.warmupLate())]);
+    this.ready = Promise.all([this.warmup(), this.world.ready, this.zeus.ready.then(() => this.warmupLate())]);
   }
 
   // Compile every program while the loader is up so no stage stalls on first
@@ -95,7 +97,7 @@ export class SceneManager {
 
   // Compile the sculpture room and helix once the model is in, still under the loader.
   async warmupLate() {
-    const groups = [this.history.group, this.zeus.group, this.heroClouds.group];
+    const groups = [this.history.group, this.zeus.group, this.heroClouds.group, this.world.group];
     groups.forEach((g) => { g.visible = true; });
     try {
       if (this.renderer.compileAsync) await this.renderer.compileAsync(this.scene, this.camera);
@@ -161,7 +163,10 @@ export class SceneManager {
     this.wipe.tick(t);
     // Fog belongs to the history helix only
     const fog = this.scene.fog;
-    if (store.activeStage === 'history') { fog.near = 6; fog.far = 14.5; } else { fog.near = 1e4; fog.far = 1e4 + 1; }
+    const inWorld = store.activeStage === 'hero' || store.activeStage === 'arrival' || store.activeStage === 'building' || (!store.activeStage && store.scroll < 4);
+    if (store.activeStage === 'history') { fog.color.set(HISTORY_BG); fog.near = 6; fog.far = 14.5; }
+    else if (inWorld) { fog.color.copy(this.world.fogColor); fog.near = this.world.fogNear; fog.far = this.world.fogFar; }
+    else { fog.near = 1e4; fog.far = 1e4 + 1; }
     const r = this.renderer;
     // Overlay mode: during the history timeline the canvas floats above the
     // DOM panels (transparent background) so the feather sits in front of them.
@@ -195,14 +200,15 @@ export class SceneManager {
     }
     // Inside the tunnel only the portal lights the ribs
     if(!act('tunnel'))this.tunnel.group.userData.glow.intensity=0;
-    const wantLights = act('tunnel') && sectionProgress('tunnel')<.82 ? .16 : act('hero') || act('arrival') || act('building') ? .65 : 1;
+    const wantLights = act('tunnel') && sectionProgress('tunnel')<.82 ? .16 : inWorld ? 0 : 1;
     if (wantLights !== this.lightScale) {
       this.lightScale = wantLights;
       this.lights.hemi.intensity = 0.9 * wantLights; this.lights.key.intensity = 1.6 * wantLights;
       this.lights.fill.intensity = 0.5 * wantLights; this.lights.rim.intensity = 0.8 * wantLights;
     }
-    this.building.update(this.camera, t, r);
     this.heroClouds.update(this.camera, t);
+    this.building.update(this.camera, t);
+    this.world.update(this.camera, t, inWorld);
     this.history.update(this.camera, t);
     this.zeus.update(this.camera, t);
     mark('rigs');
@@ -211,8 +217,6 @@ export class SceneManager {
     // The same organic edge covers the outgoing composition and uncovers
     // the next camera rig. The cut happens only while the screen is covered.
     const stage=store.activeStage;
-    if(stage==='arrival' && sectionProgress('arrival')>.87)
-      this.wipe.cover(r,this.camera.aspect,range(sectionProgress('arrival'),.87,1),INK);
     if(stage==='opening'){
       const p=sectionProgress('opening');
       if(p<.1)this.wipe.cover(r,this.camera.aspect,range(p,0,.1),INK,true);
@@ -222,10 +226,6 @@ export class SceneManager {
     // room: the outgoing colour is wiped away by a feathered edge.
     // Hero → arrival: a feathered dark edge closes over the sky, then opens
     // onto the arrival scene.
-    if(stage==='hero' && sectionProgress('hero')>.84)
-      this.wipe.cover(r,this.camera.aspect,range(sectionProgress('hero'),.84,.99),INK,false,[0,-1]);
-    if(stage==='arrival' && sectionProgress('arrival')<.07)
-      this.wipe.cover(r,this.camera.aspect,range(sectionProgress('arrival'),0,.07),INK,true,[0,-1]);
     if(stage==='history'){
       const p=sectionProgress('history');
       if(p>.965)this.wipe.cover(r,this.camera.aspect,range(p,.965,1),ZEUS_BG,false,[0,-1]);
@@ -234,8 +234,8 @@ export class SceneManager {
       this.wipe.cover(r,this.camera.aspect,range(sectionProgress('statue'),0,.08),ZEUS_BG,true,[0,-1]);
     if(stage==='statue' && sectionProgress('statue')>.68)
       this.wipe.cover(r,this.camera.aspect,range(sectionProgress('statue'),.68,.78),INK,false,[1,0]);
-    if(stage==='building' && sectionProgress('building')<.1)
-      this.wipe.cover(r,this.camera.aspect,range(sectionProgress('building'),0,.1),INK,true);
+    if(stage==='building' && sectionProgress('building')>.9)
+      this.wipe.cover(r,this.camera.aspect,range(sectionProgress('building'),.9,1),INK,false,[0,-1]);
     mark('render');
   }
 

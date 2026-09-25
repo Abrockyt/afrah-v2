@@ -9,13 +9,16 @@ import { TOWER } from '../content/copy';
 // Four captions rise and leave in masked lines as the camera moves shot to shot.
 export function Building() {
   const { runwayRef, stageRef } = useStage('building', {
-    runway: 4.5,
+    runway: 11,
     build: (tl, { q }) => {
       const shots = q('.tower__shot');
       TOWER.shots.forEach((s, i) => {
         const el = shots[i], title = el.querySelector('.tower__title'), meta = el.querySelectorAll('.tower__meta');
         showLines(tl, title, s.at[0], { dur: 0.04, stagger: 0.012 });
         tl.fromTo(meta, { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.04 }, s.at[0] + 0.02);
+        const call = q('.tower__callout')[i];
+        tl.fromTo(call, { autoAlpha: 0, '--draw': 0 }, { autoAlpha: 1, '--draw': 1, duration: 0.04 }, s.at[0] + 0.01)
+          .to(call, { autoAlpha: 0, duration: 0.03 }, s.at[1]);
         hideLines(tl, title, s.at[1], { dur: 0.04, stagger: 0.01 });
         tl.to(meta, { autoAlpha: 0, duration: 0.03 }, s.at[1]);
       });
@@ -30,13 +33,16 @@ export function Building() {
     <section className="runway" ref={runwayRef} id="tower">
       <div className="stage stage--light stage--tower" ref={stageRef}>
         <div className="stage__inner">
-          <span className="chapter tower__chapter" style={{ opacity: 0 }}>{TOWER.chapter} — The tower</span>
+          <span className="chapter tower__chapter" style={{ opacity: 0 }}>{TOWER.chapter} — The building, explained</span>
           {TOWER.shots.map((s, i) => (
             <div className={`tower__shot tower__shot--${i % 2 ? 'r' : 'l'}`} key={s.num}>
-              <span className="tower__meta tower__num t-small">{s.num} / 04</span>
+              <span className="tower__meta tower__num t-small">{s.num} / 0{TOWER.shots.length}</span>
               <Lines lines={s.title} className="tower__title t-giant" />
               <p className="tower__meta t-body">{s.body}</p>
             </div>
+          ))}
+          {TOWER.shots.map((s) => (
+            <div className="tower__callout" key={'c' + s.num} aria-hidden="true"><i className="tower__dot" /><span className="tower__lead" /><span className="tower__label">{s.label}</span></div>
           ))}
           <a className="cta tower__cta" href="/select">Select a level ↗</a>
         </div>
