@@ -23,7 +23,7 @@ uniform mat4 uInvProj; uniform mat4 uCamWorld; uniform vec3 uCamPos;
 uniform float uTime; uniform vec3 uWind;
 uniform vec4 uDeck; uniform vec4 uLow; uniform vec3 uHole; uniform vec4 uBank; uniform float uBankD;
 uniform vec3 uSunDir; uniform vec3 uSunCol; uniform vec3 uAmbHi; uniform vec3 uAmbLo; uniform vec3 uFog; uniform vec2 uFogRange;
-uniform float uSteps; uniform float uOn;
+uniform float uSteps; uniform float uOn; uniform float uFrameJ;
 varying vec2 vUv;
 float h12(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
 float remap(float v, float a, float b, float c, float d){ return c + (v - a) / (b - a) * (d - c); }
@@ -69,7 +69,7 @@ void main(){
   t1 = min(t1, t0 + 75.);
   float stepBase = clamp((t1 - t0) / uSteps, .18, 2.4);
   // interleaved gradient noise: an even, fine dither instead of speckle
-  float ign = fract(52.9829189 * fract(dot(gl_FragCoord.xy + floor(fract(uTime * .5) * 8.) * 5.588238, vec2(.06711056, .00583715))));
+  float ign = fract(52.9829189 * fract(dot(gl_FragCoord.xy, vec2(.06711056, .00583715))) + uFrameJ);
   float t = t0 + stepBase * ign;
   float T = 1.; vec3 col = vec3(0.); float firstHit = -1.;
   float cosT = dot(rd, uSunDir);
@@ -98,6 +98,16 @@ void main(){
     col = mix(col, uFog * (1. - T), f * .85);
   }
   gl_FragColor = vec4(col, T);
+}`;
+
+const accumFrag = `
+uniform sampler2D tNew; uniform sampler2D tHist; uniform float uKeep;
+varying vec2 vUv;
+void main(){
+  vec4 n = texture2D(tNew, vUv);
+  vec4 h = texture2D(tHist, vUv);
+  // clamp history to the new sample's neighbourhood range to avoid ghosting
+  gl_FragColor = mix(n, clamp(h, n - .25, n + .25), uKeep);
 }`;
 
 const compositeFrag = `
@@ -151,7 +161,9 @@ export class WorldPost {
     const hdr = { type: THREE.HalfFloatType, colorSpace: THREE.LinearSRGBColorSpace };
     this.sceneRT = new THREE.WebGLRenderTarget(4, 4, { ...hdr, samples: this.mobile ? 0 : 4 });
     this.sceneRT.depthTexture = new THREE.DepthTexture(4, 4, THREE.UnsignedIntType);
+    this.rawRT = new THREE.WebGLRenderTarget(4, 4, { ...hdr, depthBuffer: false });
     this.cloudRT = new THREE.WebGLRenderTarget(4, 4, { ...hdr, depthBuffer: false });
+    this.histRT = new THREE.WebGLRenderTarget(4, 4, { ...hdr, depthBuffer: false });
     this.compRT = new THREE.WebGLRenderTarget(4, 4, { ...hdr, depthBuffer: false });
     this.bloom = new UnrealBloomPass(new THREE.Vector2(4, 4), .5, .55, .92);
     const noise = makeCloudNoise();
@@ -166,7 +178,7 @@ export class WorldPost {
         uSunDir: { value: new THREE.Vector3(-.55, .32, -.75).normalize() }, uSunCol: { value: new THREE.Color('#ffb487') },
         uAmbHi: { value: new THREE.Color('#b98aa0') }, uAmbLo: { value: new THREE.Color('#6d5a70') },
         uFog: { value: new THREE.Color('#f4ad8a') }, uFogRange: { value: new THREE.Vector2(30, 90) },
-        uSteps: { value: this.mobile ? 40 : 64 }, uOn: { value: 1 },
+        uSteps: { value: this.mobile ? 40 : 64 }, uOn: { value: 1 }, uFrameJ: { value: 0 },
       },
     });
     this.compMat = new THREE.ShaderMaterial({
@@ -178,6 +190,11 @@ export class WorldPost {
       vertexShader: quadVert, fragmentShader: gradeFrag, depthTest: false, depthWrite: false,
       uniforms: { tColor: { value: this.compRT.texture }, uExposure: { value: 1 }, uAspect: { value: 1.78 }, uTime: { value: 0 }, uVig: { value: .3 } },
     });
+    this.accumMat = new THREE.ShaderMaterial({
+      vertexShader: quadVert, fragmentShader: accumFrag, depthTest: false, depthWrite: false,
+      uniforms: { tNew: { value: this.rawRT.texture }, tHist: { value: this.histRT.texture }, uKeep: { value: 0 } },
+    });
+    this.prevCam = new THREE.Matrix4(); this.frame = 0;
     this.quad = new FullScreenQuad(this.cloudMat);
     this.sun = new THREE.Vector3();
   }
@@ -185,7 +202,7 @@ export class WorldPost {
   setSize(w, h) {
     this.sceneRT.setSize(w, h);
     const cw = Math.max(2, Math.round(w * this.cloudScale)), ch = Math.max(2, Math.round(h * this.cloudScale));
-    this.cloudRT.setSize(cw, ch);
+    this.cloudRT.setSize(cw, ch); this.rawRT.setSize(cw, ch); this.histRT.setSize(cw, ch);
     this.compMat.uniforms.uTexel.value.set(1 / cw, 1 / ch);
     this.compRT.setSize(w, h);
     this.bloom.setSize(Math.round(w / 2), Math.round(h / 2));
@@ -219,9 +236,22 @@ export class WorldPost {
     u.uCamWorld.value.copy(camera.matrixWorld);
     u.uCamPos.value.copy(camera.position);
     u.uTime.value = time;
+    u.uFrameJ.value = (this.frame++ * 0.618034) % 1;
     this.quad.material = this.cloudMat;
+    r.setRenderTarget(this.rawRT); r.clear(true, false, false);
+    this.quad.render(r);
+    // temporal accumulation: keep more history while the camera is still
+    let move = 0; const a = camera.matrixWorld.elements, b = this.prevCam.elements;
+    for (let i = 0; i < 16; i++) move += Math.abs(a[i] - b[i]);
+    this.prevCam.copy(camera.matrixWorld);
+    const keep = move < 0.002 ? 0.88 : move < 0.02 ? 0.7 : move < 0.1 ? 0.45 : 0.15;
+    const tmp = this.histRT; this.histRT = this.cloudRT; this.cloudRT = tmp;   // last output becomes history
+    this.accumMat.uniforms.tHist.value = this.histRT.texture;
+    this.accumMat.uniforms.uKeep.value = keep;
+    this.quad.material = this.accumMat;
     r.setRenderTarget(this.cloudRT); r.clear(true, false, false);
     this.quad.render(r);
+    this.compMat.uniforms.tCloud.value = this.cloudRT.texture;
     // 3. composite + god rays
     const c = this.compMat.uniforms;
     this.sun.copy(camera.position).addScaledVector(u.uSunDir.value, 500).project(camera);

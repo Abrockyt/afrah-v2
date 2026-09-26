@@ -10,7 +10,6 @@ const CHAPTERS = [
   { id: 'home', label: 'Afrah', sections: ['hero'] },
   { id: 'arrival', label: 'Arrival', sections: ['arrival'] },
   { id: 'tower', label: 'The building', sections: ['building'] },
-  { id: 'introduction', label: 'The opening', sections: ['opening'] },
   { id: 'map-teaser', label: 'Place', sections: ['place'] },
   { id: 'cases', label: 'Residences', sections: ['cases'] },
   { id: 'architecture', label: 'Architecture', sections: ['eraArch'] },
@@ -64,7 +63,7 @@ export default function Navigation({ onSound }) {
     return () => cancelAnimationFrame(raf);
   }, []);
   const go = (id) => (e) => { e.preventDefault(); const el = document.getElementById(id); if (el) scrollTo(el, { offset: 2 }); };
-  const skip = (e) => { e.preventDefault(); const el = document.getElementById('introduction'); if (el) scrollTo(el, { duration: 2 }); };
+  const skip = (e) => { e.preventDefault(); const el = document.getElementById('tower'); if (el) scrollTo(el, { duration: 2 }); };
   return (
     <header className={`nav nav--${state.theme} ${state.ready ? 'is-ready' : ''}`}>
       <a className="nav__logo" href="#home" onClick={go('home')}><span>{BRAND.top}</span><span>.{BRAND.bottom}</span></a>

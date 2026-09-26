@@ -6,7 +6,6 @@ import PersistentCanvas from './webgl/PersistentCanvas';
 import Navigation from './ui/Navigation';
 import Loader from './ui/Loader';
 import Arrival from './sections/Arrival';
-import { Opening } from './sections/Intro';
 import { Building } from './sections/Building';
 import EraOpening from './sections/EraOpening';
 import { Living } from './sections/Living';
@@ -39,7 +38,6 @@ export default function App() {
       <main id="page">
         <EraOpening /><Arrival />
         <Building />
-        <Opening />
         <Living />
         <EraArtDeco /><EraArchitecture /><EraStatement /><EraJoy /><EraMap /><EraGarden /><EraInteriors /><EraCeilings /><EraApartments />
         <History />

@@ -8,6 +8,8 @@ export function Living() {
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
       gsap.utils.toArray('.living-photo img').forEach(img => gsap.fromTo(img, { yPercent: -5, scale: 1.12 }, { yPercent: 5, scale: 1.12, ease: 'none', scrollTrigger: { trigger: img.parentElement, start: 'top bottom', end: 'bottom top', scrub: .55 } }));
+      // the whole cream section keeps the navigation dark, however it is entered
+      gsap.timeline({ scrollTrigger: { trigger: ref.current, start: 'top 80px', end: 'bottom 80px', onEnter: () => setTheme('light'), onEnterBack: () => setTheme('light') } });
       gsap.utils.toArray('.living-block').forEach(block => gsap.fromTo(block.querySelectorAll('[data-reveal]'), { opacity: 0, y: 28 }, { opacity: 1, y: 0, stagger: .1, duration: 1, ease: 'power2.out', scrollTrigger: { trigger: block, start: 'top 75%', onEnter: () => setTheme('light'), onEnterBack: () => setTheme('light') } }));
     }, ref);
     return () => ctx.revert();

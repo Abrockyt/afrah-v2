@@ -9,7 +9,6 @@ export const NAV = {
     { id: 'home', label: 'Afrah' },
     { id: 'arrival', label: 'Arrival' },
     { id: 'tower', label: 'The building' },
-    { id: 'introduction', label: 'The opening' },
     { id: 'cases', label: 'Residences' },
     { id: 'architecture', label: 'Architecture' },
     { id: 'map-teaser', label: 'Place' },

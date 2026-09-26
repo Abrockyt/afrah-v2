@@ -248,7 +248,7 @@ export class SceneManager {
     if(stage==='statue' && sectionProgress('statue')>.68)
       this.wipe.cover(r,this.camera.aspect,range(sectionProgress('statue'),.68,.78),INK,false,[1,0]);
     if(stage==='building' && sectionProgress('building')>.9)
-      this.wipe.cover(r,this.camera.aspect,range(sectionProgress('building'),.9,1),INK,false,[0,-1]);
+      this.wipe.cover(r,this.camera.aspect,range(sectionProgress('building'),.9,1),BONE,false,[0,-1]);
     mark('render');
   }
 
