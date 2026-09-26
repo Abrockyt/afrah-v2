@@ -14,12 +14,12 @@ import { HeroCloudScene } from './scenes/HeroCloudScene';
 import { store, sectionProgress, range, smooth, resolveActiveStage } from '../core/store';
 import HS from './data/historySpec.json';
 
-export const INK = '#15100d';
-export const INK2 = '#0f0b09';
-export const BONE = '#f3ece2';
+export const INK = '#1f3d30';
+export const INK2 = '#16291f';
+export const BONE = '#f4f0e8';
 // gradient backdrops: [top, bottom, glow, lattice]
-const LEAF_GRAD = ['#eadbc9', '#cda88e', '#f6e6d4', 0.6];
-const HISTORY_GRAD = ['#221a15', '#0e0a08', '#4a3325', 0.35];
+const LEAF_GRAD = ['#f4f0e8', '#cfd9cc', '#fbf8f2', 0.45];
+const HISTORY_GRAD = ['#23443a', '#12251d', '#3d6655', 0.35];
 
 // Owns the renderer, one persistent WebGL scene graph, and the stage
 // background. Scenes are plain classes with update(camera, t, dt); the manager
@@ -257,12 +257,12 @@ export class SceneManager {
       this.wipe.cover(r,this.camera.aspect,range(sectionProgress('statue'),.68,.78),INK,false,[1,0]);
     // Architecture → statement: a storm of leaves carries a cream wipe up the screen
     if(stage==='leaf' && this.leaf.takeover>0){
-      this.wipe.cover(r,this.camera.aspect,this.leaf.takeover,'#f3ece2',false,[0,1]);
+      this.wipe.cover(r,this.camera.aspect,this.leaf.takeover,'#f4f0e8',false,[0,1]);
       this.leaf.renderStorm(r,this.camera);
     }
-    // Building → living: the fin shutter closes in cream
+    // Building → living: a green wave curtain, then ivory
     if(stage==='building' && sectionProgress('building')>.86)
-      this.wipe.cover(r,this.camera.aspect,range(sectionProgress('building'),.86,1),BONE,false,[0,1],'fins');
+      this.wipe.cover(r,this.camera.aspect,range(sectionProgress('building'),.84,1),BONE,false,[0,1],'waves');
     mark('render');
   }
 

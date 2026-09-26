@@ -3,7 +3,7 @@ import { store, subscribe } from '../core/store';
 import { gsap } from '../core/ScrollManager';
 import { scrollTo } from '../core/ScrollManager';
 import { NAV } from '../content/copy';
-import { Brand, MenuButton, Drawer } from './NavParts';
+import { Brand, MenuButton, Drawer, themeBehindNav } from './NavParts';
 
 // Chapter boundaries are derived from the section registry, so the label and
 // the progress line follow the real layout rather than hard-coded offsets.
@@ -51,11 +51,14 @@ export default function Navigation({ onSound }) {
   }, []);
   const [state, setState] = useState({ label: 'Arrival', p: 0, theme: 'dark', ready: false, sound: false, atTop: true, id: 'arrival' });
   useEffect(() => {
-    let raf;
+    let raf, frame = 0, seen = null;
     const tick = () => {
       const c = chapterState();
+      // the bar reads the colour under it; over the 3D film it follows the stage
+      if (frame++ % 6 === 0) seen = themeBehindNav();
+      const theme = seen || store.themeHint || store.theme;
       setState((prev) => {
-        const next = { label: c.label, p: c.p, id: c.id, theme: store.theme, ready: store.ready, sound: store.soundOn, atTop: store.scroll < 40 };
+        const next = { label: c.label, p: c.p, id: c.id, theme, ready: store.ready, sound: store.soundOn, atTop: store.scroll < 40 };
         return (prev.label === next.label && Math.abs(prev.p - next.p) < 0.004 && prev.theme === next.theme && prev.ready === next.ready && prev.sound === next.sound && prev.atTop === next.atTop) ? prev : next;
       });
       raf = requestAnimationFrame(tick);

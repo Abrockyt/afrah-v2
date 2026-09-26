@@ -134,6 +134,7 @@ export function EraMap() {
         .fromTo(q('.era-map__pin3d--home'), { autoAlpha: 0, scale: 0.4 }, { autoAlpha: 1, scale: 1, duration: 0.05, ease: 'back.out(2)' }, 0.1)
         .fromTo(q('.era-map__place3d'), { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.05, stagger: 0.04 }, 0.2)
         .fromTo(q('.era-map__routes3d line'), { strokeDashoffset: 400 }, { strokeDashoffset: 0, duration: 0.12, stagger: 0.04 }, 0.22)
+        .fromTo(q('.era-map__panel'), { xPercent: -100 }, { xPercent: 0, duration: 0.08, ease: 'power3.out' }, 0)
         .to(q('.era-map__copy'), { autoAlpha: 0, y: -30, duration: 0.06 }, 0.9);
     },
     onProgress: () => setTheme('light'),
@@ -144,9 +145,10 @@ export function EraMap() {
         <svg className="era-map__routes3d" width="100%" height="100%" aria-hidden="true">{PINS.map(([id]) => <line key={id} data-route={id} />)}</svg>
         <div className="era-map__pin3d era-map__pin3d--home" data-pin="home" aria-hidden="true"><i className="halo" /><i className="halo halo--2" /><b>A</b></div>
         {PINS.map(([id, n, t]) => <div className="era-map__place3d" data-pin={id} key={id}><i /><span>{n}</span><em>{t}</em></div>)}
+        <div className="era-map__panel" aria-hidden="true" />
         <div className="era-map__copy">
           <span className="t-small" data-rise>08 / The place</span>
-          <h2>{words('AT THE CENTRE')}<br />{words('OF EVERYTHING')}</h2>
+          <h2 className="era-map__serif">{words('At the centre')}<br />{words('of')} <em>{words('everything')}</em></h2>
           <p className="era-map__lede" data-rise>A river bend, a park on the doorstep and the old town a short walk away. Scroll to turn the city.</p>
           <a className="btn" href="/map" data-rise><span className="btn__icon">3D</span>Open the 3D map<b>↗</b></a>
         </div>

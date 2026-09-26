@@ -8,7 +8,7 @@ import { loadStatue } from '../objects/Statues';
 // opaque; the rest fade and shrink with distance, and the scene fog swallows
 // the far side of the helix. Scroll speed bends the planes slightly and the
 // whole group leans with the pointer.
-export const HISTORY_BG = '#1a1310';
+export const HISTORY_BG = '#16291f';
 
 const RADIUS = 4, PER_TURN = 12, STEP_Y = 0.25, CENTRE_Z = -4;
 const ANGLE = (Math.PI * 2) / PER_TURN;
