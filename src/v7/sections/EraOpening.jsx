@@ -11,7 +11,7 @@ import { gsap } from '../core/ScrollManager';
 // One line of story per shot of the flight (see HeroCloudScene).
 const CAPS = [
   { at: '0.21,0.31', line: 'A quarter rises from the cloud', sub: 'Chapter I — The approach' },
-  { at: '0.41,0.52', line: 'Nine towers of bronze and glass', sub: 'Chapter II — The foot of the tower' },
+  { at: '0.41,0.52', line: 'Ten towers of glass and bronze', sub: 'Chapter II — The foot of the tower' },
   { at: '0.86,0.96', line: 'A garden, a pool, a private park', sub: 'Chapter III — Life below the crowns' },
 ];
 

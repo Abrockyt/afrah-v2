@@ -3,6 +3,7 @@ import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {DRACOLoader} from 'three/examples/jsm/loaders/DRACOLoader.js';
 import {makeGlass, makeCopper, addFinCoords, makeWater} from './EraMaterials';
 import {buildGlassTowers} from './GlassTowers';
+import {buildSignatureTowers, clearEraTowers, LILY, WAVE} from './SignatureTowers';
 
 // ERA's own 3D district (era.estate/3d-map, Era_100.gltf) with its original
 // baked textures: every building carries ERA's 4K baked shadow atlas on uv0,
@@ -104,14 +105,15 @@ async function build(renderer) {
     return t;
   });
   const draco = new DRACOLoader().setDecoderPath('/reference-study/draco/');
-  const [gltf, shadow, ground, grass, asphalt, leaves, sky, phTree, rooms] = await Promise.all([
+  const roomTex = (f) => tl.loadAsync(DIR + f).then((t) => { t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; t.generateMipmaps = true; return t; });
+  const [gltf, shadow, ground, grass, asphalt, leaves, sky, phTree, rooms, roomsNight] = await Promise.all([
     new GLTFLoader().setDRACOLoader(draco).loadAsync(DIR + 'district.glb'),
     tex('shadow.webp'), tex('ground.webp'), tex('grass.webp', true, 50), tex('asphalt.webp', true, 40), tex('leaves.png'),
     tl.loadAsync(DIR + 'sky.webp'),
     // Poly Haven's tree_small_02 (CC0): a real scanned-texture tree for the garden
     new GLTFLoader().loadAsync('/afrah/models/tree.glb').catch(() => null),
-    // real interiors for the rooms behind the glass
-    tl.loadAsync(DIR + 'rooms.webp').then((t) => { t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; return t; }),
+    // furnished rooms behind the glass, pre-rendered by day and by lamplight (tools/roomgen.js)
+    roomTex('rooms-day.webp'), roomTex('rooms-night.webp'),
   ]);
   sky.mapping = THREE.EquirectangularReflectionMapping; sky.colorSpace = THREE.SRGBColorSpace;
   const pmrem = new THREE.PMREMGenerator(renderer);
@@ -132,7 +134,7 @@ async function build(renderer) {
     else if (name === 'Lnd_water') m = makeWater({envMap, toModel: TO_MODEL, time: waterTime, eve, deep: '#0d2a33', scale: 3});
     else if (/^Tree_leafs/.test(name)) m = new THREE.MeshStandardMaterial({map: leaves, alphaTest: .45, side: THREE.DoubleSide, color: name === 'Tree_leafs_02' ? '#93a472' : name === 'Tree_leafs_03' ? '#a3ab6e' : '#86996a', roughness: .9});
     else if (name === 'Tree_bark') m = new THREE.MeshStandardMaterial({color: '#5a4a3c', roughness: 1});
-    else if (name === 'Bld_window1') m = makeGlass({envMap, toModel: TO_MODEL, eve, rooms});
+    else if (name === 'Bld_window1') m = makeGlass({envMap, toModel: TO_MODEL, eve, rooms, roomsNight});
     else if (name === 'Bld__Bronze' || name === 'Bld__Bronze1') m = makeCopper({envMap, toModel: TO_MODEL, eve, bakeMap: shadow});
     else if (L) {
       m = new THREE.MeshStandardMaterial({color: new THREE.Color(...L.color), metalness: L.metalness, roughness: L.roughness, envMapIntensity: L.env});
@@ -147,6 +149,8 @@ async function build(renderer) {
     if (!o.isMesh) return;
     const name = o.material?.name || '';
     if (name === 'pasted__Lnd_floor_common' || name === 'fadeer') { o.visible = false; return; }
+    // ERA's towers make way for AFRAH's own (podiums and the city stay)
+    if (/^Bld_/.test(name) && !/^Bld_(buildinbgs1|offroad)/.test(name) && !clearEraTowers(o)) { o.visible = false; return; }
     o.material = make(name);
     // towers cast onto each other and the ground; everything built receives
     o.castShadow = /^Bld_(Metal|window|Dark|_roof|_Bronze)|^Bld__/.test(name);
@@ -160,11 +164,27 @@ async function build(renderer) {
   const towers = new THREE.Group(); towers.name = 'era-towers';
   // The second phase across the park: four mirror-glass towers, each a
   // different form (twisting, tapering, stepped, sail), on stone podiums.
-  const mirror = makeGlass({envMap, toModel: TO_MODEL, eve, rooms, mirror: true});
+  const mirror = makeGlass({envMap, toModel: TO_MODEL, eve, rooms, roomsNight, mirror: true});
   const podiumStone = bake(new THREE.MeshStandardMaterial({color: '#bdb3a6', roughness: .7, metalness: .05, envMap}), shadow, 0, 0, false, {stone: true});
   const crownMetal = new THREE.MeshStandardMaterial({color: '#3b3f44', roughness: .35, metalness: .8, envMap});
   mats.__mirror = mirror; mats.__podium = podiumStone; mats.__crown = crownMetal;
   towers.add(buildGlassTowers({glass: mirror, stone: podiumStone, crown: crownMetal}));
+
+  // AFRAH's towers on ERA's plots: the Lily and her five Wave sisters
+  const lantern = new THREE.MeshPhysicalMaterial({color: '#cfc9bf', metalness: .5, roughness: .12, clearcoat: 1, envMap, emissive: '#ffd29a', emissiveIntensity: 1});
+  lantern.onBeforeCompile = (sh) => { sh.uniforms.uEve = eve; sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nuniform float uEve;').replace('#include <emissivemap_fragment>', '#include <emissivemap_fragment>\ntotalEmissiveRadiance = vec3(1., .74, .46) * (.05 + uEve * .75);'); };
+  lantern.customProgramCacheKey = () => 'afrah-lantern';
+  const sig = {
+    glass: makeGlass({envMap, toModel: TO_MODEL, eve, rooms, roomsNight, room: new THREE.Vector4(4.4, LILY.storey, 7, LILY.base), look: {color: '#1b2730', metalness: .45, envI: 1.9, seeIn: [.75, 1]}, key: '-lily'}),
+    glassWave: makeGlass({envMap, toModel: TO_MODEL, eve, rooms, roomsNight, room: new THREE.Vector4(5, WAVE.storey, 6.5, WAVE.base), look: {color: '#161e24', metalness: .25, envI: 1.6, seeIn: [.8, 1]}, key: '-wave'}),
+    slab: new THREE.MeshStandardMaterial({color: '#ebe6de', roughness: .42, metalness: .05, envMap, envMapIntensity: .9}),
+    bronze: new THREE.MeshStandardMaterial({color: '#8c7156', roughness: .34, metalness: .9, envMap, envMapIntensity: 1.1, side: THREE.DoubleSide}),
+    rail: new THREE.MeshStandardMaterial({color: '#c4d8de', roughness: .05, metalness: .3, envMap, transparent: true, opacity: .26, depthWrite: false, side: THREE.DoubleSide}),
+    lantern,
+  };
+  Object.entries(sig).forEach(([k, m]) => { mats['__' + k] = m; });
+  const afrah = buildSignatureTowers(sig);
+  towers.add(afrah);
 
   // Trees: ERA's leaf cards planted as instances along the streets.
   const treeGroup = new THREE.Group();
@@ -186,7 +206,7 @@ async function build(renderer) {
     trees.forEach((t) => { t.visible = false; });
     const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), sc = new THREE.Vector3(), p = new THREE.Vector3();
     // clearings where the hero camera runs at street level
-    const CLEAR = [[-48, 30], [-62, 5], [-75, -20], [-80, -38]];
+    const CLEAR = [[-48, 30], [-62, 5], [-75, -20], [-80, -38], [-214, -44], [-192, -44], [-170, -44], [-165, -62]];
     const pick = pts.filter(([x, , z]) => Math.hypot(x - CENTRE.x, z - CENTRE.z) < 1500 && !(x > HOLE.x && x < HOLE.z && z > HOLE.y && z < HOLE.w)
       && CLEAR.every(([cx, cz]) => Math.hypot(x - cx, z - cz) > 34));
     const GARDEN = innerWidth < 760 ? 60 : 105;
@@ -240,8 +260,8 @@ async function build(renderer) {
     treeGroup.add(distant);
   }
 
-  // The resort deck on the podium courtyard (ERA's podium roof at +13.5 m):
-  // a 64 m pool with stone coping, a lap pool, loungers and umbrellas.
+  // The resort deck in the park at the Lily's foot: a 64 m pool with stone
+  // coping, a lap pool, loungers and umbrellas.
   const pools = new THREE.Group();
   const waterMat = makeWater({envMap, toModel: TO_MODEL, time: waterTime, eve, deep: '#0d4d5c', glow: .5, scale: .8, amp: .4});
   const deckMat = bake(new THREE.MeshStandardMaterial({color: '#cfc2ad', roughness: .78, envMap}), shadow, 0, 0, false, {stone: true});
@@ -251,8 +271,8 @@ async function build(renderer) {
   const teak = new THREE.MeshStandardMaterial({color: '#7a5436', roughness: .6, envMap});
   const canopy = new THREE.MeshStandardMaterial({color: '#efe7da', roughness: .9, side: THREE.DoubleSide, envMap});
   const box = (w, h, d, mat, x, y, z, g, ry = 0, rx = 0) => { const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat); m.position.set(x, y, z); m.rotation.set(rx, ry, 0); m.castShadow = m.receiveShadow = true; g.add(m); return m; };
-  const pool = (x, z, w, d, ry = 0, deckPad = 6, loungers = true) => {
-    const g = new THREE.Group(); g.position.set(x, 13.6, z); g.rotation.y = ry;
+  const pool = (x, z, w, d, ry = 0, deckPad = 6, loungers = true, y = 4.6) => {
+    const g = new THREE.Group(); g.position.set(x, y, z); g.rotation.y = ry;
     // deck round the pool (four slabs, so the water sits in an opening)
     const P = deckPad;
     box(w + P * 2, .3, P, deckMat, 0, -.15, d / 2 + P / 2 + .4, g); box(w + P * 2, .3, P, deckMat, 0, -.15, -d / 2 - P / 2 - .4, g);
@@ -275,8 +295,9 @@ async function build(renderer) {
     }
     pools.add(g); return g;
   };
-  pool(-82, 9, 64, 16, 0, 6);
-  pool(-139, 9, 18, 6, 0, 3, false);
+  // in the park beside the Lily, on open lawn (found clear of every building)
+  pool(-192, -44, 64, 16, 0, 6);
+  pool(-165, -62, 22, 6, Math.PI / 2, 3, false);
 
   // the land runs on past the edge of ERA's map disc into the haze
   const land = new THREE.Mesh(new THREE.CircleGeometry(60000, 48), new THREE.MeshStandardMaterial({color: '#d6c2aa', roughness: 1}));

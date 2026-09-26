@@ -68,7 +68,7 @@ export default function App() {
       </footer>
       {menu && <Dialog title="Menu" className="a-menu" onClose={() => setMenu(false)}>
         <nav>{MENU.map(([to, n], i) => <Link key={to} to={to} className={path === to ? 'on' : ''}><em>{String(i).padStart(2, '0')}</em>{n}</Link>)}</nav>
-        <figure><img src="/v3/era/arch-building.webp" alt=""/><figcaption><span>Sales gallery</span>River Embankment 1 · Daily 10–20</figcaption></figure>
+        <figure><img src="/media/renders/waves.webp" alt=""/><figcaption><span>Sales gallery</span>River Embankment 1 · Daily 10–20</figcaption></figure>
       </Dialog>}
       {loading && <Loader done={() => setLoading(false)}/>}
     </div>

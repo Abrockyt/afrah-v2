@@ -66,6 +66,8 @@
 .ld__outline{fill:none;stroke:#e0a070;stroke-width:1.1;stroke-linejoin:round;vector-effect:non-scaling-stroke;filter:drop-shadow(0 0 6px rgba(255,170,110,.45))}
 .ld__floor{stroke:#ffc98f;stroke-width:1.4;opacity:0;stroke-dasharray:2.6 1.4;vector-effect:non-scaling-stroke}
 .ld__leaf{opacity:0}
+.ld__fin{stroke:#d08a58;stroke-width:1;opacity:.35;vector-effect:non-scaling-stroke}
+.ld__finial{stroke:#e0a070;stroke-width:1.1;vector-effect:non-scaling-stroke}
 .ld__glow{opacity:0}
 .ld__meta{position:absolute;inset:0;pointer-events:none;color:#f4e6da;font-family:var(--font-display)}
 .ld__brand{position:absolute;left:var(--gutter);top:5vh;font:500 17px/1.05 var(--font-display);letter-spacing:-.02em;display:flex;flex-direction:column}

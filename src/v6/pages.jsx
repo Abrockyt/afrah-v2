@@ -108,14 +108,14 @@ function Stats({items}) {
 function ArchitecturePage() {
   return <main className="e-page">
     <PageTitle eyebrow="Architecture" crumbs="Architecture">Architecture</PageTitle>
-    <figure className="e-hero"><img src="/v3/era/arch-building.webp" alt="The tower at dusk"/></figure>
-    <p className="e-lede">A tower of stone and bronze that rises in setbacks, each one a terrace.</p>
+    <figure className="e-hero"><img src="/media/renders/quarter-river.webp" alt="The quarter on the river bend at dusk"/></figure>
+    <p className="e-lede">A tower of glass that turns as it rises, crowned with bronze.</p>
     <Editorial items={[
-      ['01 / Silhouette', 'Setbacks.', '/v3/era/art-deco.webp', 'The mass steps back as it rises, opening terraces to the sky and light to the street. Sixty-four levels, three setbacks and a lantern.'],
-      ['02 / Facade', 'Bronze leaves.', '/v3/era/new-era.webp', 'Tall bronze fins shaped like leaves frame deep windows. They catch the low sun in the morning and glow from within at night.'],
-      ['03 / Street', 'The arcade.', '/v3/era/arch-2.webp', 'At ground level a stone arcade of arched windows opens onto the square: cafés, the lobby and the entrance to the garden.'],
+      ['01 / Silhouette', 'The twist.', '/media/renders/quarter.webp', 'A rounded square in plan, the Lily turns an eighth of a turn over sixty-four levels and narrows slightly, so every floor sees the river from a new angle.'],
+      ['02 / Crown', 'The bud.', '/media/renders/lily-crown.webp', 'Thirty-two bronze fins run up the facade with the twist. Above the last floor they keep rising and close over a lantern of glass that glows at night.'],
+      ['03 / Ensemble', 'The Waves.', '/media/renders/waves.webp', 'Five sister towers wrap their homes in white balconies whose depth changes from floor to floor, so the facades ripple like water in the light.'],
     ]}/>
-    <Stats items={[['64', 'levels', 'Above the river'], ['266', 'm', 'Height to the crown'], ['5', 'towers', 'One ensemble'], ['1.2', 'ha', 'Courtyard garden']]}/>
+    <Stats items={[['64', 'levels', 'Above the river'], ['297', 'm', 'Height to the finial'], ['10', 'towers', 'One ensemble'], ['4', 'ha', 'Park and garden']]}/>
     <section className="e-forms">
       <header><span className="e-eyebrow">Phase two</span><h2 className="f-serif">Four mirror towers.</h2><p>Around the stone tower, four glass towers, each with its own form, reflect it and the sky.</p></header>
       <div>{TOWER_FORMS.map(([n, t, h, d]) => <article key={n}><svg viewBox="0 0 60 120" aria-hidden="true"><path d={FORM_PATHS[n]}/></svg><span className="e-eyebrow">{n}</span><strong className="f-serif">{t}</strong><em>{h} m</em><p>{d}</p></article>)}</div>
@@ -126,7 +126,7 @@ function ArchitecturePage() {
     <div className="e-under"><Link to="/gallery" className="f-pill">See the gallery</Link></div>
   </main>;
 }
-const TOWER_FORMS = [['Twist', 'A quarter turn.', 232, 'A square plan that turns 90° over its height.'], ['Taper', 'The ellipse.', 196, 'An elliptical plan narrowing to a sloped crown.'], ['Step', 'Glass Deco.', 176, 'Three setbacks, the Art Deco profile in mirror glass.'], ['Sail', 'The lens.', 158, 'A lens-shaped plan bowed like a sail towards the river.']];
+const TOWER_FORMS = [['Twist', 'A quarter turn.', 232, 'A square mirror tower that turns 90° over its height.'], ['Taper', 'The ellipse.', 196, 'An elliptical plan narrowing to a sloped crown.'], ['Step', 'Glass Deco.', 176, 'Three setbacks, the Art Deco profile in mirror glass.'], ['Sail', 'The lens.', 158, 'A lens-shaped plan bowed like a sail towards the river.']];
 const FORM_PATHS = {
   Twist: 'M18 118 L42 118 L46 4 L14 4 Z M18 118 L46 4 M42 118 L14 4',
   Taper: 'M10 118 C10 70 18 30 24 6 L38 2 C42 30 50 70 50 118 Z',
@@ -148,14 +148,11 @@ function PlacePage() {
 }
 
 const PHOTOS = [
-  ['Exterior', 'The tower at dusk', '/v3/era/arch-building.webp', 1050, 1878],
-  ['Exterior', 'A new era for the city', '/v3/era/new-era.webp', 2016, 2044],
-  ['Exterior', 'Stone, bronze and light', '/v3/era/art-deco.webp', 868, 1390],
-  ['Exterior', 'The arcade on the square', '/v3/era/arch-2.webp', 2016, 1134],
-  ['Exterior', 'Above the river bend', '/v3/silver/intro.webp', 2016, 1260],
-  ['Exterior', 'Evening over the district', '/v3/silver/arch-intro.webp', 2016, 1260],
-  ['Exterior', 'Terraces in the setbacks', '/v3/silver/gallery-2.webp', 1918, 1176],
-  ['Exterior', 'Towers in the sky', '/v3/silver/gallery-4.webp', 1918, 1176],
+  ['Exterior', 'The Lily’s crown', '/media/renders/lily-crown.webp', 1600, 1000],
+  ['Exterior', 'The quarter on the river bend', '/media/renders/quarter-river.webp', 1600, 1000],
+  ['Exterior', 'The Wave towers at dusk', '/media/renders/waves.webp', 1600, 1000],
+  ['Exterior', 'Ten towers, one park', '/media/renders/quarter.webp', 1600, 1000],
+  ['Exterior', 'Evening over the district', '/media/renders/quarter-dusk.webp', 1600, 1000],
   ['Interior', 'The entrance hall', '/v3/era/int-1.webp', 1300, 1625],
   ['Interior', 'Double-height lobby', '/v3/era/int-2.webp', 1300, 1625],
   ['Interior', 'Concierge', '/v3/era/int-3.webp', 1300, 1552],
@@ -244,7 +241,7 @@ function Lightbox({items, index, onIndex, onClose}) {
 }
 
 const PROGRESS = [
-  ['September 2026', 64, '/v3/era/new-era.webp', 'Facade installation reaches level 41; bronze leaves fitted to the first setback.'],
+  ['September 2026', 64, '/media/renders/lily-crown.webp', 'Glazing reaches level 41; the first bronze fins of the crown are lifted into place.'],
   ['June 2026', 51, '/v3/silver/arch-top.webp', 'The structure tops out at level 64. Crown steelwork begins.'],
   ['March 2026', 38, '/v3/silver/gallery-5.webp', 'Core and slabs to level 44; the podium arcade is glazed.'],
   ['December 2025', 22, '/v3/silver/court.webp', 'Podium and courtyard slab complete; the first trees planted.'],

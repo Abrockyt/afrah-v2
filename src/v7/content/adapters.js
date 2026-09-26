@@ -22,9 +22,9 @@ const HISTORIES = [
   [2023, 'First stone', '/v3/likova/cube.webp'],
   [2024, 'The courtyard slab', '/v3/silver/court-2.webp'],
   [2025, 'The tower tops out', '/v3/era/arch-2.webp'],
-  [2026, 'Bronze facade complete', '/v3/era/arch-building.webp'],
+  [2026, 'Bronze crown complete', '/media/renders/lily-crown.webp'],
   [2026, 'Gardens on the terraces', '/v3/silver/terraces.webp'],
-  [2027, 'The lights come on', '/media/architecture-dusk.webp'],
+  [2027, 'The lights come on', '/media/renders/quarter-dusk.webp'],
   [2027, 'First residents move in', '/media/living.webp'],
 ].map(([year, title, image], i) => ({id: `h${i}`, year, title, image}));
 

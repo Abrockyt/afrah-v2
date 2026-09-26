@@ -64,16 +64,16 @@ export const DEFY = { words: ['RISE', 'ABOVE', 'THE', 'CITY'] };
 
 export const PARADOX = {
   first: ['WHAT HAPPENS WHEN', 'A TOWER', 'FEELS LIKE HOME?'],
-  second: ['TWENTY-SIX', 'LEVELS OF LIGHT', 'ABOVE THE WATER'],
+  second: ['SIXTY-FOUR', 'LEVELS OF LIGHT', 'ABOVE THE WATER'],
 };
 
 export const TOWER = {
   chapter: '02',
   shots: [
-    { at: [0.07, 0.2], num: '01', title: ['THE', 'QUARTER'], label: 'Nine towers · one park', body: 'The towers you flew through stand as one quarter on the river bend, around a private park.' },
-    { at: [0.25, 0.36], num: '02', title: ['THE', 'CROWN'], label: 'Bronze leaf fins · 266 m', body: 'Bronze fins rise like leaves and close into a crown that holds the last of the sun.' },
-    { at: [0.39, 0.5], num: '03', title: ['THE', 'GLASS'], label: 'Floor-to-ceiling glazing', body: 'Every home is glazed floor to ceiling and opens to at least two views.' },
-    { at: [0.53, 0.64], num: '04', title: ['THE', 'POOL DECK'], label: 'Podium level · +13.5 m', body: 'A heated pool and sun deck on the podium roof, above the noise of the street.' },
+    { at: [0.07, 0.2], num: '01', title: ['THE', 'QUARTER'], label: 'Ten towers · one park', body: 'The Lily at the centre, five Wave towers around her and four mirror towers across the park, on the river bend.' },
+    { at: [0.25, 0.36], num: '02', title: ['THE', 'CROWN'], label: 'The Lily · 64 levels · 297 m', body: 'Thirty-two bronze fins turn with the tower and close over a glass lantern: a bud of light above the city.' },
+    { at: [0.39, 0.5], num: '03', title: ['THE', 'GLASS'], label: 'Floor-to-ceiling glazing', body: 'Every home is glazed floor to ceiling. At dusk the rooms light up one by one behind the glass.' },
+    { at: [0.53, 0.64], num: '04', title: ['THE', 'POOL DECK'], label: '64 m pool · in the park', body: 'A heated pool and sun deck in the park at the foot of the Lily, among the trees.' },
     { at: [0.67, 0.78], num: '05', title: ['THE', 'GARDEN'], label: '800 trees · 4 hectares', body: 'Paths, lawns and eight hundred trees: the ground belongs to the people who live here.' },
     { at: [0.81, 0.9], num: '06', title: ['PHASE', 'TWO'], label: 'Four mirror towers', body: 'Across the park, four towers in mirror glass: one turns, one tapers, one steps, one bows like a sail.' },
   ],
@@ -111,7 +111,7 @@ export const WHY = {
   benefits: [
     { k: 'Views', v: 'River on three sides' },
     { k: 'Light', v: 'Floor-to-ceiling glass' },
-    { k: 'Terraces', v: 'Every setback a garden' },
+    { k: 'Balconies', v: 'Deep, on every floor' },
     { k: 'Quiet', v: 'Triple glazing, deep walls' },
     { k: 'Service', v: 'Concierge, day and night' },
     { k: 'Wellness', v: 'Pool, spa and studio' },

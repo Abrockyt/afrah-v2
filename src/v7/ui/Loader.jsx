@@ -2,26 +2,25 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { store, notify } from '../core/store';
 import { gsap, stopScroll, startScroll } from '../core/ScrollManager';
 
-// Loader: the tower rises. On a twilight ground, ERA's stepped tower draws
-// itself in a single copper line while loading, storey by storey; an
-// altimeter counts the levels up to 64. When everything is ready the bronze
-// leaves of the crown fill in, every window lights at once, and the screen
-// dissolves into rose mist, which is exactly where the hero film begins:
-// above the clouds. A click anywhere is the sound opt-in.
+// Loader: the tower rises. On a twilight ground the Lily draws itself in a
+// single copper line while loading, storey by storey; an altimeter counts the
+// levels up to 64. When everything is ready the bronze petals of the crown
+// fill in, every window lights at once, and the screen dissolves into rose
+// mist, which is exactly where the hero film begins: above the clouds.
+// A click anywhere is the sound opt-in.
 
 const FLOORS = 64;
-// The tower outline (viewBox 0 0 240 520): a podium, three setbacks and a crown.
-const OUTLINE = 'M40 510 L40 470 L60 470 L60 250 L72 250 L72 170 L86 170 L86 110 L100 110 L100 70 L120 40 L140 70 L140 110 L154 110 L154 170 L168 170 L168 250 L180 250 L180 470 L200 470 L200 510 Z';
-// leaf fins on the setbacks: pointed lancets
-const leaf = (x, y, h, w = 7) => `M${x} ${y} C${x - w} ${y - h * .35} ${x - w * .6} ${y - h * .8} ${x} ${y - h} C${x + w * .6} ${y - h * .8} ${x + w} ${y - h * .35} ${x} ${y} Z`;
-const LEAVES = [
-  ...[66, 84, 102, 120, 138, 156, 174].map((x) => leaf(x, 250, 42)),
-  ...[80, 96, 112, 128, 144, 160].map((x) => leaf(x, 170, 36, 6)),
-  ...[93, 107, 120, 133, 147].map((x) => leaf(x, 110, 30, 5)),
-];
-// storey lines inside the shaft (y from 460 up to 120)
-const levelY = (i) => 460 - (i / (FLOORS - 1)) * 330;
-const widthAt = (y) => (y > 250 ? [64, 176] : y > 170 ? [76, 164] : y > 110 ? [90, 150] : [104, 136]);
+// The Lily's outline (viewBox 0 0 240 520): a gently tapering shaft and the
+// bud of bronze petals over the lantern, with its finial.
+const ROOF = 196;
+const OUTLINE = `M66 504 L72 ${ROOF} C64 150 88 96 120 62 C152 96 176 150 168 ${ROOF} L174 504 Z`;
+// petals: lancets from the roof line closing on the tip
+const petal = (x) => { const c = x + (120 - x) * 0.25; return `M${x - 3} ${ROOF} Q${c - 10} 120 120 62 Q${c + 8} 120 ${x + 3} ${ROOF} Z`; };
+const LEAVES = [78, 90, 102, 114, 126, 138, 150, 162].map(petal);
+// fins up the shaft, leaning with the twist
+const FINS = Array.from({ length: 9 }, (_, i) => 76 + i * 11);
+const levelY = (i) => 492 - (i / (FLOORS - 1)) * (492 - ROOF - 6);
+const widthAt = () => [60, 180];
 
 export default function Loader({ onSound }) {
   const ref = useRef(null);
@@ -86,7 +85,9 @@ export default function Loader({ onSound }) {
       <ellipse className="ld__glow" cx="120" cy="300" rx="150" ry="260" fill="url(#ldGlow)" />
       <g clipPath="url(#ldShaft)">
         {floors.map((f, i) => <line key={i} className="ld__floor" x1={f.a} x2={f.b} y1={f.y} y2={f.y} />)}
+        {FINS.map((x) => <line key={x} className="ld__fin" x1={x} y1={504} x2={x + 10} y2={ROOF} />)}
       </g>
+      <line className="ld__finial" x1="120" y1="62" x2="120" y2="30" />
       {LEAVES.map((d, i) => <path key={i} className="ld__leaf" d={d} fill="url(#ldCopper)" />)}
       <path className="ld__outline" d={OUTLINE} />
     </svg>

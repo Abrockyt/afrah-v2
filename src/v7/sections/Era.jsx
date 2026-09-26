@@ -189,16 +189,16 @@ export function EraInteriors() {
   );
 }
 
-/* ── The new Art Deco era (ERA's opening statement) ──────────────────── */
+/* ── A new landmark: the Lily ─────────────────────────────────────────── */
 export function EraArtDeco() {
   const ref = useRef(null);
   useReveals(ref);
   return (
     <section className="era-deco" ref={ref} id="art-deco" onPointerEnter={() => setTheme('dark')}>
       <span className="t-small era-kicker" data-rise>04 / A place of art</span>
-      <h2 className="era-deco__title" data-words>{words('THE NEW')}<br />{words('ART DECO ERA')}</h2>
-      <figure className="era-deco__img" data-rise><img src="/v3/era/art-deco.webp" alt="Bronze Art Deco detailing on the AFRAH facade" loading="lazy" data-parallax="8" /></figure>
-      <p className="era-deco__text" data-rise>The towers you flew through borrow their confidence from the 1930s: vertical lines, bronze leaves, stepped crowns. What the old skyscrapers promised the city, AFRAH delivers to the people who live in it.</p>
+      <h2 className="era-deco__title" data-words>{words('A NEW')}<br />{words('LANDMARK')}</h2>
+      <figure className="era-deco__img" data-rise><img src="/media/renders/lily-crown.webp" alt="The Lily's crown of bronze fins closing over its glass lantern" loading="lazy" data-parallax="8" /></figure>
+      <p className="era-deco__text" data-rise>The Lily turns an eighth of a turn as it rises, and thirty-two bronze fins turn with it, closing over a lantern of glass at the top. By day it holds the sky; at night it is the brightest thing on the river.</p>
     </section>
   );
 }
@@ -233,7 +233,7 @@ export function EraApartments() {
       <div className="era-apart__head"><span className="t-small era-kicker" data-rise>10 / Residences</span><h2 data-words>{words('APARTMENTS')}</h2></div>
       <div className="era-apart__cards">
         <a className="era-apart__card" href="/residences" data-rise><span className="t-small">Select by criteria</span><strong>Bedrooms, level, area, view</strong><b>Select an apartment ↗</b></a>
-        <a className="era-apart__card era-apart__card--img" href="/select" data-rise><img src="/v3/era/apart-buildings.webp" alt="" aria-hidden="true" /><span className="t-small">Visual selection</span><strong>Pick a floor on the tower</strong><b>Open the tower ↗</b></a>
+        <a className="era-apart__card era-apart__card--img" href="/select" data-rise><img src="/media/renders/quarter.webp" alt="" aria-hidden="true" /><span className="t-small">Visual selection</span><strong>Pick a floor on the tower</strong><b>Open the tower ↗</b></a>
       </div>
     </section>
   );
@@ -247,7 +247,7 @@ export function EraOutro() {
   });
   return (
     <section className="era-outro" ref={ref} id="new-era" onPointerEnter={() => setTheme('dark')}>
-      <img className="era-outro__bg" src="/v3/era/new-era.webp" alt="" aria-hidden="true" />
+      <img className="era-outro__bg" src="/media/renders/quarter-river.webp" alt="" aria-hidden="true" />
       <div className="era-outro__copy">
         <span className="t-small" data-rise>A place where life becomes art</span>
         <h2 data-words>{words('A NEW ERA')}<br />{words('FOR THE CITY,')}<br />{words('A NEW CHAPTER')}<br />{words('IN YOUR LIFE.')}</h2>

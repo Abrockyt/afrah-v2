@@ -5,7 +5,7 @@ import { sectionProgress, store, smooth, range } from '../../core/store';
 // up where the hero left it (above the pool deck), comes down to the street
 // for the arrival, then the tower chapter visits each part of the complex in
 // turn while the evening comes on: the whole quarter, the bronze crown, the
-// glass, the pool deck, the garden, and the second phase across the park.
+// glass, the pool deck in the park, the garden, and the second phase.
 // Each shot carries an anchor; its screen position is published as CSS
 // variables so the DOM callout (dot + leader line) sits on the real thing.
 
@@ -25,7 +25,7 @@ export const TOWER = [
   { p: 0.2, target: V(0.4, 1.4, -0.3), dist: 15, az: -24 * D, el: 30 * D, anchor: CROWN },
   { p: 0.3, target: CROWN.clone().setY(5.0), dist: 3.2, az: 32 * D, el: 9 * D, anchor: V(-0.05, 5.3, -0.55) },   // the crown
   { p: 0.44, target: V(-0.16, 3.1, -0.82), dist: 3.1, az: 4 * D, el: 6 * D, anchor: V(-0.12, 3.1, -0.4) },     // the glass
-  { p: 0.58, target: V(0.92, 0.3, 1.8), dist: 2.3, az: 38 * D, el: 34 * D, anchor: V(0.92, 0.32, 1.8) },       // the pool deck
+  { p: 0.58, target: V(-1.2, 0.35, 0.62), dist: 2.7, az: -36 * D, el: 22 * D, anchor: V(-1.28, 0.1, 0.72) },    // the pool deck, the Lily behind
   { p: 0.72, target: V(0.5, 0.35, 4.4), dist: 3.2, az: 12 * D, el: 16 * D, anchor: V(0.6, 0.4, 4.6) },          // the garden
   { p: 0.86, target: V(5.9, 2.0, -2.0), dist: 7.5, az: 62 * D, el: 14 * D, anchor: V(5.9, 3.3, -2.0) },         // phase two
   { p: 1.0, target: V(2.5, 1.2, -1.0), dist: 18, az: 50 * D, el: 30 * D, anchor: null },

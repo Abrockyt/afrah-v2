@@ -12,16 +12,20 @@ import '../styles/floor-select.css';
 // to it and the plan draws itself in the panel. Pick a residence on the plan
 // for its details.
 
-// The tallest tower of the quarter (the one the hero film flies up), from
-// ERA's district model: 266 m, bronze leaf crown. Scene scale 1 unit = 12.5 m.
+// The Lily, the tallest tower of the quarter (the one the hero film flies up):
+// 64 storeys of 3.6 m over a double-height lobby, turning an eighth of a turn
+// as it rises, so the storey outlines turn and narrow with it.
+// Scene scale 1 unit = 12.5 m.
 const K = 0.08;                                          // metres → units
-const TOWER_M = { x: -139.5, z: -121 };                  // tower centre in model metres
-const FIRST_LABEL = 5;                                   // storey number of the first residential floor
-const FLOOR = 3.6 * K, FIRST_RES_FLOOR_Y = 18 * K, TOP_Y = 234 * K;
+const TOWER_M = { x: -136.2, z: -121 };                  // tower centre in model metres
+const FIRST_LABEL = 3;                                   // storey number of the first residential floor
+const FLOOR = 3.6 * K, FIRST_RES_FLOOR_Y = 10.2 * K, TOP_Y = 233 * K;
 const FLOORS = Math.round((TOP_Y - FIRST_RES_FLOOR_Y) / FLOOR);
-const FOOT = { minX: -25.5 * K, maxX: 25.5 * K, minZ: -22 * K, maxZ: 22 * K };
+const FOOT = { minX: -20.3 * K, maxX: 20.3 * K, minZ: -20.3 * K, maxZ: 20.3 * K };
 const CX = (FOOT.minX + FOOT.maxX) / 2, CZ = (FOOT.minZ + FOOT.maxZ) / 2, W = FOOT.maxX - FOOT.minX, D = FOOT.maxZ - FOOT.minZ;
 const floorY = (i) => FIRST_RES_FLOOR_Y + i * FLOOR;
+// the tower's twist and taper at a storey (see SignatureTowers.js)
+const twist = (i) => { const h = Math.min(1, (floorY(i) / K - 3) / 230); return { rot: -h * Math.PI / 4, sc: 1 - 0.1 * h }; };
 const STATUS = (u) => (['available', 'available', 'reserved', 'available', 'sold'][(u.seed * 7) % 5]);
 
 function useTower(canvasRef, onHover, onPick) {
@@ -63,7 +67,7 @@ function useTower(canvasRef, onHover, onPick) {
     // camera rig: orbit angle + height + distance, all tweened
     const rig = { angle: -0.55, y: TOP_Y * 0.55, dist: 46, lookY: TOP_Y * 0.5, spin: true };
     loadEraDistrict(renderer).then((d) => {
-      // re-scale ERA's quarter so the tallest tower stands on the origin
+      // re-scale the quarter so the Lily stands on the origin
       const g = d.group;
       g.scale.setScalar(K);
       g.position.set(-TOWER_M.x * K, 0, -TOWER_M.z * K);
@@ -91,7 +95,7 @@ function useTower(canvasRef, onHover, onPick) {
       if (i !== hovered) {
         hovered = i;
         hover.visible = i >= 0 && i !== selected;
-        if (i >= 0) hover.position.y = floorY(i) + FLOOR / 2;
+        if (i >= 0) { const { rot, sc } = twist(i); hover.position.y = floorY(i) + FLOOR / 2; hover.rotation.y = rot; hover.scale.set(sc, 1, sc); }
         canvas.style.cursor = i >= 0 ? 'pointer' : 'grab';
         onHover(i, e);
       } else if (i >= 0) onHover(i, e);
@@ -118,14 +122,19 @@ function useTower(canvasRef, onHover, onPick) {
       }
       const y = floorY(i);
       picked.visible = true;
+      const { rot, sc } = twist(i);
       gsap.to(picked.position, { y: y + FLOOR / 2, duration: 0.6, ease: 'power3.inOut' });
-      gsap.fromTo(picked.scale, { x: 1, z: 1 }, { x: 1.07, z: 1.07, duration: 0.7, ease: 'back.out(2.2)', delay: 0.25 });
+      gsap.to(picked.rotation, { y: rot, duration: 0.6, ease: 'power3.inOut' });
+      gsap.fromTo(picked.scale, { x: sc, z: sc }, { x: sc * 1.07, z: sc * 1.07, duration: 0.7, ease: 'back.out(2.2)', delay: 0.25 });
       // dim everything above and below the chosen storey
       dimBelow.scale.y = Math.max(0.01, y - 0.02); dimBelow.position.set(CX, (y - 0.02) / 2, CZ);
       const topSpan = TOP_Y + 1.2 - (y + FLOOR);
       dimAbove.scale.y = Math.max(0.01, topSpan); dimAbove.position.set(CX, y + FLOOR + topSpan / 2, CZ);
       gsap.to(dimMat, { opacity: 0.62, duration: 0.6 });
-      gsap.to(rig, { y: y + 3.2, lookY: y - 0.2, dist: 22, duration: 1.3, ease: 'power3.inOut' });
+      // swing round to the open side of the Lily (no sister tower in the way)
+      rig.spin = false;
+      const clear = 0.05 + Math.round((rig.angle - 0.05) / (Math.PI * 2)) * Math.PI * 2;
+      gsap.to(rig, { y: y + 3.2, lookY: y - 0.2, dist: 22, angle: clear, duration: 1.3, ease: 'power3.inOut' });
     };
 
     let raf;
