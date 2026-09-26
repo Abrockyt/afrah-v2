@@ -75,7 +75,7 @@ export const TOWER = {
     { at: [0.39, 0.5], num: '03', title: ['THE', 'GLASS'], label: 'Floor-to-ceiling glazing', body: 'Every home is glazed floor to ceiling and opens to at least two views.' },
     { at: [0.53, 0.64], num: '04', title: ['THE', 'POOL DECK'], label: 'Podium level · +13.5 m', body: 'A heated pool and sun deck on the podium roof, above the noise of the street.' },
     { at: [0.67, 0.78], num: '05', title: ['THE', 'GARDEN'], label: '800 trees · 4 hectares', body: 'Paths, lawns and eight hundred trees: the ground belongs to the people who live here.' },
-    { at: [0.81, 0.9], num: '06', title: ['PHASE', 'TWO'], label: 'Across the park', body: 'A second set of towers completes the quarter, built from the same bronze and glass.' },
+    { at: [0.81, 0.9], num: '06', title: ['PHASE', 'TWO'], label: 'Four mirror towers', body: 'Across the park, four towers in mirror glass: one turns, one tapers, one steps, one bows like a sail.' },
   ],
 };
 

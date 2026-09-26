@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {DRACOLoader} from 'three/examples/jsm/loaders/DRACOLoader.js';
 import {makeGlass, makeCopper, addFinCoords, makeWater} from './EraMaterials';
+import {buildGlassTowers} from './GlassTowers';
 
 // ERA's own 3D district (era.estate/3d-map, Era_100.gltf) with its original
 // baked textures: every building carries ERA's 4K baked shadow atlas on uv0,
@@ -157,17 +158,13 @@ async function build(renderer) {
   // The complex's second phase: ERA's own towers again, across the park.
   root.updateMatrixWorld(true);
   const towers = new THREE.Group(); towers.name = 'era-towers';
-  const phase2 = new THREE.Group(); phase2.name = 'era-phase-2';
-  root.traverse((o) => {
-    if (!o.isMesh || !/^Bld_(Metal|window|Bronze|_Bronze|Dark|_roof)|^Bld__/.test(o.material.name)) return;
-    const b = new THREE.Box3().setFromObject(o);
-    if (b.max.y < 30 || b.min.x < -300 || b.max.x > 40 || b.min.z < -240 || b.max.z > 80) return;
-    const c = new THREE.Mesh(o.geometry, o.material); c.applyMatrix4(o.matrixWorld); c.castShadow = true; c.receiveShadow = true; phase2.add(c);
-  });
-  // rotated a quarter turn and set on the open plot north-east of the park
-  phase2.rotation.y = Math.PI / 2;
-  phase2.position.set(250, 0, -310);
-  towers.add(phase2);
+  // The second phase across the park: four mirror-glass towers, each a
+  // different form (twisting, tapering, stepped, sail), on stone podiums.
+  const mirror = makeGlass({envMap, toModel: TO_MODEL, eve, rooms, mirror: true});
+  const podiumStone = bake(new THREE.MeshStandardMaterial({color: '#bdb3a6', roughness: .7, metalness: .05, envMap}), shadow, 0, 0, false, {stone: true});
+  const crownMetal = new THREE.MeshStandardMaterial({color: '#3b3f44', roughness: .35, metalness: .8, envMap});
+  mats.__mirror = mirror; mats.__podium = podiumStone; mats.__crown = crownMetal;
+  towers.add(buildGlassTowers({glass: mirror, stone: podiumStone, crown: crownMetal}));
 
   // Trees: ERA's leaf cards planted as instances along the streets.
   const treeGroup = new THREE.Group();

@@ -19,15 +19,15 @@ float eraNoise(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3. - 2. * 
 
 // Rooms behind the glass. P, V, N in model metres; returns radiance.
 const INTERIOR = `
-uniform float uEve; uniform sampler2D uRooms;
+uniform float uEve; uniform sampler2D uRooms; uniform vec4 uRoomSize; uniform float uMirror;
 vec3 eraRoom(vec3 P, vec3 V, vec3 N, out float frame){
   frame = 0.;
   vec3 Nh = vec3(N.x, 0., N.z);
   if (length(Nh) < .3) return vec3(.02);
   Nh = normalize(Nh);
   vec3 T = vec3(Nh.z, 0., -Nh.x);
-  vec3 C = vec3(4.4, 4.55, 6.5);                       // room width, storey, depth
-  vec3 ro = vec3(dot(P, T), P.y - 17.6, 0.);
+  vec3 C = uRoomSize.xyz;                               // room width, storey, depth
+  vec3 ro = vec3(dot(P, T), P.y - uRoomSize.w, 0.);
   vec3 rd = vec3(dot(V, T), V.y, dot(V, -Nh));
   rd.z = max(rd.z, .04);
   vec2 id = floor(ro.xy / C.xy);
@@ -61,6 +61,7 @@ vec3 eraRoom(vec3 P, vec3 V, vec3 N, out float frame){
   // slab edge and mullions
   frame = max(step(rp.y, .42), step(min(rp.x, C.x - rp.x), .07));
   frame = max(frame, step(abs(fy - .78), .012) * .8);           // transom
+  if (uMirror > .5) frame = max(frame, step(abs(fract(rp.x / 1.47) - .5), .012) * .9);   // curtain-wall mullions
   return col;
 }
 `;
@@ -81,12 +82,14 @@ float eraLeafH(vec4 f){
 }
 `;
 
-export function makeGlass({ envMap, toModel, eve, rooms }) {
-  const m = new THREE.MeshPhysicalMaterial({ color: '#0c1116', metalness: 0, roughness: .05, clearcoat: 1, clearcoatRoughness: .03, envMap, envMapIntensity: 1.35, emissive: '#ffffff', emissiveIntensity: 1 });
+export function makeGlass({ envMap, toModel, eve, rooms, mirror = false }) {
+  const m = new THREE.MeshPhysicalMaterial({ color: mirror ? '#3a4a58' : '#0c1116', metalness: mirror ? .85 : 0, roughness: mirror ? .04 : .05, clearcoat: 1, clearcoatRoughness: .02, envMap, envMapIntensity: mirror ? 2.8 : 1.35, emissive: '#ffffff', emissiveIntensity: 1 });
   m.onBeforeCompile = (sh) => {
     sh.uniforms.uToModel = { value: toModel };
     sh.uniforms.uEve = eve;
     sh.uniforms.uRooms = { value: rooms };
+    sh.uniforms.uRoomSize = { value: mirror ? new THREE.Vector4(4.4, 3.6, 6, 3) : new THREE.Vector4(4.4, 4.55, 6.5, 17.6) };
+    sh.uniforms.uMirror = { value: mirror ? 1 : 0 };
     sh.vertexShader = sh.vertexShader
       .replace('#include <common>', '#include <common>\nvarying vec3 vEraW; varying vec3 vEraN;')
       .replace('#include <worldpos_vertex>', '#include <worldpos_vertex>\nvEraW = (modelMatrix * vec4(transformed, 1.0)).xyz; vEraN = normalize(mat3(modelMatrix) * objectNormal);');
@@ -101,11 +104,13 @@ export function makeGlass({ envMap, toModel, eve, rooms }) {
           float frame;
           vec3 room = eraRoom(Pm, Vm, Nm, frame);
           float fres = pow(1. - clamp(dot(-Vm, Nm), 0., 1.), 4.);
-          totalEmissiveRadiance = room * (1. - frame) * (1. - fres * .85);
-          diffuseColor.rgb = mix(diffuseColor.rgb, vec3(.09, .085, .08), frame);
+          // mirror glass shows its rooms only faintly by day, clearly once lit
+          float seeIn = uMirror > .5 ? mix(.1, .38, uEve) : 1.;
+          totalEmissiveRadiance = room * seeIn * (1. - frame) * (1. - fres * .85);
+          diffuseColor.rgb = mix(diffuseColor.rgb, uMirror > .5 ? vec3(.16, .17, .18) : vec3(.09, .085, .08), frame);
         }`);
   };
-  m.customProgramCacheKey = () => 'era-glass-interior';
+  m.customProgramCacheKey = () => 'era-glass-interior' + (mirror ? '-mirror' : '');
   return m;
 }
 
