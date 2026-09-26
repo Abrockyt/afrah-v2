@@ -50,7 +50,7 @@ export const MOODS = {
   // the place chapter: a clear, cool morning
   morning: { horizon: '#f6e3cf', mid: '#bfd5e6', top: '#6d9ccc', sun: '#fff0da', sunCol: '#fff1d6', fog: '#e3e8eb', hemiSky: '#eef4fb', hemiGround: '#8b8578', sunI: 2.4, hemiI: 1.25, ground: 1, evening: 0 },
   // the building chapter: last light, rooms coming on
-  dusk: { horizon: '#ee9f7e', mid: '#8b6f93', top: '#252a52', sun: '#ff9a62', sunCol: '#ff8f5a', fog: '#6e5a66', hemiSky: '#c6a8b8', hemiGround: '#231d24', sunI: 1.9, hemiI: .55, ground: .45, evening: 1 },
+  dusk: { horizon: '#ee9f7e', mid: '#8b6f93', top: '#252a52', sun: '#ff9a62', sunCol: '#ff8f5a', fog: '#6e5a66', hemiSky: '#c6a8b8', hemiGround: '#231d24', sunI: 1.9, hemiI: .8, ground: .45, evening: 1 },
 };
 
 export class EraWorld {
@@ -109,7 +109,7 @@ export class EraWorld {
     this.envMood = name;
     const env = this.envs[name];
     Object.values(this.district.materials).forEach((m) => { if (m.envMap !== undefined) m.envMap = env; });
-    this.district.waterMat && (this.district.waterMat.envMap = env);
+    if (this.district.waterMat) this.district.waterMat.envMap = env;
   }
 
   setMood(name, k = 1) {
@@ -120,7 +120,6 @@ export class EraWorld {
     u.uSunCol.value.copy(mix(a.sunCol, b.sunCol)); u.uGround.value = a.ground + (b.ground - a.ground) * k;
     // haze takes the horizon's colour, so the far ground melts into the sky
     this.fogColor.copy(u.uHorizon.value);
-    this.district?.waterMat.uniforms.uSky.value.copy(u.uMid.value).lerp(u.uHorizon.value, .5);
     this.sun.color.copy(mix(a.sun, b.sun)); this.hemi.color.copy(mix(a.hemiSky, b.hemiSky)); this.hemi.groundColor.copy(mix(a.hemiGround, b.hemiGround));
     this._sunI = a.sunI + (b.sunI - a.sunI) * k; this._hemiI = a.hemiI + (b.hemiI - a.hemiI) * k;
     this.district?.setEvening(a.evening + (b.evening - a.evening) * k);

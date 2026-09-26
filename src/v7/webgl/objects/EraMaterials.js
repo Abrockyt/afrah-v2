@@ -19,7 +19,7 @@ float eraNoise(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3. - 2. * 
 
 // Rooms behind the glass. P, V, N in model metres; returns radiance.
 const INTERIOR = `
-uniform float uEve;
+uniform float uEve; uniform sampler2D uRooms;
 vec3 eraRoom(vec3 P, vec3 V, vec3 N, out float frame){
   frame = 0.;
   vec3 Nh = vec3(N.x, 0., N.z);
@@ -36,31 +36,24 @@ vec3 eraRoom(vec3 P, vec3 V, vec3 N, out float frame){
   float tm = min(min(t.x, t.y), t.z);
   vec3 hp = vec3(rp, 0.) + rd * tm;
   float r = eraH21(id), r2 = eraH21(id + 17.3), r3 = eraH21(id + 5.1);
-  vec3 wall = mix(vec3(.80, .74, .66), vec3(.93, .90, .85), r2);
-  vec3 col; float nz;
-  if (tm == t.z) {                                            // back wall
-    vec2 q = hp.xy / C.xy;
-    col = wall;
-    float sofa = step(abs(q.x - .5 - (r2 - .5) * .3), .3) * step(q.y, .19) * step(.25, r3);
-    col = mix(col, mix(vec3(.30, .24, .20), vec3(.62, .55, .48), r3), sofa);
-    float art = step(abs(q.x - .5 + (r3 - .5) * .2), .13) * step(abs(q.y - .52), .11) * step(.45, r2);
-    col = mix(col, mix(vec3(.55, .32, .22), vec3(.25, .33, .40), r), art);
-    float door = step(abs(q.x - .12), .07) * step(q.y, .5) * step(r3, .3);
-    col = mix(col, vec3(.35, .27, .21), door);
-    nz = 1.;
-  } else if (tm == t.y) {
-    col = rd.y < 0. ? mix(vec3(.42, .29, .19), vec3(.62, .52, .42), r2) * (.85 + .15 * eraNoise(hp.xz * vec2(2., 8.))) : vec3(.95, .93, .9);
-    nz = hp.z / C.z;
-  } else {
-    col = wall * .82; nz = hp.z / C.z;
-  }
+  // the room is a real interior photograph, set as the far wall and seen in
+  // parallax through the pane; where the ray misses it (steep angles) the
+  // photo's edges stretch into side walls, floor and ceiling, a little darker
+  vec2 bw = (rp + rd.xy * (C.z / rd.z)) / C.xy;
+  float inside = step(0., bw.x) * step(bw.x, 1.) * step(0., bw.y) * step(bw.y, 1.);
+  vec2 uvr = clamp(bw, .01, .99);
+  float k = floor(r * 7.999);
+  vec2 cell = vec2(mod(k, 4.), floor(k / 4.));
+  vec3 col = texture2D(uRooms, (uvr + cell) / vec2(4., 2.)).rgb;
+  col *= mix(.6, 1., inside);
+  float nz = 1.;
   // light: a warm pendant near the ceiling, daylight falling off with depth
   float lamp = exp(-2.2 * length(vec2(hp.x / C.x - .5, (C.y - hp.y) / C.y * 1.6)));
   float on = step(1. - uEve * .68, r);
   vec3 warm = mix(vec3(1., .74, .46), vec3(1., .86, .66), r3);
-  vec3 day = vec3(.55, .53, .5) * (1. - uEve) * (1. - nz * .55);
-  vec3 night = vec3(.035, .04, .055) * uEve;
-  vec3 light = day + night + on * warm * (.42 + lamp * 1.7) * uEve * (.7 + .5 * r2);
+  vec3 day = vec3(.62) * (1. - uEve);
+  vec3 night = vec3(.03, .035, .05) * uEve;
+  vec3 light = day + night + on * warm * (.9 + lamp * .8) * uEve * (.75 + .45 * r2);
   col *= light;
   // blinds half-drawn in some rooms
   float fy = rp.y / C.y;
@@ -88,11 +81,12 @@ float eraLeafH(vec4 f){
 }
 `;
 
-export function makeGlass({ envMap, toModel, eve }) {
+export function makeGlass({ envMap, toModel, eve, rooms }) {
   const m = new THREE.MeshPhysicalMaterial({ color: '#0c1116', metalness: 0, roughness: .05, clearcoat: 1, clearcoatRoughness: .03, envMap, envMapIntensity: 1.35, emissive: '#ffffff', emissiveIntensity: 1 });
   m.onBeforeCompile = (sh) => {
     sh.uniforms.uToModel = { value: toModel };
     sh.uniforms.uEve = eve;
+    sh.uniforms.uRooms = { value: rooms };
     sh.vertexShader = sh.vertexShader
       .replace('#include <common>', '#include <common>\nvarying vec3 vEraW; varying vec3 vEraN;')
       .replace('#include <worldpos_vertex>', '#include <worldpos_vertex>\nvEraW = (modelMatrix * vec4(transformed, 1.0)).xyz; vEraN = normalize(mat3(modelMatrix) * objectNormal);');
@@ -191,4 +185,40 @@ export function addFinCoords(mesh, matrix) {
     out[i * 4 + 3] = bb[4] - bb[1];
   }
   g.setAttribute('aFin', new THREE.BufferAttribute(out, 4));
+}
+
+// Water: rolling wave normals in model metres (several directional swells plus
+// fine ripples), dark body, sky reflection through the environment and a sharp
+// sun glint. `glow` adds underwater light for pools at dusk.
+export function makeWater({ envMap, toModel, time, eve, deep = '#0c2f3a', glow = 0, scale = 1, amp = 1 }) {
+  const m = new THREE.MeshPhysicalMaterial({ color: deep, metalness: 0, roughness: .06, envMap, envMapIntensity: 1.3, clearcoat: 1, clearcoatRoughness: .02, emissive: '#1fb3c4', emissiveIntensity: 0 });
+  m.onBeforeCompile = (sh) => {
+    sh.uniforms.uToModel = { value: toModel };
+    sh.uniforms.uTime = time;
+    sh.uniforms.uEve = eve;
+    sh.vertexShader = sh.vertexShader
+      .replace('#include <common>', '#include <common>\nvarying vec3 vEraW;')
+      .replace('#include <worldpos_vertex>', '#include <worldpos_vertex>\nvEraW = (modelMatrix * vec4(transformed, 1.0)).xyz;');
+    sh.fragmentShader = sh.fragmentShader
+      .replace('#include <common>', '#include <common>\nuniform mat4 uToModel; uniform float uTime; uniform float uEve; varying vec3 vEraW;' + COMMON + `
+        vec2 eraWaveGrad(vec2 p){
+          vec2 g = vec2(0.);
+          vec3 w[4]; w[0] = vec3(.8, .6, .9); w[1] = vec3(-.5, .86, 1.7); w[2] = vec3(.2, -.98, 3.1); w[3] = vec3(-.9, -.4, 5.3);
+          for (int i = 0; i < 4; i++){ float k = w[i].z * ${(1 / scale).toFixed(3)}; float ph = dot(w[i].xy, p) * k + uTime * sqrt(k) * 1.6; g += w[i].xy * k * cos(ph) * (.18 / w[i].z) * ${amp.toFixed(2)}; }
+          float e = .05; float n0 = eraNoise(p * 2.4 + uTime * .35);
+          g += vec2(eraNoise(p * 2.4 + vec2(e, 0.) + uTime * .35) - n0, eraNoise(p * 2.4 + vec2(0., e) + uTime * .35) - n0) / e * .035 * ${amp.toFixed(2)};
+          return g;
+        }`)
+      .replace('#include <normal_fragment_maps>', `#include <normal_fragment_maps>
+        {
+          vec3 Pm = (uToModel * vec4(vEraW, 1.)).xyz;
+          vec2 g = eraWaveGrad(Pm.xz);
+          vec3 nW = normalize(vec3(-g.x, 1., -g.y));
+          normal = normalize((viewMatrix * vec4(nW, 0.)).xyz);
+        }`)
+      .replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>
+        totalEmissiveRadiance = vec3(.05, .42, .48) * ${glow.toFixed(2)} * uEve;`);
+  };
+  m.customProgramCacheKey = () => 'era-water' + glow + scale + amp;
+  return m;
 }

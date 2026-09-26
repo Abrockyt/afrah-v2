@@ -194,6 +194,18 @@ export class WorldPost {
 
   get clouds() { return this.cloudMat.uniforms; }
 
+  // one step down in quality when frames run long: fewer cloud steps, lower
+  // cloud resolution, lighter bloom (called by SceneManager's frame timer)
+  degrade() {
+    if (this.level >= 2) return false;
+    this.level = (this.level || 0) + 1;
+    this.cloudScale = this.level === 1 ? .38 : .28;
+    this.cloudMat.uniforms.uSteps.value = this.level === 1 ? 44 : 30;
+    const v = this.r.getDrawingBufferSize(new THREE.Vector2());
+    this.setSize(v.x, v.y);
+    return true;
+  }
+
   render(scene, camera, time, { rays = 0, exposure = 1 } = {}) {
     const r = this.r;
     camera.updateMatrixWorld();

@@ -221,6 +221,9 @@ export class SceneManager {
     mark('rigs');
     mark('composition');
     if (inWorld && this.post && this.world.district) {
+      // adaptive quality: sustained slow frames step the pipeline down
+      this._slow = (this._slow || 0) + (dt > 0.034 ? 1 : -0.5); if (this._slow < 0) this._slow = 0;
+      if (this._slow > 90) { this._slow = 0; if (!this.post.degrade() && this.renderer.getPixelRatio() > 1) { this.renderer.setPixelRatio(1); this.resize(innerWidth, innerHeight); } }
       this.world.applyClouds(this.post);
       this.post.render(this.scene, this.camera, t, { rays: this.world.cloud.rays });
     } else r.render(this.scene, this.camera);

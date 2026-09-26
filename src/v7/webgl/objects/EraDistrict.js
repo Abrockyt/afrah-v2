@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {DRACOLoader} from 'three/examples/jsm/loaders/DRACOLoader.js';
-import {makeGlass, makeCopper, addFinCoords} from './EraMaterials';
+import {makeGlass, makeCopper, addFinCoords, makeWater} from './EraMaterials';
 
 // ERA's own 3D district (era.estate/3d-map, Era_100.gltf) with its original
 // baked textures: every building carries ERA's 4K baked shadow atlas on uv0,
@@ -103,10 +103,14 @@ async function build(renderer) {
     return t;
   });
   const draco = new DRACOLoader().setDecoderPath('/reference-study/draco/');
-  const [gltf, shadow, ground, grass, asphalt, leaves, sky] = await Promise.all([
+  const [gltf, shadow, ground, grass, asphalt, leaves, sky, phTree, rooms] = await Promise.all([
     new GLTFLoader().setDRACOLoader(draco).loadAsync(DIR + 'district.glb'),
     tex('shadow.webp'), tex('ground.webp'), tex('grass.webp', true, 50), tex('asphalt.webp', true, 40), tex('leaves.png'),
     tl.loadAsync(DIR + 'sky.webp'),
+    // Poly Haven's tree_small_02 (CC0): a real scanned-texture tree for the garden
+    new GLTFLoader().loadAsync('/afrah/models/tree.glb').catch(() => null),
+    // real interiors for the rooms behind the glass
+    tl.loadAsync(DIR + 'rooms.webp').then((t) => { t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; return t; }),
   ]);
   sky.mapping = THREE.EquirectangularReflectionMapping; sky.colorSpace = THREE.SRGBColorSpace;
   const pmrem = new THREE.PMREMGenerator(renderer);
@@ -116,17 +120,18 @@ async function build(renderer) {
   root.updateMatrixWorld(true);
   const mats = {};
   const eve = {value: 0};
+  const waterTime = {value: 0};
   const make = (name) => {
     if (mats[name]) return mats[name];
     let m;
     const L = LOOK[name];
-    if (name === 'Lnd_grass') m = bake(new THREE.MeshStandardMaterial({map: grass, color: '#8c9c72', roughness: 1}), shadow, 1, .25);
+    if (name === 'Lnd_grass') m = bake(new THREE.MeshStandardMaterial({map: grass, color: '#a5b684', roughness: 1}), shadow, 1, .35);
     else if (name === 'Lnd_asphalt' || name === 'Lnd_Asphalt_out') m = bake(new THREE.MeshStandardMaterial({map: asphalt, color: '#9a9690', roughness: .92}), shadow, name === 'Lnd_asphalt' ? 1 : 0, .3);
     else if (name === 'Offroad_2' || name === 'Bld_offroad') m = new THREE.MeshStandardMaterial({map: ground, color: '#b9a893', roughness: 1});
-    else if (name === 'Lnd_water') m = new THREE.MeshStandardMaterial({color: '#4c6f7c', roughness: .08, metalness: .2, envMapIntensity: 1.6});
+    else if (name === 'Lnd_water') m = makeWater({envMap, toModel: TO_MODEL, time: waterTime, eve, deep: '#0d2a33', scale: 3});
     else if (/^Tree_leafs/.test(name)) m = new THREE.MeshStandardMaterial({map: leaves, alphaTest: .45, side: THREE.DoubleSide, color: name === 'Tree_leafs_02' ? '#93a472' : name === 'Tree_leafs_03' ? '#a3ab6e' : '#86996a', roughness: .9});
     else if (name === 'Tree_bark') m = new THREE.MeshStandardMaterial({color: '#5a4a3c', roughness: 1});
-    else if (name === 'Bld_window1') m = makeGlass({envMap, toModel: TO_MODEL, eve});
+    else if (name === 'Bld_window1') m = makeGlass({envMap, toModel: TO_MODEL, eve, rooms});
     else if (name === 'Bld__Bronze' || name === 'Bld__Bronze1') m = makeCopper({envMap, toModel: TO_MODEL, eve, bakeMap: shadow});
     else if (L) {
       m = new THREE.MeshStandardMaterial({color: new THREE.Color(...L.color), metalness: L.metalness, roughness: L.roughness, envMapIntensity: L.env});
@@ -187,7 +192,9 @@ async function build(renderer) {
     const CLEAR = [[-48, 30], [-62, 5], [-75, -20], [-80, -38]];
     const pick = pts.filter(([x, , z]) => Math.hypot(x - CENTRE.x, z - CENTRE.z) < 1500 && !(x > HOLE.x && x < HOLE.z && z > HOLE.y && z < HOLE.w)
       && CLEAR.every(([cx, cz]) => Math.hypot(x - cx, z - cz) > 34));
-    const close = pick.filter(([x, , z]) => Math.hypot(x - CENTRE.x, z - CENTRE.z) < (innerWidth < 760 ? 240 : 400));
+    const GARDEN = innerWidth < 760 ? 60 : 105;
+    const garden = phTree ? pick.filter(([x, , z]) => Math.hypot(x - CENTRE.x, z - CENTRE.z) < GARDEN) : [];
+    const close = pick.filter(([x, , z]) => { const d = Math.hypot(x - CENTRE.x, z - CENTRE.z); return d < (innerWidth < 760 ? 240 : 400) && (!phTree || d >= GARDEN); });
     const far = pick.filter(([x, , z]) => Math.hypot(x - CENTRE.x, z - CENTRE.z) >= (innerWidth < 760 ? 240 : 400));
     species.forEach((sp, k) => {
       const mine = close.filter((_, i) => i % species.length === k);
@@ -199,6 +206,36 @@ async function build(renderer) {
       place(sp.crown, sp.crownMat);
       if (sp.trunk) place(sp.trunk, sp.trunkMat, mine.filter(([x, , z]) => Math.hypot(x - CENTRE.x, z - CENTRE.z) < 260));
     });
+    if (phTree && garden.length) {
+      // the garden round the towers: full trees, each turned and sized differently
+      phTree.scene.updateMatrixWorld(true);
+      phTree.scene.traverse((o) => {
+        if (!o.isMesh) return;
+        const g = o.geometry.clone().applyMatrix4(o.matrixWorld);
+        const m = o.material.clone();
+        if (/leaves/.test(m.name)) { m.transparent = false; m.alphaTest = .5; m.depthWrite = true; m.side = THREE.DoubleSide; m.color.multiplyScalar(.9); }
+        m.envMap = envMap; m.envMapIntensity = .5;
+        const mesh = new THREE.InstancedMesh(g, m, garden.length);
+        garden.forEach(([x, y, z, s], i) => {
+          const r = Math.abs(Math.sin(x * 12.9898 + z * 78.233) * 43758.5);
+          q.setFromAxisAngle(THREE.Object3D.DEFAULT_UP, r % 6.283);
+          mesh.setMatrixAt(i, m4.compose(p.set(x, y, z), q, sc.setScalar(2.6 + (r % 1) * 1.1 + s * .3)));
+        });
+        mesh.receiveShadow = true;
+        treeGroup.add(mesh);
+      });
+    }
+    // garden lamps: warm bollards and post lanterns among the trees, lit at dusk
+    {
+      const spots = [...garden, ...close].filter((_, i) => i % 3 === 0).slice(0, 260);
+      const lamp = new THREE.SphereGeometry(.35, 8, 6);
+      const lampMat = new THREE.MeshStandardMaterial({color: '#2a2622', emissive: '#ffb56b', emissiveIntensity: 0, roughness: .6});
+      lampMat.onBeforeCompile = (sh) => { sh.uniforms.uEve = eve; sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nuniform float uEve;').replace('#include <emissivemap_fragment>', '#include <emissivemap_fragment>\ntotalEmissiveRadiance = vec3(1., .66, .36) * 6. * uEve;'); };
+      lampMat.customProgramCacheKey = () => 'era-lamp';
+      const lamps = new THREE.InstancedMesh(lamp, lampMat, spots.length);
+      spots.forEach(([x, y, z], i) => { const a = i * 2.39; lamps.setMatrixAt(i, m4.compose(p.set(x + Math.cos(a) * 4, y + 3.2, z + Math.sin(a) * 4), q.identity(), sc.setScalar(1))); });
+      treeGroup.add(lamps);
+    }
     const blob = new THREE.IcosahedronGeometry(1, 1); blob.scale(5.5, 6.5, 5.5); blob.translate(0, 8, 0);
     const blobMat = new THREE.MeshStandardMaterial({color: '#6f8656', roughness: 1, flatShading: true});
     const distant = new THREE.InstancedMesh(blob, blobMat, far.length);
@@ -206,49 +243,43 @@ async function build(renderer) {
     treeGroup.add(distant);
   }
 
-  // Pool deck on the podium courtyard (ERA's podium roof at +13.5 m).
+  // The resort deck on the podium courtyard (ERA's podium roof at +13.5 m):
+  // a 64 m pool with stone coping, a lap pool, loungers and umbrellas.
   const pools = new THREE.Group();
-  const waterMat = new THREE.ShaderMaterial({
-    transparent: false, fog: true,
-    uniforms: THREE.UniformsUtils.merge([THREE.UniformsLib.fog, {uTime: {value: 0}, uSky: {value: new THREE.Color('#bfe3ee')}, uDeep: {value: new THREE.Color('#136f82')}, uEve: {value: 0}}]),
-    vertexShader: `varying vec2 vUv; varying vec3 vW;
-      #include <fog_pars_vertex>
-      void main(){ vUv=uv; vec4 w=modelMatrix*vec4(position,1.); vW=w.xyz; vec4 mvPosition=viewMatrix*w; gl_Position=projectionMatrix*mvPosition;
-        #include <fog_vertex>
-      }`,
-    fragmentShader: `uniform float uTime; uniform vec3 uSky; uniform vec3 uDeep; uniform float uEve; varying vec2 vUv; varying vec3 vW;
-      #include <fog_pars_fragment>
-      float h(vec2 p){ return sin(p.x * 3.1 + uTime * .9) * sin(p.y * 2.3 - uTime * .7) + sin((p.x - p.y) * 5.7 + uTime * 1.3) * .35; }
-      void main(){
-        vec2 p = vW.xz * 180.;
-        float e = .02;
-        vec3 n = normalize(vec3(h(p + vec2(e, 0.)) - h(p - vec2(e, 0.)), 6., h(p + vec2(0., e)) - h(p - vec2(0., e))));
-        vec3 V = normalize(cameraPosition - vW);
-        float fr = .03 + .97 * pow(1. - max(dot(V, n), 0.), 5.);
-        float edge = smoothstep(0., .08, vUv.x) * smoothstep(0., .08, 1. - vUv.x) * smoothstep(0., .14, vUv.y) * smoothstep(0., .14, 1. - vUv.y);
-        vec3 body = mix(uDeep * .55, uDeep * 1.15, edge);
-        body += vec3(.03, .26, .3) * uEve * (.25 + .55 * edge);               // underwater lights
-        vec3 col = mix(body, uSky, clamp(fr, 0., .85));
-        col += pow(max(dot(reflect(-V, n), normalize(vec3(-.5, .4, -.7))), 0.), 180.) * .8;
-        gl_FragColor = vec4(col, 1.);
-        #include <tonemapping_fragment>
-        #include <colorspace_fragment>
-        #include <fog_fragment>
-      }`,
-  });
-  const deckMat = bake(new THREE.MeshStandardMaterial({color: '#d9cdb9', roughness: .85, envMap}), shadow, 0);
-  const pool = (x, z, w, d, ry = 0) => {
+  const waterMat = makeWater({envMap, toModel: TO_MODEL, time: waterTime, eve, deep: '#0d4d5c', glow: .5, scale: .8, amp: .4});
+  const deckMat = bake(new THREE.MeshStandardMaterial({color: '#cfc2ad', roughness: .78, envMap}), shadow, 0, 0, false, {stone: true});
+  const coping = new THREE.MeshStandardMaterial({color: '#ece5d8', roughness: .55, envMap});
+  const basin = new THREE.MeshStandardMaterial({color: '#6fb7c2', roughness: .4, envMap});
+  const fabric = new THREE.MeshStandardMaterial({color: '#f2ede4', roughness: .85, envMap});
+  const teak = new THREE.MeshStandardMaterial({color: '#7a5436', roughness: .6, envMap});
+  const canopy = new THREE.MeshStandardMaterial({color: '#efe7da', roughness: .9, side: THREE.DoubleSide, envMap});
+  const box = (w, h, d, mat, x, y, z, g, ry = 0, rx = 0) => { const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat); m.position.set(x, y, z); m.rotation.set(rx, ry, 0); m.castShadow = m.receiveShadow = true; g.add(m); return m; };
+  const pool = (x, z, w, d, ry = 0, deckPad = 6, loungers = true) => {
     const g = new THREE.Group(); g.position.set(x, 13.6, z); g.rotation.y = ry;
-    const deck = new THREE.Mesh(new THREE.BoxGeometry(w + 8, .35, d + 8), deckMat); deck.position.y = -.1;
-    const water = new THREE.Mesh(new THREE.PlaneGeometry(w, d), waterMat); water.rotation.x = -Math.PI / 2; water.position.y = .085;
-    g.add(deck, water);
-    // loungers along the long edge
-    const lounger = new THREE.BoxGeometry(1, .5, 2.2), lm = new THREE.MeshStandardMaterial({color: '#f3eee6', roughness: .7, envMap});
-    for (let i = 0; i < Math.floor(w / 3.2); i++) { const l = new THREE.Mesh(lounger, lm); l.position.set(-w / 2 + 1.6 + i * 3.2, .35, d / 2 + 2.6); g.add(l); }
+    // deck round the pool (four slabs, so the water sits in an opening)
+    const P = deckPad;
+    box(w + P * 2, .3, P, deckMat, 0, -.15, d / 2 + P / 2 + .4, g); box(w + P * 2, .3, P, deckMat, 0, -.15, -d / 2 - P / 2 - .4, g);
+    box(P, .3, d + .8, deckMat, w / 2 + P / 2 + .4, -.15, 0, g); box(P, .3, d + .8, deckMat, -w / 2 - P / 2 - .4, -.15, 0, g);
+    // coping ring and a tiled basin a little below the deck
+    box(w + .8, .12, .4, coping, 0, .06, d / 2 + .2, g); box(w + .8, .12, .4, coping, 0, .06, -d / 2 - .2, g);
+    box(.4, .12, d, coping, w / 2 + .2, .06, 0, g); box(.4, .12, d, coping, -w / 2 - .2, .06, 0, g);
+    box(w, .05, d, basin, 0, -.9, 0, g);
+    const water = new THREE.Mesh(new THREE.PlaneGeometry(w, d), waterMat); water.rotation.x = -Math.PI / 2; water.position.y = -.08; water.receiveShadow = true;
+    g.add(water);
+    if (loungers) for (let i = 0; i < Math.floor(w / 2.6); i++) {
+      const lx = -w / 2 + 1.3 + i * 2.6, lz = d / 2 + 2.4;
+      box(.75, .12, 1.9, fabric, lx, .38, lz, g);
+      box(.75, .1, .8, fabric, lx, .62, lz + .85, g, 0, -.6);
+      box(.08, .3, 1.8, teak, lx - .34, .2, lz, g); box(.08, .3, 1.8, teak, lx + .34, .2, lz, g);
+      if (i % 2 === 0) {
+        const pole = new THREE.Mesh(new THREE.CylinderGeometry(.04, .04, 2.6, 6), teak); pole.position.set(lx + 1.3, 1.3, lz + .4); g.add(pole);
+        const top = new THREE.Mesh(new THREE.ConeGeometry(1.5, .45, 8, 1, true), canopy); top.position.set(lx + 1.3, 2.55, lz + .4); top.castShadow = true; g.add(top);
+      }
+    }
     pools.add(g); return g;
   };
-  pool(-82, 10, 38, 9);
-  pool(-126, 8, 16, 7);
+  pool(-82, 9, 64, 16, 0, 6);
+  pool(-139, 9, 18, 6, 0, 3, false);
 
   // the land runs on past the edge of ERA's map disc into the haze
   const land = new THREE.Mesh(new THREE.CircleGeometry(60000, 48), new THREE.MeshStandardMaterial({color: '#d6c2aa', roughness: 1}));
@@ -264,7 +295,7 @@ async function build(renderer) {
   return {
     group: holder, envMap, waterMat, materials: mats,
     // evening: 0 = golden hour, 1 = dusk with rooms lit
-    setEvening(k) { eve.value = k; waterMat.uniforms.uEve.value = k; },
-    tick(t) { waterMat.uniforms.uTime.value = t; holder.updateMatrixWorld(); TO_MODEL.copy(holder.matrixWorld).invert(); },
+    setEvening(k) { eve.value = k; },
+    tick(t) { waterTime.value = t; holder.updateMatrixWorld(); TO_MODEL.copy(holder.matrixWorld).invert(); },
   };
 }
