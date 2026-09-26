@@ -66,7 +66,8 @@ function ring(plan, N, rot = 0, scale = 1, cx = 0, cz = 0) {
 class Builder {
   constructor() { this.pos = []; this.idx = []; }
   v(x, y, z) { this.pos.push(x, y, z); return this.pos.length / 3 - 1; }
-  quad(a, b, c, d) { this.idx.push(a, b, c, a, c, d); }
+  // rings run anticlockwise seen from above, so this winding faces outwards
+  quad(a, b, c, d) { this.idx.push(a, c, b, a, d, c); }
   geometry() {
     const g = new THREE.BufferGeometry();
     g.setAttribute('position', new THREE.Float32BufferAttribute(this.pos, 3));
@@ -89,7 +90,7 @@ function glassSkin(rings, ys, rooms, roomW) {
   });
   for (let l = 0; l < rings.length - 1; l++) for (let i = 0; i < N; i++) {
     const a = l * (N + 1) + i, c = (l + 1) * (N + 1) + i;
-    idx.push(a, a + 1, c + 1, a, c + 1, c);
+    idx.push(a, c + 1, a + 1, a, c, c + 1);   // outward-facing
   }
   const g = new THREE.BufferGeometry();
   g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
