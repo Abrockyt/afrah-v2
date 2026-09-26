@@ -1,5 +1,5 @@
 /* Floor selection page */
-.fs-page{position:relative;min-height:100vh;background:#081c32;color:#f3ece2;display:grid;grid-template-columns:1fr min(34vw,500px);grid-template-rows:auto 1fr;padding-top:clamp(100px,13vh,150px)}
+.fs-page{position:relative;min-height:100vh;background:#15100d;color:#f3ece2;display:grid;grid-template-columns:1fr min(34vw,500px);grid-template-rows:auto 1fr;padding-top:clamp(100px,13vh,150px)}
 .fs-head{grid-column:1/-1;padding:0 var(--gutter,40px) 2vh}
 .fs-eyebrow{font:500 11px/1 var(--font-display,Inter);letter-spacing:.2em;text-transform:uppercase;color:#c5a48f}
 .fs-head h1{margin:14px 0 10px;font:300 clamp(40px,5.4vw,96px)/.95 var(--font-display,Inter);letter-spacing:-.01em}
@@ -7,7 +7,7 @@
 .fs-stage{position:relative;min-height:72vh}
 .fs-canvas{position:absolute;inset:0;width:100%;height:100%;opacity:0;transition:opacity 1s ease;cursor:grab;touch-action:pan-y}
 .fs-canvas.is-ready{opacity:1}
-.fs-tip{position:absolute;left:0;top:0;pointer-events:none;display:grid;gap:4px;padding:10px 14px;background:rgba(8,28,50,.92);border:1px solid rgba(197,164,143,.5);opacity:0;transition:opacity .2s;font:400 12px/1.2 var(--font-display,Inter)}
+.fs-tip{position:absolute;left:0;top:0;pointer-events:none;display:grid;gap:4px;padding:10px 14px;background:rgba(21,16,13,.92);border:1px solid rgba(197,164,143,.5);opacity:0;transition:opacity .2s;font:400 12px/1.2 var(--font-display,Inter)}
 .fs-tip.is-on{opacity:1}
 .fs-tip strong{font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#e2bf9f}
 .fs-levels{position:absolute;right:18px;top:50%;transform:translateY(-50%);list-style:none;margin:0;padding:0;display:grid;gap:2px;max-height:70vh;overflow:auto}
@@ -40,7 +40,7 @@
 .fs-unitcard strong{display:block;font:400 22px/1.1 var(--font-display,Inter);margin-bottom:6px}
 .fs-unitcard span{display:block;font:400 12px/1.4 var(--font-display,Inter);color:rgba(243,236,226,.72);margin-bottom:14px}
 .fs-unitplan{color:#c5a48f}
-.fs-cta{display:inline-block;padding:10px 16px;background:#c5a48f;color:#081c32;font:500 11px/1 var(--font-display,Inter);letter-spacing:.12em;text-transform:uppercase}
+.fs-cta{display:inline-block;padding:10px 16px;background:#c5a48f;color:#15100d;font:500 11px/1 var(--font-display,Inter);letter-spacing:.12em;text-transform:uppercase}
 .fs-empty{display:grid;gap:10px;padding-top:24vh;font:400 14px/1.4 var(--font-display,Inter);letter-spacing:.08em;text-transform:uppercase}
 .fs-empty em{font-style:normal;font-size:11px;color:rgba(243,236,226,.5)}
 @keyframes fs-card{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}

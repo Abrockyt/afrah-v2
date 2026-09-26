@@ -62,6 +62,6 @@ export default function EraOpening() {
     {CAPS.map((c) => <div className="hero__cap" data-at={c.at} key={c.at}><p className="hero__cap-line"><span>{c.line}</span></p><p className="hero__cap-sub">{c.sub}</p></div>)}
     <div className="hero__scrollcue" aria-hidden="true"><span>Scroll</span><i /></div>
     <div className="hero__above" aria-hidden="true"><h2>{chars('ABOVE THE CLOUDS')}</h2><p className="hero__above-sub">Every residence opens onto the sky.</p></div>
-    <a className="era-opening__map" href="/map"><span className="era-opening__map-icon">3D</span><span>EXPLORE THE PLACE</span><b>↗</b></a>
+    <a className="btn era-opening__map" href="/map"><span className="btn__icon">3D</span>Explore the place<b>↗</b></a>
   </div></section>;
 }

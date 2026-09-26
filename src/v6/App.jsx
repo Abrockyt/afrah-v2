@@ -3,6 +3,7 @@ import gsap from 'gsap';
 import {ScrollTrigger} from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 import {Dialog} from '../Forms';
+import SiteFooter from '../v7/ui/SiteFooter';
 import PageNav from '../v7/ui/PageNav';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -60,12 +61,7 @@ export default function App() {
       <PageNav path={path} go={go}/>
       <div className="a-chapter"><i><b ref={bar}/></i></div>
       <Suspense fallback={null}>{isPage ? <Page key={path} path={path}/> : <main key="film"><Film/></main>}</Suspense>
-      <footer className="a-foot">
-        <span className="f-serif">AFRAH</span>
-        <nav>{MENU.slice(1).map(([to, n]) => <Link key={to} to={to}>{n}</Link>)}</nav>
-        <div className="a-foot-cta"><Link to="/viewing" className="f-pill">Arrange a viewing</Link></div>
-        <small>Illustrative concept · plans, figures and imagery not final · study build</small>
-      </footer>
+      <SiteFooter Link={Link}/>
       {menu && <Dialog title="Menu" className="a-menu" onClose={() => setMenu(false)}>
         <nav>{MENU.map(([to, n], i) => <Link key={to} to={to} className={path === to ? 'on' : ''}><em>{String(i).padStart(2, '0')}</em>{n}</Link>)}</nav>
         <figure><img src="/media/renders/waves.webp" alt=""/><figcaption><span>Sales gallery</span>River Embankment 1 · Daily 10–20</figcaption></figure>

@@ -11,6 +11,7 @@ import './v7/styles/loader-card.css';
 import './v7/styles/history.css';
 import './v7/styles/era.css';
 import './v7/styles/nav.css';
+import './v7/styles/redesign.css';
 
 const PagesApp = React.lazy(() => import('./v7/PagesApp.jsx'));
 const isHome = location.pathname === '/' || location.pathname === '/index.html';

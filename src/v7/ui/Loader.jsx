@@ -1,51 +1,87 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { store, notify } from '../core/store';
 import { gsap, stopScroll, startScroll } from '../core/ScrollManager';
+import { LilyMark } from './NavParts';
 
-// Loader: the tower rises. On a twilight ground the Lily draws itself in a
-// single copper line while loading, storey by storey; an altimeter counts the
-// levels up to 64. When everything is ready the bronze petals of the crown
-// fill in, every window lights at once, and the screen dissolves into rose
-// mist, which is exactly where the hero film begins: above the clouds.
+// Loader: a city drawn in light. After ERA's glowing line lattice, but made of
+// AFRAH's own buildings: three rows of Lily and Wave towers and arcades draw
+// themselves in fine lines while the site loads, a banded bronze gradient
+// slides along every line so the drawing shimmers, and rings of light open
+// behind the Lily. When everything is ready the lines flare, the wordmark
+// settles, and the screen dissolves into rose mist, where the hero begins.
 // A click anywhere is the sound opt-in.
 
-const FLOORS = 64;
-// The Lily's outline (viewBox 0 0 240 520): a gently tapering shaft and the
-// bud of bronze petals over the lantern, with its finial.
-const ROOF = 196;
-const OUTLINE = `M66 504 L72 ${ROOF} C64 150 88 96 120 62 C152 96 176 150 168 ${ROOF} L174 504 Z`;
-// petals: lancets from the roof line closing on the tip
-const petal = (x) => { const c = x + (120 - x) * 0.25; return `M${x - 3} ${ROOF} Q${c - 10} 120 120 62 Q${c + 8} 120 ${x + 3} ${ROOF} Z`; };
-const LEAVES = [78, 90, 102, 114, 126, 138, 150, 162].map(petal);
-// fins up the shaft, leaning with the twist
-const FINS = Array.from({ length: 9 }, (_, i) => 76 + i * 11);
-const levelY = (i) => 492 - (i / (FLOORS - 1)) * (492 - ROOF - 6);
-const widthAt = () => [60, 180];
+function rng(seed) { let a = seed; return () => { a = (a * 16807) % 2147483647; return a / 2147483647; }; }
+
+// Building vectors (viewBox 1440 × 900, y down, `b` = ground line)
+const lily = (x, b, h, w) => {
+  const s = b - h * 0.74, t = b - h;
+  return [
+    `M${x - w / 2} ${b} L${x - w * 0.44} ${s} C${x - w * 0.62} ${s - h * 0.1} ${x - w * 0.22} ${t + h * 0.06} ${x} ${t} C${x + w * 0.22} ${t + h * 0.06} ${x + w * 0.62} ${s - h * 0.1} ${x + w * 0.44} ${s} L${x + w / 2} ${b}`,
+    `M${x - w * 0.44} ${s} C${x - w * 0.2} ${s - h * 0.12} ${x - w * 0.08} ${t + h * 0.08} ${x} ${t} M${x + w * 0.44} ${s} C${x + w * 0.2} ${s - h * 0.12} ${x + w * 0.08} ${t + h * 0.08} ${x} ${t}`,
+    `M${x} ${t} L${x} ${t - h * 0.07}`,
+    `M${x - w * 0.16} ${b} L${x - w * 0.14} ${s} M${x + w * 0.16} ${b} L${x + w * 0.14} ${s}`,
+  ];
+};
+const wave = (x, b, h, w, r) => {
+  const t = b - h, out = [`M${x - w / 2} ${b} L${x - w / 2} ${t + w * 0.3} Q${x - w / 2} ${t} ${x} ${t} Q${x + w / 2} ${t} ${x + w / 2} ${t + w * 0.3} L${x + w / 2} ${b}`];
+  let d = '';
+  for (let y = t + w * 0.36; y < b - 8; y += 13) {
+    const a = 3 + 3 * Math.sin(y * 0.05 + r * 6);
+    d += `M${x - w / 2 - a} ${y} Q${x} ${y + (r > 0.5 ? 4 : -4)} ${x + w / 2 + a} ${y} `;
+  }
+  out.push(d);
+  return out;
+};
+const arcade = (x, b, w, n, h) => {
+  let d = `M${x} ${b} L${x} ${b - h} L${x + w} ${b - h} L${x + w} ${b} `;
+  const aw = w / n;
+  for (let i = 0; i < n; i++) { const ax = x + i * aw + aw * 0.15, bw = aw * 0.7; d += `M${ax} ${b} L${ax} ${b - h * 0.45} A${bw / 2} ${bw / 2} 0 0 1 ${ax + bw} ${b - h * 0.45} L${ax + bw} ${b} `; }
+  return [d];
+};
+
+function buildCity() {
+  const rows = [];
+  const R = rng(11);
+  [[640, 0.55, 0.34], [760, 0.8, 0.62], [880, 1, 1]].forEach(([b, k, o], ri) => {
+    const paths = [];
+    let x = -40 - R() * 60;
+    while (x < 1500) {
+      const r = R(), w = (34 + R() * 34) * k, h = (180 + R() * 300) * k;
+      if (r < 0.34) paths.push(...lily(x + w / 2, b, h * 1.15, w));
+      else if (r < 0.8) paths.push(...wave(x + w / 2, b, h, w, R()));
+      else { const aw = (90 + R() * 80) * k; paths.push(...arcade(x, b, aw, 3 + Math.floor(R() * 3), 60 * k + R() * 40 * k)); x += aw - w; }
+      x += w + (10 + R() * 30) * k;
+    }
+    paths.push(`M-20 ${b} L1460 ${b}`);
+    rows.push({ o, paths, sw: 0.6 + ri * 0.35 });
+  });
+  // the hero: one tall Lily at the centre, with rings of light behind it
+  const hero = lily(720, 880, 560, 110);
+  return { rows, hero };
+}
 
 export default function Loader({ onSound }) {
   const ref = useRef(null);
   const [done, setDone] = useState(false);
-  const floors = useMemo(() => Array.from({ length: FLOORS }, (_, i) => { const y = levelY(i), [a, b] = widthAt(y); return { y, a: a + 2, b: b - 2 }; }), []);
+  const city = useMemo(buildCity, []);
 
   useEffect(() => {
     stopScroll();
     const el = ref.current;
     const q = gsap.utils.selector(el);
-    const line = q('.ld__outline')[0];
-    const len = line.getTotalLength();
-    gsap.set(line, { strokeDasharray: len, strokeDashoffset: len });
-    const floorEls = q('.ld__floor');
-    const numEl = q('.ld__num')[0];
+    const lines = q('.lx__draw');
+    const numEl = q('.lx__num')[0];
+    gsap.set(lines, { strokeDasharray: 1, strokeDashoffset: 1 });
+    // each line draws in its turn as loading progresses
+    const draw = gsap.timeline({ paused: true });
+    lines.forEach((l, i) => draw.to(l, { strokeDashoffset: 0, duration: 0.5, ease: 'power1.inOut' }, (i / lines.length) * 0.5));
     const state = { p: 0 };
-    const paint = () => {
-      const p = state.p;
-      line.style.strokeDashoffset = String(len * (1 - Math.min(1, p * 1.15)));
-      const lit = Math.floor(p * FLOORS);
-      floorEls.forEach((f, i) => { f.style.opacity = i < lit ? '.55' : '0'; });
-      numEl.textContent = String(Math.min(FLOORS, Math.max(0, Math.round(p * FLOORS)))).padStart(2, '0');
-    };
-    // creeps toward 88% while loading
-    const creep = gsap.to(state, { p: 0.88, duration: 7, ease: 'power2.out', onUpdate: paint });
+    const paint = () => { draw.progress(state.p); numEl.textContent = String(Math.round(state.p * 100)).padStart(2, '0'); };
+    const creep = gsap.to(state, { p: 0.86, duration: 6, ease: 'power2.out', onUpdate: paint });
+    // the shimmer: the banded gradient slides across the city, forever
+    const shimmer = gsap.fromTo(q('.lx__band'), { attr: { gradientTransform: 'translate(-1440 0)' } }, { attr: { gradientTransform: 'translate(1440 0)' }, duration: 5.5, ease: 'none', repeat: -1 });
+    const rings = gsap.fromTo(q('.lx__ring'), { attr: { r: 40 }, opacity: 0.8 }, { attr: { r: 520 }, opacity: 0, duration: 4.5, ease: 'power1.out', stagger: 1.5, repeat: -1 });
 
     const fonts = document.fonts ? document.fonts.ready : Promise.resolve();
     const gl = new Promise((res) => { const t = setInterval(() => { if (store.glReady || performance.now() > 25000) { clearInterval(t); res(); } }, 50); });
@@ -57,45 +93,48 @@ export default function Loader({ onSound }) {
         creep.kill();
         if (matchMedia('(prefers-reduced-motion: reduce)').matches) { reveal(); setDone(true); return; }
         tl = gsap.timeline({ onComplete: () => setDone(true) })
-          .to(state, { p: 1, duration: 0.7, ease: 'power2.out', onUpdate: paint })
-          // the crown's leaves fill with bronze, the windows all light
-          .fromTo(q('.ld__leaf'), { opacity: 0, scale: 0.6, transformOrigin: '50% 100%' }, { opacity: 1, scale: 1, duration: 0.6, stagger: 0.02, ease: 'back.out(2)' }, 0.55)
-          .to(floorEls, { opacity: 0.95, duration: 0.3, stagger: { each: 0.004, from: 'start' } }, 0.8)
-          .to(q('.ld__glow'), { opacity: 1, duration: 0.8 }, 0.9)
-          .to(q('.ld__meta'), { autoAlpha: 0, y: -12, duration: 0.5 }, 1.2)
-          // rose mist rises over everything: the hero opens inside the cloud
-          .to(q('.ld__mist'), { opacity: 1, duration: 1.1, ease: 'power2.inOut' }, 1.5)
-          .to(q('.ld__tower'), { y: -60, scale: 1.08, opacity: 0, duration: 1.2, ease: 'power2.in' }, 1.45)
+          .to(state, { p: 1, duration: 0.8, ease: 'power2.out', onUpdate: paint })
+          // the city flares, the wordmark settles
+          .to(q('.lx__glow'), { opacity: 1, duration: 0.7 }, 0.5)
+          .to(q('.lx__hero .lx__draw'), { strokeWidth: 2.2, duration: 0.7 }, 0.5)
+          .to(q('.lx__meta'), { autoAlpha: 0, y: -10, duration: 0.5 }, 1.3)
+          .to(q('.lx__mist'), { opacity: 1, duration: 1.1, ease: 'power2.inOut' }, 1.5)
+          .to(q('.lx__svg'), { scale: 1.06, opacity: 0, duration: 1.3, ease: 'power2.in', transformOrigin: '50% 80%' }, 1.4)
           .add(reveal, 2.4)
           .to(el, { opacity: 0, duration: 1.2, ease: 'power1.inOut' }, 2.5);
-      }, Math.max(0, 1600 - (performance.now() - started)));
+      }, Math.max(0, 1800 - (performance.now() - started)));
     });
-    return () => { clearTimeout(timer); creep.kill(); tl?.kill(); };
+    return () => { clearTimeout(timer); creep.kill(); shimmer.kill(); rings.kill(); tl?.kill(); };
   }, []);
 
-  return <div ref={ref} className={`ld loader ${done ? 'is-done' : ''}`} role="status" aria-live="polite" onClick={() => onSound?.(true)}>
+  const bandStops = Array.from({ length: 21 }, (_, i) => <stop key={i} offset={i / 20} stopColor={i === 18 ? '#f2c7a4' : '#d49a78'} stopOpacity={i % 2 ? 1 : 0.22} />);
+  return <div ref={ref} className={`lx loader ${done ? 'is-done' : ''}`} role="status" aria-live="polite" onClick={() => onSound?.(true)}>
     <span className="loader__sr">{done ? 'AFRAH loaded' : 'Loading AFRAH'}</span>
-    <div className="ld__sky" aria-hidden="true" />
-    <svg className="ld__tower" viewBox="0 0 240 520" aria-hidden="true">
+    <svg className="lx__svg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
       <defs>
-        <linearGradient id="ldCopper" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stopColor="#8f4a26" /><stop offset=".6" stopColor="#d88a52" /><stop offset="1" stopColor="#f4c89a" /></linearGradient>
-        <radialGradient id="ldGlow" cx=".5" cy=".55" r=".6"><stop offset="0" stopColor="#ffb676" stopOpacity=".35" /><stop offset="1" stopColor="#ffb676" stopOpacity="0" /></radialGradient>
-        <clipPath id="ldShaft"><path d={OUTLINE} /></clipPath>
+        <linearGradient id="lxBand" className="lx__band" x1="0" y1="0" x2="1440" y2="360" gradientUnits="userSpaceOnUse" spreadMethod="repeat">{bandStops}</linearGradient>
+        <linearGradient id="lxFadeY" x1="0" y1="0" x2="0" y2="900" gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#120d0b" /><stop offset=".3" stopColor="#120d0b" stopOpacity="0" /><stop offset=".92" stopColor="#120d0b" stopOpacity="0" /><stop offset="1" stopColor="#120d0b" /></linearGradient>
+        <linearGradient id="lxFadeX" x1="0" y1="0" x2="1440" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#120d0b" /><stop offset=".14" stopColor="#120d0b" stopOpacity="0" /><stop offset=".86" stopColor="#120d0b" stopOpacity="0" /><stop offset="1" stopColor="#120d0b" /></linearGradient>
+        <filter id="lxBlur" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="3.2" /></filter>
       </defs>
-      <ellipse className="ld__glow" cx="120" cy="300" rx="150" ry="260" fill="url(#ldGlow)" />
-      <g clipPath="url(#ldShaft)">
-        {floors.map((f, i) => <line key={i} className="ld__floor" x1={f.a} x2={f.b} y1={f.y} y2={f.y} />)}
-        {FINS.map((x) => <line key={x} className="ld__fin" x1={x} y1={504} x2={x + 10} y2={ROOF} />)}
+      <g className="lx__rings">{[0, 1, 2].map((i) => <circle key={i} className="lx__ring" cx="720" cy="360" r="40" />)}</g>
+      {city.rows.map((row, ri) => (
+        <g key={ri} opacity={row.o}>
+          <g className="lx__glow" filter="url(#lxBlur)">{row.paths.map((d, i) => <path key={i} d={d} pathLength="1" className="lx__draw" stroke="url(#lxBand)" strokeWidth={row.sw * 2.4} />)}</g>
+          <g>{row.paths.map((d, i) => <path key={i} d={d} pathLength="1" className="lx__draw" stroke="url(#lxBand)" strokeWidth={row.sw} />)}</g>
+        </g>
+      ))}
+      <g className="lx__hero">
+        <g className="lx__glow" filter="url(#lxBlur)">{city.hero.map((d, i) => <path key={i} d={d} pathLength="1" className="lx__draw" stroke="url(#lxBand)" strokeWidth="3.4" />)}</g>
+        {city.hero.map((d, i) => <path key={i} d={d} pathLength="1" className="lx__draw" stroke="url(#lxBand)" strokeWidth="1.5" />)}
       </g>
-      <line className="ld__finial" x1="120" y1="62" x2="120" y2="30" />
-      {LEAVES.map((d, i) => <path key={i} className="ld__leaf" d={d} fill="url(#ldCopper)" />)}
-      <path className="ld__outline" d={OUTLINE} />
+      <rect width="1440" height="900" fill="url(#lxFadeY)" /><rect width="1440" height="900" fill="url(#lxFadeX)" />
     </svg>
-    <div className="ld__meta" aria-hidden="true">
-      <span className="ld__brand">AFRAH<em>residences</em></span>
-      <span className="ld__alt"><b className="ld__num">00</b><i>/ {FLOORS}</i><em>Level</em></span>
-      <span className="ld__line">Rising above the clouds</span>
+    <div className="lx__meta" aria-hidden="true">
+      <span className="lx__brand"><LilyMark size={30} /><b>AFRAH</b><em>residences above the city</em></span>
+      <span className="lx__count"><b className="lx__num">00</b><i>%</i></span>
+      <span className="lx__line">Drawing the city</span>
     </div>
-    <div className="ld__mist" aria-hidden="true" />
+    <div className="lx__mist ld__mist" aria-hidden="true" />
   </div>;
 }

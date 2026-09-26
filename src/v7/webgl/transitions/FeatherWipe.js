@@ -91,10 +91,60 @@ uniform vec3 uFrom;
 uniform vec3 uTo;
 uniform float uCover;
 uniform float uReverse;
+uniform float uMode;
+uniform vec3 uEdge;
+uniform float uGrad;
+uniform vec3 uGradTop;
+uniform vec3 uGradBot;
+uniform vec3 uGlow;
+uniform float uLattice;
 ${MASK_GLSL}
+// Fin shutter: the screen closes behind vertical panels (the Lily's fins),
+// each rising with an arched head, one after another from the centre out,
+// a thin bronze line on every head. 1.0 = still uncovered.
+float finMask(vec2 uv, out float edge){
+  float N = 9.0;
+  float i = floor(uv.x * N), fx = fract(uv.x * N);
+  float order = abs(i - (N - 1.0) * 0.5) / ((N - 1.0) * 0.5);
+  float p = clamp(uProgress * 1.7 - order * 0.7, 0.0, 1.0);
+  p = p * p * (3.0 - 2.0 * p);
+  float arch = 0.07 * sqrt(max(0.0, 1.0 - pow(2.0 * fx - 1.0, 2.0)));
+  float y = uDir.y < 0.0 ? 1.0 - uv.y : uv.y;
+  float top = p * 1.1 - 0.07 + arch;
+  float gap = step(0.004 * (1.0 - p), min(fx, 1.0 - fx) / N) ;
+  float covered = step(y, top) * max(gap, step(0.999, p));
+  edge = step(top - 0.006, y) * step(y, top) * step(0.001, p) * (1.0 - step(0.999, p));
+  return 1.0 - covered;
+}
+// Soft architectural lattice: quarter-circle arcs on a grid (ERA-like), faint.
+float lattice(vec2 uv){
+  vec2 p = vec2(uv.x * 1.7778, uv.y) * 3.0;
+  vec2 c = fract(p), g = floor(p);
+  float d1 = abs(length(c) - 1.0), d2 = abs(length(c - vec2(1.0, 0.0)) - 1.0);
+  float d3 = abs(length(c - vec2(0.0, 1.0)) - 1.0), d4 = abs(length(c - 1.0) - 1.0);
+  float d = min(min(d1, d2), min(d3, d4));
+  float w = fwidth(p.x) * 1.2;
+  return 1.0 - smoothstep(0.0, w, d);
+}
 void main(){
+  if (uCover > 0.5 && uMode > 0.5) {
+    float edge; float m = finMask(vUv, edge);
+    float a = mix(1.0 - m, m, uReverse);
+    gl_FragColor = edge > 0.5 ? vec4(uEdge, 1.0) : vec4(uTo, a);
+    return;
+  }
   float m = wipeMask(vUv);
-  gl_FragColor = uCover > 0.5 ? vec4(uTo, mix(1.0-m,m,uReverse)) : vec4(mix(uTo, uFrom, m), 1.0);
+  if (uCover > 0.5) { gl_FragColor = vec4(uTo, mix(1.0-m,m,uReverse)); return; }
+  vec3 base = mix(uTo, uFrom, m);
+  if (uGrad > 0.5) {
+    vec3 g = mix(uGradBot, uGradTop, smoothstep(0.0, 1.0, vUv.y));
+    float r = length((vUv - vec2(0.42, 0.55)) * vec2(1.7778, 1.0));
+    g = mix(g, uGlow, exp(-r * r * 2.6) * 0.55);
+    g = mix(g, g * 0.94 + uGlow * 0.06, lattice(vUv) * uLattice);
+    float grain = fract(sin(dot(vUv * 1000.0, vec2(12.9898, 78.233))) * 43758.5453) - 0.5;
+    base = g + grain * 0.012;
+  }
+  gl_FragColor = vec4(base, 1.0);
 }
 `;
 
@@ -115,15 +165,19 @@ export class FeatherWipe {
     this.material = new THREE.ShaderMaterial({
       vertexShader: vert, fragmentShader: frag, depthTest: false, depthWrite: false,
       transparent: true,
-      uniforms: { uFrom: { value: new THREE.Color('#121212') }, uTo: { value: new THREE.Color('#cfcaca') }, uCover:{value:0},uReverse:{value:0}, ...this.shared },
+      uniforms: { uFrom: { value: new THREE.Color('#121212') }, uTo: { value: new THREE.Color('#cfcaca') }, uCover:{value:0},uReverse:{value:0}, uMode:{value:0}, uEdge:{value:new THREE.Color('#c08a5b')},
+        uGrad:{value:0}, uGradTop:{value:new THREE.Color()}, uGradBot:{value:new THREE.Color()}, uGlow:{value:new THREE.Color()}, uLattice:{value:0}, ...this.shared },
     });
     const quad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), this.material);
     quad.frustumCulled = false;
     this.scene.add(quad);
   }
-  set(from, to, progress, dir, seed = 1.3, fringe = 0.09) {
+  set(from, to, progress, dir, seed = 1.3, fringe = 0.09, grad = null) {
     const u = this.material.uniforms;
     u.uCover.value=0;
+    // an optional gradient backdrop (top, bottom, glow, lattice strength)
+    u.uGrad.value = grad ? 1 : 0;
+    if (grad) { u.uGradTop.value.set(grad[0]).convertLinearToSRGB(); u.uGradBot.value.set(grad[1]).convertLinearToSRGB(); u.uGlow.value.set(grad[2]).convertLinearToSRGB(); u.uLattice.value = grad[3]; }
     // Colour uniforms are written straight to the framebuffer (no tone
     // mapping / colour-space chunk), so keep them in sRGB numeric values.
     u.uFrom.value.set(from).convertLinearToSRGB();
@@ -138,12 +192,15 @@ export class FeatherWipe {
     renderer.render(this.scene, this.camera);
   }
 
-  cover(renderer,aspect,progress,color,reverse=false,dir=[0,1]){
+  // mode 'feather' (organic edge) or 'fins' (the fin shutter)
+  cover(renderer,aspect,progress,color,reverse=false,dir=[0,1],mode='feather'){
+    const g=this.material.uniforms.uGrad.value;
     this.set(color,color,progress,dir,2.7,.12);
     this.material.uniforms.uCover.value=1;
+    this.material.uniforms.uMode.value=mode==='fins'?1:0;
     this.material.uniforms.uReverse.value=reverse?1:0;
     this.render(renderer,aspect);
-    this.material.uniforms.uCover.value=0;
+    this.material.uniforms.uCover.value=0; this.material.uniforms.uMode.value=0; this.material.uniforms.uGrad.value=g;
   }
 
   // Patch a mesh material so its fragments are discarded on one side of the

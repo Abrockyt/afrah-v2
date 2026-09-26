@@ -23,9 +23,10 @@ export function History(){
         .fromTo(q('.hx__item'),{autoAlpha:0},{autoAlpha:1,duration:.04},.21)
         .fromTo(q('.hx__timeline'),{autoAlpha:0},{autoAlpha:1,duration:.04},.14)
         .fromTo(strip,{x:0},{x:()=>-(strip.scrollWidth-strip.parentElement.clientWidth),duration:.83,ease:'none'},.14)
-        .to(q('.hx__item, .hx__timeline'),{autoAlpha:0,duration:.03},.965);
+        .fromTo(q('.hx__big'),{autoAlpha:0},{autoAlpha:1,duration:.04},.21)
+        .to(q('.hx__item, .hx__timeline, .hx__big'),{autoAlpha:0,duration:.03},.965);
     },
-    onProgress:()=>setTheme('light'),
+    onProgress:()=>setTheme('dark'),
   });
   // The helix reports which milestone is at the reading point.
   useEffect(()=>{
@@ -36,6 +37,9 @@ export function History(){
       last=i;const it=HISTORY_ITEMS[i];if(!it)return;
       const el=itemRef.current;
       el.querySelector('.hx__item-year').textContent=it.year;
+      const big=el.parentElement.querySelector('.hx__big');
+      if(big){const n=big.firstChild;n.textContent=it.year;gsap.fromTo(n,{opacity:0,yPercent:30},{opacity:1,yPercent:0,duration:.9,ease:'power3.out',overwrite:true});}
+      el.parentElement.querySelectorAll('.hx__tick').forEach((n)=>n.classList.toggle('is-on',n.dataset.year===String(it.year)));
       const t=el.querySelector('.hx__item-title');
       t.innerHTML=it.title.split(' ').map(w=>`<span class="hx__word"><span>${w}</span></span>`).join(' ');
       gsap.fromTo(t.querySelectorAll('.hx__word > span'),{yPercent:100},{yPercent:0,duration:.6,stagger:.04,ease:'power3.out',overwrite:true});
@@ -47,7 +51,11 @@ export function History(){
     <div className="hx__title-wrap"><div className="hx__title-mask"><h2 className="hx__title">{HISTORY_TITLE.map((line,i)=><span className="hx__title-line" key={i}>{line.split(' ').map((w,j)=><span className="hx__word" key={j}><span>{w}</span></span>)}</span>)}</h2></div></div>
     <div className="hx__intro">{HISTORY_INTRO.map((l,i)=><span className="hx__line" key={i}>{l||'\u00a0'}</span>)}</div>
     <div className="hx__item" ref={itemRef} aria-live="polite"><span className="hx__item-year"/><h3 className="hx__item-title"/></div>
-    <div className="hx__timeline" aria-hidden="true"><div className="hx__timeline-strip">{years.map((it,i)=><span key={i}>{it.year}</span>)}</div></div>
+    <span className="hx__big" aria-hidden="true"><span/></span>
+    <div className="hx__timeline" aria-hidden="true">
+      <i className="hx__marker"/>
+      <div className="hx__timeline-strip">{years.map((it,i)=><span className="hx__tick" data-year={it.year} key={i}><b>{it.year}</b><em>{it.title.split(' ').slice(0,3).join(' ')}</em></span>)}</div>
+    </div>
     <span className="hx__kicker t-small">11 / The story</span>
   </div></section>;
 }
@@ -69,8 +77,7 @@ export function Contact() {
         .fromTo(el.querySelectorAll('.contact__body p'), { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: 0.4 }, 0.3)
         .fromTo(el.querySelectorAll('.field'), { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, stagger: 0.05, duration: 0.3 }, 0.2)
         .fromTo(el.querySelectorAll('.field i'), { scaleX: 0 }, { scaleX: 1, stagger: 0.05, duration: 0.3, transformOrigin: 'left' }, 0.3)
-        .fromTo(el.querySelector('.contact__cta'), { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.3 }, 0.8)
-        .fromTo(el.querySelector('.footer'), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.3 }, 0.9);
+        .fromTo(el.querySelector('.contact__cta'), { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.3 }, 0.8);
     }, el);
     return () => ctx.revert();
   }, []);
@@ -90,13 +97,9 @@ export function Contact() {
             </label>
           ))}
           <label className="contact__consent"><input name="consent" type="checkbox" value="yes" required/> I agree to be contacted about this enquiry.</label>
-          <button className="cta contact__cta" type="submit" disabled={status === 'sending'}>{status === 'sent' ? 'Request received — thank you' : status === 'error' ? 'Could not send — try again' : CONTACT.cta}</button>
+          <button className="btn contact__cta" type="submit" disabled={status === 'sending'}>{status === 'sent' ? 'Request received — thank you' : status === 'error' ? 'Could not send — try again' : CONTACT.cta}<b>↗</b></button>
         </form>
       </div>
-      <footer className="footer">
-        <span className="t-small t-mist">© {new Date().getFullYear()} AFRAH — illustrative concept, plans and imagery not final</span>
-        <nav className="t-small">{CONTACT.footer.map(([href, f]) => <a key={href} href={href}>{f}</a>)}</nav>
-      </footer>
     </section>
   );
 }

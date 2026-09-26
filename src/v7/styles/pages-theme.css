@@ -5,7 +5,7 @@
 @font-face { font-family: 'Orbit Display'; src: url('/fonts/tasaorbiterdisplay-semibold-webfont.woff2') format('woff2'); font-weight: 600; font-display: swap; }
 
 :root {
-  --k: #081c32; --i: #f8f5f0; --b: #c5a48f; --bone: #f0eee8; --mist: #c4ced8;
+  --k: #15100d; --i: #f8f5f0; --b: #c5a48f; --bone: #f3ece2; --mist: #d9cbbd;
   --serif: 'Orbit Display', 'Helvetica Neue', Arial, sans-serif;
   --sans: 'Orbit Display', 'Helvetica Neue', Arial, sans-serif;
 }
@@ -27,8 +27,8 @@ body { background: var(--k); }
 .submit-button { color: var(--k); font-weight: 600; }
 
 /* surfaces */
-.e-card, .e-progress article, .e-contact aside { background: #102b49; }
-.e-card:hover { background: #183956; border-color: rgba(197, 164, 143, 0.55); }
+.e-card, .e-progress article, .e-contact aside { background: #241b16; }
+.e-card:hover { background: #30241d; border-color: rgba(197, 164, 143, 0.55); }
 .e-card .plan { color: var(--bone); }
 .e-card-meta span:first-child, .e-eyebrow, .e-filters label, .e-specs dt, .f-res-panel dt, .m-pin em { color: var(--b); }
 .p-plan { background: var(--bone); }

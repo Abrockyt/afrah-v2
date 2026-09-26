@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { store, subscribe } from '../core/store';
 import { gsap } from '../core/ScrollManager';
 import { scrollTo } from '../core/ScrollManager';
-import { BRAND, NAV } from '../content/copy';
+import { NAV } from '../content/copy';
+import { Brand, MenuButton, Drawer } from './NavParts';
 
 // Chapter boundaries are derived from the section registry, so the label and
 // the progress line follow the real layout rather than hard-coded offsets.
@@ -64,23 +65,24 @@ export default function Navigation({ onSound }) {
   }, []);
   const go = (id) => (e) => { e.preventDefault(); const el = document.getElementById(id); if (el) scrollTo(el, { offset: 2 }); };
   const skip = (e) => { e.preventDefault(); const el = document.getElementById('tower'); if (el) scrollTo(el, { duration: 2 }); };
+  const idx = Math.max(0, NAV.chapters.findIndex((c) => c.id === state.id));
   return (
-    <header className={`nav nav--${state.theme} ${state.ready ? 'is-ready' : ''}`}>
-      <a className="nav__logo" href="#home" onClick={go('home')}><span>{BRAND.top}</span><span>.{BRAND.bottom}</span></a>
-      <div className="nav__center">
-        <span className="nav__label t-small">{state.label}</span>
-        <span className="nav__line"><i style={{ transform: `scaleX(${state.p})` }} /></span>
-        <button className="nav__grid" aria-label="Pages" aria-expanded={menu} onClick={() => setMenu((m) => !m)}><i /><i /><i /><i /></button>
+    <header className={`nav nav--${state.theme} ${state.ready ? 'is-ready' : ''} ${menu ? 'is-menu' : ''}`}>
+      <Brand href="#home" onClick={go('home')} />
+      <div className="nav__chapter" aria-live="polite">
+        <span className="nav__idx">{String(idx + 1).padStart(2, '0')}</span>
+        <span className="nav__label">{state.label}</span>
+        <span className="nav__prog"><i style={{ transform: `scaleX(${Math.max(0.04, state.p)})` }} /></span>
       </div>
-      <a className="nav__why t-small" href="/residences">Residences <b>↗</b></a>
+      <div className="nav__right">
+        <a className="nav__link" href="/residences">Residences</a>
+        <a className="nav__book" href="#contact" onClick={go('contact')}>Book a viewing</a>
+        <MenuButton open={menu} onClick={() => setMenu((m) => !m)} />
+      </div>
       <div className={`nav__hint t-small ${state.atTop ? '' : 'is-hidden'}`}>[ Scroll to explore ]</div>
       <button className={`nav__skip t-small ${state.id === 'arrival' && !state.atTop ? '' : 'is-hidden'}`} onClick={skip}><i /><span>{NAV.skip}</span></button>
       <button className="nav__sound t-small" onClick={onSound}>{state.sound ? NAV.sound.on : NAV.sound.off} <b>{state.sound ? '◉' : '◎'}</b></button>
-      <nav className={`nav__menu ${menu ? 'is-open' : ''}`} aria-hidden={!menu}>
-        {NAV.chapters.map((c, i) => <a key={c.id} href={`#${c.id}`} onClick={(e) => { setMenu(false); go(c.id)(e); }}><em>{String(i + 1).padStart(2, '0')}</em>{c.label}</a>)}
-        <i />
-        {NAV.pages.map(([href, label]) => <a key={href} href={href} className="nav__page">{label} <b>↗</b></a>)}
-      </nav>
+      <Drawer open={menu} onClose={() => setMenu(false)} onChapter={(id, e) => go(id)(e)} />
     </header>
   );
 }

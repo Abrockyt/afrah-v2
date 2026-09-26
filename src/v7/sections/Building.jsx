@@ -44,7 +44,7 @@ export function Building() {
           {TOWER.shots.map((s) => (
             <div className="tower__callout" key={'c' + s.num} aria-hidden="true"><i className="tower__dot" /><span className="tower__lead" /><span className="tower__label">{s.label}</span></div>
           ))}
-          <a className="cta tower__cta" href="/select">Select a level ↗</a>
+          <a className="btn tower__cta" href="/select">Select a level<b>↗</b></a>
         </div>
       </div>
     </section>

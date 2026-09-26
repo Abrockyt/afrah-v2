@@ -5,4 +5,5 @@ import './styles/tokens.css';
 import './styles/pages-theme.css';
 import './styles/nav.css';
 import './styles/refinement.css';
+import './styles/redesign.css';
 export default App;

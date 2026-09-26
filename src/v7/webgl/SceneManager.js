@@ -14,9 +14,12 @@ import { HeroCloudScene } from './scenes/HeroCloudScene';
 import { store, sectionProgress, range, smooth, resolveActiveStage } from '../core/store';
 import HS from './data/historySpec.json';
 
-export const INK = '#061e34';
-export const INK2 = '#04182b';
-export const BONE = '#f0eee8';
+export const INK = '#15100d';
+export const INK2 = '#0f0b09';
+export const BONE = '#f3ece2';
+// gradient backdrops: [top, bottom, glow, lattice]
+const LEAF_GRAD = ['#eadbc9', '#cda88e', '#f6e6d4', 0.6];
+const HISTORY_GRAD = ['#221a15', '#0e0a08', '#4a3325', 0.35];
 
 // Owns the renderer, one persistent WebGL scene graph, and the stage
 // background. Scenes are plain classes with update(camera, t, dt); the manager
@@ -129,7 +132,7 @@ export class SceneManager {
     const s = store.sections;
     const act = (id) => store.activeStage === id;
     const bg = this.bg;
-    bg.fringe = 0; bg.p = 0; bg.from = INK; bg.to = INK;
+    bg.fringe = 0; bg.p = 0; bg.from = INK; bg.to = INK; bg.grad = null;
     if (act('arrival')) { bg.from = INK; }
     else if (act('opening')) { // the earlier sculptural hero is now chapter two
       bg.from = INK; bg.to = BONE; bg.dir = [0, -1]; bg.seed = 1.3; bg.p = range(sectionProgress('opening'), 0.66, 0.98);
@@ -141,15 +144,15 @@ export class SceneManager {
     else if (act('tunnel')) { bg.from = sectionProgress('tunnel') > 0.8 ? INK : '#040608'; }
     else if (act('why')) { bg.from = INK2; }
     else if (act('bridge')) { bg.from = INK2; }
-    else if (act('leaf')) { bg.from = LEAF_BG; }
-    else if (!store.activeStage && s.leaf?.st && store.scroll > s.leaf.st.start - store.vh * 1.2 && store.scroll < s.leaf.st.start) { bg.from = LEAF_BG; }
-    else if (act('history')) { bg.from = HISTORY_BG; }
+    else if (act('leaf')) { bg.from = LEAF_BG; bg.grad = LEAF_GRAD; }
+    else if (!store.activeStage && s.leaf?.st && store.scroll > s.leaf.st.start - store.vh * 1.2 && store.scroll < s.leaf.st.start) { bg.from = LEAF_BG; bg.grad = LEAF_GRAD; }
+    else if (act('history')) { bg.from = HISTORY_BG; bg.grad = HISTORY_GRAD; }
     else if (act('statue')) { bg.from = ZEUS_BG; }
     else if (!store.activeStage && s.building?.st && s.leaf?.st && store.scroll > s.building.st.end && store.scroll < s.leaf.st.start) { bg.from = BONE; }
-    else if (!store.activeStage && s.history?.st && store.scroll < s.history.st.start && store.scroll > s.history.st.start - store.vh * 1.5) { bg.from = HISTORY_BG; }
+    else if (!store.activeStage && s.history?.st && store.scroll < s.history.st.start && store.scroll > s.history.st.start - store.vh * 1.5) { bg.from = HISTORY_BG; bg.grad = HISTORY_GRAD; }
     else if (store.scroll < 4) { bg.from = INK; }
     // Theme for the navigation follows the dominant colour
-    const light = ((bg.from === BONE || bg.from === HISTORY_BG || bg.from === LEAF_BG) && bg.p < 0.5) || (bg.to === BONE && bg.p >= 0.5);
+    const light = ((bg.from === BONE || bg.from === LEAF_BG) && bg.p < 0.5) || (bg.to === BONE && bg.p >= 0.5);
     store.themeHint = light ? 'light' : 'dark';
   }
 
@@ -169,7 +172,7 @@ export class SceneManager {
     resolveActiveStage();
     this.computeBackground();
     const bg = this.bg;
-    this.wipe.set(bg.from, bg.to, bg.p, bg.dir, bg.seed, bg.fringe);
+    this.wipe.set(bg.from, bg.to, bg.p, bg.dir, bg.seed, bg.fringe, bg.grad);
     this.wipe.tick(t);
     // Fog belongs to the history helix only
     const fog = this.scene.fog;
@@ -257,8 +260,9 @@ export class SceneManager {
       this.wipe.cover(r,this.camera.aspect,this.leaf.takeover,'#f3ece2',false,[0,1]);
       this.leaf.renderStorm(r,this.camera);
     }
-    if(stage==='building' && sectionProgress('building')>.9)
-      this.wipe.cover(r,this.camera.aspect,range(sectionProgress('building'),.9,1),BONE,false,[0,-1]);
+    // Building → living: the fin shutter closes in cream
+    if(stage==='building' && sectionProgress('building')>.86)
+      this.wipe.cover(r,this.camera.aspect,range(sectionProgress('building'),.86,1),BONE,false,[0,1],'fins');
     mark('render');
   }
 

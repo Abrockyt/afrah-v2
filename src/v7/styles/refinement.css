@@ -1,5 +1,5 @@
 /* ERA-led composition; the existing TASA/Orbit typography is preserved. */
-:root{--c-ink:#061e34;--c-ink-2:#04182b;--c-bone:#f1eee8;--c-accent:#c5a48f;--gutter:clamp(22px,4.6vw,88px)}
+:root{--c-ink:#15100d;--c-ink-2:#0f0b09;--c-bone:#f1eee8;--c-accent:#c5a48f;--gutter:clamp(22px,4.6vw,88px)}
 html{scroll-padding-top:80px}
 button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:1px solid var(--c-accent);outline-offset:6px}
 .architectural-pattern{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:hidden}
@@ -56,7 +56,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{
 .memory__label{top:14%;left:auto;right:var(--gutter);width:40vw}.memory__label h2{font-size:clamp(45px,5vw,90px);font-weight:400;line-height:.95;margin-top:20px}.memory__caption{right:var(--gutter);bottom:12%;width:42vw}.memory__card{width:min(33vw,580px);height:min(48vh,550px)}
 .contact{padding-top:18vh}.contact__title{font-size:clamp(54px,6.5vw,124px);line-height:.98;letter-spacing:-.05em;font-weight:400}.contact__body{font-size:16px;max-width:34ch;line-height:1.6}.contact__form{padding-top:20px}.field input,.field textarea{font-family:var(--font-display);font-size:17px;padding:15px 0}.contact .cta{border-radius:0;background:var(--c-accent);color:var(--c-ink);padding:22px 30px}.footer{padding-top:10vh;border-top:1px solid var(--c-line);flex-wrap:wrap;gap:25px}.footer nav{flex-wrap:wrap}
 .page-loading{min-height:100vh;display:grid;place-items:center;background:var(--c-ink);color:var(--c-white);font-size:9vw;letter-spacing:-.05em}
-.a-app{--k:#061e34;--i:#f8f5f0;--b:#c5a48f;--serif:'Orbit Display',Arial,sans-serif;--sans:'Orbit Display',Arial,sans-serif;font-family:'Orbit Display',Arial,sans-serif}
+.a-app{--k:#15100d;--i:#f8f5f0;--b:#c5a48f;--serif:'Orbit Display',Arial,sans-serif;--sans:'Orbit Display',Arial,sans-serif;font-family:'Orbit Display',Arial,sans-serif}
 .a-app .f-pill,.a-app .a-round{border:0;border-radius:0;background:transparent;color:inherit}.a-app .a-mark{font-family:'Orbit Display',Arial,sans-serif;font-weight:400;letter-spacing:-.055em}.a-app .e-title h1{font-family:'Orbit Display',Arial,sans-serif;font-weight:400;letter-spacing:-.055em}.a-app .e-page{padding-top:155px}.a-app .a-left,.a-app .a-right{top:30px}.a-app .a-foot{padding-top:80px}
 @media(min-width:1800px){.era-opening__title{font-size:12vw}.era-opening__aside{font-size:21px}}
 @media(max-width:900px){.era-opening__title{top:22vh;font-size:13.3vw}.era-opening__aside{top:14vh;left:var(--gutter);font-size:12px;max-width:80%}.era-opening__picture{top:44vh;left:7%;width:86%;height:85vh}.era-opening__map{bottom:13vh;padding:14px;gap:15px;font-size:9px}.era-opening__map b{margin-left:4px}.era-opening__map-icon{width:30px;height:30px;font-size:11px}.living-intro{grid-template-columns:1fr;gap:35px}.living-intro__body{margin-left:25%}.living-panorama{margin:0;height:65vh}.living-interior{gap:6vw}.living-interior__copy{padding-left:0}.living-interior .living-photo{height:75vh}.living-garden{gap:6vw}.living-garden .living-photo{height:70vh}.living-garden>div{padding-right:0}.place-chapter{gap:5vw}.place-chapter__image{height:65vh}}
@@ -82,11 +82,11 @@ html{scroll-padding-top:0}
 @media(max-width:600px){.loader__portal{inset:23% 20%}}
 @media(prefers-reduced-motion:reduce){.loader__portal{animation:none}}
 /* Scope the page palette above legacy page styles, independent of lazy CSS order. */
-body:has(.a-app){background:#061e34;font-family:'Orbit Display',Arial,sans-serif}
-.a-app{min-height:100vh;background:#061e34;color:#f8f5f0}
-.a-app .e-card,.a-app .e-progress article,.a-app .e-contact aside{background:#102b49}
-.a-app .e-card:hover{background:#183956}.a-app .e-card .plan{color:#f1eee8}
-.a-app .e-chips button[aria-pressed=true]{color:#061e34}
+body:has(.a-app){background:#15100d;font-family:'Orbit Display',Arial,sans-serif}
+.a-app{min-height:100vh;background:#15100d;color:#f8f5f0}
+.a-app .e-card,.a-app .e-progress article,.a-app .e-contact aside{background:#241b16}
+.a-app .e-card:hover{background:#30241d}.a-app .e-card .plan{color:#f1eee8}
+.a-app .e-chips button[aria-pressed=true]{color:#15100d}
 .a-app .e-page{animation:page-arrival .8s cubic-bezier(.2,.65,.2,1) both}
 @keyframes page-arrival{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){.a-app .e-page{animation:none}}

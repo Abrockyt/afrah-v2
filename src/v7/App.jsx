@@ -12,6 +12,7 @@ import { Living } from './sections/Living';
 import { EraArchitecture, EraStatement, EraJoy, EraMap, EraGarden, EraInteriors, EraArtDeco, EraCeilings, EraApartments, EraOutro } from './sections/Era';
 import { History, Contact } from './sections/History';
 import { Statue } from './sections/Statue';
+import SiteFooter from './ui/SiteFooter';
 
 // AFRAH film, built on the Composites-style engine (ported from elegant-hypatia,
 // all original code): one persistent canvas, pinned stages, feathered wipes.
@@ -44,6 +45,7 @@ export default function App() {
         <Statue />
         <EraOutro />
         <Contact />
+        <SiteFooter />
       </main>
       <Loader onSound={(v) => toggleSound(v)} />
     </>
