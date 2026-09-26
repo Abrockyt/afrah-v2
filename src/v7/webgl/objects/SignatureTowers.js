@@ -24,9 +24,29 @@ const superRect = (a, b, n = 5) => (t) => {
   return [c * r, s * r];
 };
 
-// Samples a plan into points and outward normals (in the xz plane).
+// Re-parametrises a closed plan by arc length, so equal steps of t are equal
+// distances along the facade: rooms come out the same width all round and
+// the fins stand at an even spacing.
+function arcPlan(plan, M = 2048) {
+  const pts = [], cum = [0];
+  for (let i = 0; i <= M; i++) pts.push(plan(i / M));
+  for (let i = 1; i <= M; i++) cum.push(cum[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]));
+  const L = cum[M];
+  const f = (t) => {
+    const d = (((t % 1) + 1) % 1) * L;
+    let lo = 0, hi = M;
+    while (hi - lo > 1) { const m = (lo + hi) >> 1; if (cum[m] <= d) lo = m; else hi = m; }
+    const k = (d - cum[lo]) / Math.max(1e-9, cum[hi] - cum[lo]);
+    return [pts[lo][0] + (pts[hi][0] - pts[lo][0]) * k, pts[lo][1] + (pts[hi][1] - pts[lo][1]) * k];
+  };
+  f.perimeter = L;
+  return f;
+}
+
+// Samples a plan into points, outward normals and tangents (in the xz plane;
+// tangents point the way t increases).
 function ring(plan, N, rot = 0, scale = 1, cx = 0, cz = 0) {
-  const P = [], Nn = [];
+  const P = [], Nn = [], T = [];
   const cr = Math.cos(rot), sr = Math.sin(rot);
   for (let i = 0; i < N; i++) {
     const [x, z] = plan(i / N);
@@ -35,12 +55,12 @@ function ring(plan, N, rot = 0, scale = 1, cx = 0, cz = 0) {
   for (let i = 0; i < N; i++) {
     const a = P[(i + N - 1) % N], b = P[(i + 1) % N];
     const tx = b[0] - a[0], tz = b[1] - a[1], l = Math.hypot(tx, tz) || 1;
-    Nn.push([tz / l, -tx / l]);
+    Nn.push([tz / l, -tx / l]); T.push([tx / l, tz / l]);
   }
   // make sure the normals point outwards
   const c0 = P.reduce((s, p) => [s[0] + p[0] / N, s[1] + p[1] / N], [0, 0]);
   if ((P[0][0] - c0[0]) * Nn[0][0] + (P[0][1] - c0[1]) * Nn[0][1] < 0) Nn.forEach((n) => { n[0] = -n[0]; n[1] = -n[1]; });
-  return { P, N: Nn };
+  return { P, N: Nn, T };
 }
 
 class Builder {
@@ -53,6 +73,36 @@ class Builder {
     g.setIndex(this.idx); g.computeVertexNormals();
     return g;
   }
+}
+
+// Glass walls with facade coordinates for the room shader: aFacade = (metres
+// along the facade, measured so exactly `rooms` rooms of `roomW` go round,
+// and the facade tangent). The seam column is doubled so the coordinate does
+// not wrap inside a quad.
+function glassSkin(rings, ys, rooms, roomW) {
+  const N = rings[0].P.length, pos = [], fac = [], idx = [];
+  rings.forEach((r, l) => {
+    for (let i = 0; i <= N; i++) {
+      const k = i % N, [x, z] = r.P[k], [tx, tz] = r.T[k];
+      pos.push(x, ys[l], z); fac.push(i / N * rooms * roomW, 0, tx, tz);
+    }
+  });
+  for (let l = 0; l < rings.length - 1; l++) for (let i = 0; i < N; i++) {
+    const a = l * (N + 1) + i, c = (l + 1) * (N + 1) + i;
+    idx.push(a, a + 1, c + 1, a, c + 1, c);
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  g.setAttribute('aFacade', new THREE.Float32BufferAttribute(fac, 4));
+  g.setIndex(idx); g.computeVertexNormals();
+  // the doubled seam must share one normal
+  const n = g.attributes.normal;
+  for (let l = 0; l < rings.length; l++) {
+    const a = l * (N + 1), b = a + N;
+    const x = n.getX(a) + n.getX(b), y = n.getY(a) + n.getY(b), z = n.getZ(a) + n.getZ(b), m = Math.hypot(x, y, z) || 1;
+    n.setXYZ(a, x / m, y / m, z / m); n.setXYZ(b, x / m, y / m, z / m);
+  }
+  return g;
 }
 
 // Walls between consecutive rings (all with the same point count).
@@ -94,23 +144,23 @@ function mesh(geo, mat, cast = true) {
 }
 
 // ---------------------------------------------------------------- the Lily
-export const LILY = { storey: 3.6, floors: 64, base: 3 };
+export const LILY = { storey: 3.6, floors: 64, base: 3, roomW: 4.4 };
 function buildLily({ cx, cz, size, mats }) {
   const g = new THREE.Group(); g.name = 'afrah-lily';
   const { storey, floors, base } = LILY;
   const top = base + storey * floors;                 // roof of the last floor
   const crown = 50;                                   // the bud above it
   const N = 128, K = 32;
-  const plan = superRect(size, size, 4.2);
+  const plan = arcPlan(superRect(size, size, 4.2));
   const rotAt = (y) => (y - base) / (top - base) * Math.PI / 4;
   const bodyScale = (y) => 1 - 0.1 * Math.min(1, (y - base) / (top - base));
   const budScale = (u) => bodyScale(top) * (1 + 0.12 * Math.sin(u * Math.PI)) * Math.pow(Math.cos(u * Math.PI / 2), 0.75);
 
   // glass walls, floor by floor
-  const walls = new Builder(), rings = [], ys = [];
+  const rings = [], ys = [];
   for (let l = 0; l <= floors; l++) { const y = base + l * storey; ys.push(y); rings.push(ring(plan, N, rotAt(y), bodyScale(y), cx, cz)); }
-  skin(walls, rings, ys);
-  g.add(mesh(walls.geometry(), mats.glass));
+  // one room between each pair of fins
+  g.add(mesh(glassSkin(rings, ys, K, LILY.roomW), mats.glass));
 
   // white slab edges (the lobby is double height: no slab at level 1)
   const slabs = new Builder();
@@ -133,7 +183,7 @@ function buildLily({ cx, cz, size, mats }) {
   for (let l = 0; l <= floors; l++) steps.push([base + l * storey, 1]);
   for (let s = 1; s <= 16; s++) { const u = s / 16; steps.push([top + u * crown, u]); }
   for (let k = 0; k < K; k++) {
-    const t = (k + 0.5) / K, col = [];
+    const t = k / K, col = [];
     steps.forEach(([y, flag], si) => {
       const inBud = y > top + 1e-3, u = inBud ? (y - top) / crown : 0;
       const sc = inBud ? budScale(u) : bodyScale(y);
@@ -169,17 +219,15 @@ function buildLily({ cx, cz, size, mats }) {
 }
 
 // ---------------------------------------------------------------- the Waves
-export const WAVE = { storey: 3.4, base: 3 };
+export const WAVE = { storey: 3.4, base: 3, roomW: 5 };
 function buildWave({ cx, cz, a, b, floors, seed, mats }) {
   const g = new THREE.Group(); g.name = 'afrah-wave';
   const { storey, base } = WAVE;
   const N = 144;
-  const plan = superRect(a, b, 3.4);
+  const plan = arcPlan(superRect(a, b, 3.4));
   const top = base + floors * storey;
   const r0 = ring(plan, N, 0, 1, cx, cz);
-  const walls = new Builder();
-  skin(walls, [r0, r0], [base, top]);
-  g.add(mesh(walls.geometry(), mats.glassWave));
+  g.add(mesh(glassSkin([r0, r0], [base, top], Math.round(plan.perimeter / WAVE.roomW), WAVE.roomW), mats.glassWave));
 
   // balconies: depth rippling round the plan and from floor to floor
   const plates = new Builder(), rails = new Builder();

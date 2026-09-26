@@ -93,7 +93,7 @@ const M = {
 };
 
 // ---- room shell
-function shell(scene, { wall = M.wall, back = null, floor = M.oak, door = false, panels = false }) {
+function shell(scene, lights, { wall = M.wall, back = null, floor = M.oak, door = false, panels = false, ceil = 'cove', drape = null }) {
   const plane = (w, h, mat, pos, rot) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), mat); m.position.set(...pos); m.rotation.set(...rot); m.receiveShadow = true; scene.add(m); return m; };
   const fl = plane(W, D, floor, [W / 2, 0, D / 2], [-Math.PI / 2, 0, 0]);
   fl.material.map.repeat.set(W / 4.2, D / 4.2);
@@ -107,13 +107,37 @@ function shell(scene, { wall = M.wall, back = null, floor = M.oak, door = false,
   box(W, 0.12, 0.25, M.ceiling, W / 2, H - 0.06, D - 0.125);
   if (door) { box(1.12, 2.38, 0.02, M.lacquer, door, 1.19, D - 0.01); box(1.0, 2.3, 0.03, M.dark, door, 1.15, D - 0.025); }
   if (panels) for (let i = 0; i < 5; i++) box(0.02, H - 0.3, D * 0.16, M.walnut, W - 0.01, H / 2, D * 0.12 + i * D * 0.17);
-  // sheer curtains gathered at the window sides
-  for (const side of [0, 1]) {
-    const g = new THREE.PlaneGeometry(0.55, H - 0.05, 40, 1), p = g.attributes.position;
-    for (let i = 0; i < p.count; i++) p.setZ(i, Math.sin(p.getX(i) * 38) * 0.035);
-    g.computeVertexNormals();
-    const c = new THREE.Mesh(g, M.sheer); c.rotation.y = Math.PI / 2; c.position.set(side ? W - 0.1 : 0.1, H / 2, 0.45); scene.add(c);
+  // ceilings, which is most of what you see looking up at a tower
+  if (ceil === 'coffer') {
+    for (let x = 1.15; x < W; x += 1.15) box(0.1, 0.16, D, M.ceiling, x, H - 0.08, D / 2);
+    for (let z = 1.2; z < D; z += 1.2) box(W, 0.16, 0.1, M.ceiling, W / 2, H - 0.08, z);
+  } else if (ceil === 'slats') {
+    for (let x = 0.06; x < W; x += 0.13) box(0.05, 0.07, D - 0.9, M.walnut, x, H - 0.035, D / 2 + 0.45);
   }
+  if (ceil === 'cove' || ceil === 'slats') {
+    // a dropped perimeter with a hidden LED line washing the ceiling at night
+    const led = new THREE.MeshStandardMaterial({ color: '#fff', emissive: '#ffd9a8', emissiveIntensity: 0 });
+    const inset = 0.5, drop = 0.22;
+    box(inset, drop, D, M.ceiling, inset / 2, H - drop / 2, D / 2); box(inset, drop, D, M.ceiling, W - inset / 2, H - drop / 2, D / 2);
+    box(W, drop, inset, M.ceiling, W / 2, H - drop / 2, D - inset / 2);
+    const strip = (w, d, x, z) => { const m = new THREE.Mesh(new THREE.BoxGeometry(w, 0.02, d), led); m.position.set(x, H - drop + 0.02, z); scene.add(m); };
+    strip(0.03, D - inset, inset + 0.02, D / 2 - inset / 2); strip(0.03, D - inset, W - inset - 0.02, D / 2 - inset / 2); strip(W - inset * 2, 0.03, W / 2, D - inset - 0.02);
+    const glow = new THREE.PointLight('#ffd6a0', 0, 5, 2); glow.position.set(W / 2, H - 0.15, D * 0.6); scene.add(glow);
+    lights.push({ l: glow, shade: led, power: 0.5 });
+  }
+  // curtain pelmet, a sheer drawn across part of the glass, and heavier
+  // drapes gathered at the sides
+  box(W, 0.14, 0.18, M.ceiling, W / 2, H - 0.07, 0.12);
+  const fold = (w, mat, x, z, amp, freq) => {
+    const g = new THREE.PlaneGeometry(w, H - 0.14, Math.ceil(w * 60), 1), p = g.attributes.position;
+    for (let i = 0; i < p.count; i++) p.setZ(i, Math.sin(p.getX(i) * freq) * amp);
+    g.computeVertexNormals();
+    const c = new THREE.Mesh(g, mat); c.position.set(x, (H - 0.14) / 2, z); c.castShadow = true; scene.add(c); return c;
+  };
+  const sheerW = 0.9 + rnd() * 1.4, left = rnd() > 0.5;
+  fold(sheerW, M.sheer, left ? sheerW / 2 + 0.05 : W - sheerW / 2 - 0.05, 0.16, 0.03, 36);
+  const dm = drape || M.linen;
+  fold(0.45, dm, 0.25, 0.1, 0.05, 22).rotation.y = 0.15; fold(0.45, dm, W - 0.25, 0.1, 0.05, 22).rotation.y = -0.15;
   return box;
 }
 
@@ -153,7 +177,7 @@ function downlights(scene, lights, xs, zs) {
   xs.forEach((x) => zs.forEach((z) => {
     const s = new THREE.SpotLight('#ffd6a6', 0, 8, 0.75, 0.6, 2); s.position.set(x, H - 0.02, z); s.target.position.set(x, 0, z + 0.2);
     scene.add(s, s.target);
-    const disc = new THREE.Mesh(new THREE.CircleGeometry(0.05, 20), new THREE.MeshStandardMaterial({ color: '#ddd', emissive: '#fff1dc', emissiveIntensity: 0 }));
+    const disc = new THREE.Mesh(new THREE.CircleGeometry(0.075, 24), new THREE.MeshStandardMaterial({ color: '#cfcac2', emissive: '#fff1dc', emissiveIntensity: 0 }));
     disc.rotation.x = Math.PI / 2; disc.position.set(x, H - 0.005, z); scene.add(disc);
     lights.push({ l: s, shade: disc.material, power: 0.8 });
   }));
@@ -306,17 +330,19 @@ const ROOMS = [
     downlights(s, L, [W / 2], [1.4, 3.4]);
   },
 ];
+const drapes = ['#8d8172', '#c9b79c', '#5e6b5a', '#a3553a', '#4d5866'].map((c) => new THREE.MeshStandardMaterial({ color: c, roughness: 1, side: THREE.DoubleSide }));
 const LOOKS = [
-  { wall: M.wall, floor: M.oak, door: 0.8 }, { wall: M.wallWarm, floor: M.oakDark }, { wall: M.wall, back: M.wallGreen, floor: M.oak, door: false },
-  { wall: M.wallWarm, floor: M.oak, panels: true }, { wall: M.wall, floor: M.oakDark }, { wall: M.wallBlue, floor: M.oakDark },
-  { wall: M.wall, back: M.wallWarm, floor: M.oak, door: W - 0.7 }, { wall: M.wall, floor: M.oak, panels: true },
+  { wall: M.wall, floor: M.oak, door: 0.8, ceil: 'cove', drape: drapes[1] }, { wall: M.wallWarm, floor: M.oakDark, ceil: 'slats', drape: drapes[0] },
+  { wall: M.wall, back: M.wallGreen, floor: M.oak, door: false, ceil: 'cove', drape: drapes[2] }, { wall: M.wallWarm, floor: M.oak, panels: true, ceil: 'coffer', drape: drapes[3] },
+  { wall: M.wall, floor: M.oakDark, ceil: 'slats', drape: drapes[1] }, { wall: M.wallBlue, floor: M.oakDark, ceil: 'coffer', drape: drapes[4] },
+  { wall: M.wall, back: M.wallWarm, floor: M.oak, door: W - 0.7, ceil: 'cove', drape: drapes[0] }, { wall: M.wall, floor: M.oak, panels: true, ceil: 'coffer', drape: drapes[3] },
 ];
 
 async function stage(i) {
   const scene = new THREE.Scene();
   scene.environment = envTex;
   const lights = [];
-  const box = shell(scene, LOOKS[i]);
+  const box = shell(scene, lights, LOOKS[i]);
   await ROOMS[i](scene, lights, box);
   // daylight: soft light from the whole window plus a low sun patch
   const win = new THREE.RectAreaLight('#fff6ea', 0, W, H); win.position.set(W / 2, H / 2, 0.02); win.lookAt(W / 2, H / 2, 5); scene.add(win);

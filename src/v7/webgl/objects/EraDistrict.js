@@ -175,8 +175,8 @@ async function build(renderer) {
   lantern.onBeforeCompile = (sh) => { sh.uniforms.uEve = eve; sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nuniform float uEve;').replace('#include <emissivemap_fragment>', '#include <emissivemap_fragment>\ntotalEmissiveRadiance = vec3(1., .74, .46) * (.05 + uEve * .75);'); };
   lantern.customProgramCacheKey = () => 'afrah-lantern';
   const sig = {
-    glass: makeGlass({envMap, toModel: TO_MODEL, eve, rooms, roomsNight, room: new THREE.Vector4(4.4, LILY.storey, 7, LILY.base), look: {color: '#1b2730', metalness: .45, envI: 1.9, seeIn: [.75, 1]}, key: '-lily'}),
-    glassWave: makeGlass({envMap, toModel: TO_MODEL, eve, rooms, roomsNight, room: new THREE.Vector4(5, WAVE.storey, 6.5, WAVE.base), look: {color: '#161e24', metalness: .25, envI: 1.6, seeIn: [.8, 1]}, key: '-wave'}),
+    glass: makeGlass({envMap, toModel: TO_MODEL, eve, rooms, roomsNight, room: new THREE.Vector4(LILY.roomW, LILY.storey, 7, LILY.base), look: {color: '#1b2730', metalness: .35, envI: 1.7, seeIn: [.85, 1]}, key: '-lily', facade: true}),
+    glassWave: makeGlass({envMap, toModel: TO_MODEL, eve, rooms, roomsNight, room: new THREE.Vector4(WAVE.roomW, WAVE.storey, 6.5, WAVE.base), look: {color: '#161e24', metalness: .25, envI: 1.6, seeIn: [.85, 1]}, key: '-wave', facade: true}),
     slab: new THREE.MeshStandardMaterial({color: '#ebe6de', roughness: .42, metalness: .05, envMap, envMapIntensity: .9}),
     bronze: new THREE.MeshStandardMaterial({color: '#8c7156', roughness: .34, metalness: .9, envMap, envMapIntensity: 1.1, side: THREE.DoubleSide}),
     rail: new THREE.MeshStandardMaterial({color: '#c4d8de', roughness: .05, metalness: .3, envMap, transparent: true, opacity: .26, depthWrite: false, side: THREE.DoubleSide}),

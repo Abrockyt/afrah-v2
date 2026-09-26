@@ -27,14 +27,24 @@ float eraNoise(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3. - 2. * 
 const ROOM_E = '0.75';
 const INTERIOR = `
 uniform float uEve; uniform sampler2D uRooms; uniform sampler2D uRoomsN; uniform vec4 uRoomSize; uniform float uMirror;
+#ifdef ERA_FACADE
+varying vec4 vFac;
+#endif
 vec3 eraRoom(vec3 P, vec3 V, vec3 N, out float frame){
   frame = 0.;
   vec3 Nh = vec3(N.x, 0., N.z);
   if (length(Nh) < .3) return vec3(.02);
   Nh = normalize(Nh);
-  vec3 T = vec3(Nh.z, 0., -Nh.x);
   vec3 C = uRoomSize.xyz;                               // room width, storey, depth
+#ifdef ERA_FACADE
+  // curved facades carry their own coordinates: metres along the facade and
+  // its tangent, so rooms keep their shape round the curve
+  vec3 T = normalize(vec3(vFac.z, 0., vFac.w));
+  vec3 ro = vec3(vFac.x, P.y - uRoomSize.w, 0.);
+#else
+  vec3 T = vec3(Nh.z, 0., -Nh.x);
   vec3 ro = vec3(dot(P, T), P.y - uRoomSize.w, 0.);
+#endif
   vec3 rd = vec3(dot(V, T), V.y, dot(V, -Nh));
   rd.z = max(rd.z, .04);
   vec2 id = floor(ro.xy / C.xy);
@@ -79,7 +89,7 @@ float eraLeafH(vec4 f){
 }
 `;
 
-export function makeGlass({ envMap, toModel, eve, rooms, roomsNight, mirror = false, room = null, look = null, key = '' }) {
+export function makeGlass({ envMap, toModel, eve, rooms, roomsNight, mirror = false, room = null, look = null, key = '', facade = false }) {
   const L = look || (mirror ? { color: '#3a4a58', metalness: .85, envI: 2.8, seeIn: [.1, .38] } : { color: '#0c1116', metalness: 0, envI: 1.35, seeIn: [1, 1] });
   const m = new THREE.MeshPhysicalMaterial({ color: L.color, metalness: L.metalness, roughness: mirror ? .04 : .05, clearcoat: 1, clearcoatRoughness: .02, envMap, envMapIntensity: L.envI, emissive: '#ffffff', emissiveIntensity: 1 });
   m.onBeforeCompile = (sh) => {
@@ -90,9 +100,11 @@ export function makeGlass({ envMap, toModel, eve, rooms, roomsNight, mirror = fa
     sh.uniforms.uRoomSize = { value: room || (mirror ? new THREE.Vector4(4.4, 3.6, 6, 3) : new THREE.Vector4(4.4, 4.55, 6.5, 17.6)) };
     sh.uniforms.uMirror = { value: mirror ? 1 : 0 };
     sh.uniforms.uSeeIn = { value: new THREE.Vector2(...L.seeIn) };
-    sh.vertexShader = sh.vertexShader
-      .replace('#include <common>', '#include <common>\nvarying vec3 vEraW; varying vec3 vEraN;')
-      .replace('#include <worldpos_vertex>', '#include <worldpos_vertex>\nvEraW = (modelMatrix * vec4(transformed, 1.0)).xyz; vEraN = normalize(mat3(modelMatrix) * objectNormal);');
+    const def = facade ? '#define ERA_FACADE\n' : '';
+    sh.vertexShader = def + sh.vertexShader
+      .replace('#include <common>', '#include <common>\nvarying vec3 vEraW; varying vec3 vEraN;' + (facade ? '\nattribute vec4 aFacade; varying vec4 vFac;' : ''))
+      .replace('#include <worldpos_vertex>', '#include <worldpos_vertex>\nvEraW = (modelMatrix * vec4(transformed, 1.0)).xyz; vEraN = normalize(mat3(modelMatrix) * objectNormal);' + (facade ? ' vFac = aFacade;' : ''));
+    sh.fragmentShader = def + sh.fragmentShader;
     sh.fragmentShader = sh.fragmentShader
       .replace('#include <common>', '#include <common>\nuniform mat4 uToModel; uniform vec2 uSeeIn; varying vec3 vEraW; varying vec3 vEraN;' + COMMON + INTERIOR)
       .replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>
@@ -106,11 +118,13 @@ export function makeGlass({ envMap, toModel, eve, rooms, roomsNight, mirror = fa
           float fres = pow(1. - clamp(dot(-Vm, Nm), 0., 1.), 4.);
           // reflective glass shows its rooms faintly by day, clearly once lit
           float seeIn = mix(uSeeIn.x, uSeeIn.y, uEve);
-          totalEmissiveRadiance = room * seeIn * (1. - frame) * (1. - fres * .85);
+          // at grazing angles the glass is a mirror: the rooms fade out
+          float ndv = clamp(dot(-Vm, Nm), 0., 1.);
+          totalEmissiveRadiance = room * seeIn * (1. - frame) * (1. - fres * .85) * smoothstep(.06, .32, ndv);
           diffuseColor.rgb = mix(diffuseColor.rgb, uMirror > .5 ? vec3(.16, .17, .18) : vec3(.09, .085, .08), frame);
         }`);
   };
-  m.customProgramCacheKey = () => 'era-glass-interior' + (mirror ? '-mirror' : '') + key;
+  m.customProgramCacheKey = () => 'era-glass-interior' + (mirror ? '-mirror' : '') + (facade ? '-facade' : '') + key;
   return m;
 }
 
