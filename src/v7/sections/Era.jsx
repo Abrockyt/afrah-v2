@@ -2,47 +2,61 @@ import React, { useLayoutEffect, useRef } from 'react';
 import { useStage } from '../core/useStage';
 import { gsap } from '../core/ScrollManager';
 import { setTheme } from '../core/store';
+import { fallData } from '../webgl/scenes/FeatherFall';
 
 // ERA-style chapters that replace the old passage. Copy is AFRAH's own; the
 // imagery is temporary study material from /v3/era and /v3/silver.
 
 const words = (text) => text.split(' ').map((w, i) => <span className="era-w" key={i}><span>{w}</span></span>);
 
-/* ── Architecture: tower rising in a dusk sky, then the ERA ring ─────────── */
-// Pinned. The title and text sit top-left while the stepped tower rises and
-// grows through the sky. Then a cream ring carrying the arcade image rises from
-// the bottom and grows — always a circle — until the image fills the screen.
-// The next chapter then slides up over it, as on ERA.
+/* ── Architecture: the falling copper leaf (after Composites) ───────────── */
+// The WebGL LeafScene drops one of ERA's bronze leaves through the measured
+// fall of Composites' feather. The words tick through a fixed slot marked by
+// the accent dot (same measured windows), and a storm of leaves carries the
+// wipe into the next chapter.
+const LEAF_WORDS = ['ARCHITECTURE', 'SHAPED', 'BY', 'NATURE'];
 export function EraArchitecture() {
-  const { runwayRef, stageRef } = useStage('eraArch', {
-    runway: 10,
+  const W = fallData.words;
+  const { runwayRef, stageRef } = useStage('leaf', {
+    runway: fallData.runwayVh,
     build: (tl, { q, stage }) => {
-      const ring = q('.era-ring')[0];
-      const H = () => stage.clientHeight;
-      tl.fromTo(q('.era-arch__title .era-w > span'), { yPercent: 105 }, { yPercent: 0, duration: 0.06, stagger: 0.01, ease: 'power3.out' }, 0.01)
-        .fromTo(q('.era-arch__text'), { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.06 }, 0.05)
-        .fromTo(q('.era-arch__tower'), { yPercent: 62, scale: 0.92 }, { yPercent: -18, scale: 1.14, duration: 0.56, ease: 'none' }, 0.02)
-        .to(q('.era-arch__copy'), { y: () => -0.45 * H(), autoAlpha: 0, duration: 0.14, ease: 'power1.in' }, 0.3)
-        // ERA ring: a cream disc rises from below; its hole opens onto a still,
-        // full-screen image. The disc grows slowly while the hole opens fast,
-        // so the band thins, then the hole takes over the whole screen.
-        .fromTo(ring, { '--cy': '128vh', '--ro': '32vw', '--ri': '0vw' }, { '--cy': '80vh', '--ro': '42vw', '--ri': '22vw', duration: 0.16, ease: 'power1.out' }, 0.46)
-        .to(ring, { '--cy': '72vh', '--ro': '50vw', '--ri': '31vw', duration: 0.08, ease: 'none' }, 0.62)
-        .to(ring, { '--cy': '58vh', '--ro': '150vmax', '--ri': '140vmax', duration: 0.12, ease: 'power2.in' }, 0.7)
-        .fromTo(q('.era-ring__img img'), { scale: 1.12 }, { scale: 1, duration: 0.36, ease: 'none' }, 0.46);
+      const words = q('.leaf__word');
+      const col = q('.leaf__col')[0];
+      const row = () => W.rowGapY * stage.clientHeight;
+      tl.fromTo(q('.leaf__kicker, .leaf__intro'), { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: 0.04, stagger: 0.01 }, 0.02)
+        .to(q('.leaf__intro'), { autoAlpha: 0, y: -20, duration: 0.04 }, 0.16);
+      tl.fromTo(words, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.03 }, W.appear);
+      tl.fromTo(col, { y: () => row() }, { y: 0, duration: W.settle - W.appear, ease: 'power1.out' }, W.appear);
+      W.windows.forEach(([a, b], i) => {
+        tl.to(words[i], { color: '#1a1a1a', duration: 0.025 }, a);
+        if (i > 0) tl.to(col, { y: () => -i * row(), duration: W.shift, ease: 'power1.inOut' }, a);
+        if (i < W.windows.length - 1) tl.to(words[i], { color: 'rgba(18,18,18,0.12)', duration: 0.025 }, b);
+        if (i >= 1 && i < W.windows.length - 1) tl.to(words[i - 1], { autoAlpha: 0, duration: 0.04 }, b);
+      });
+      tl.to(words, { autoAlpha: 0, duration: W.fadeOut[1] - W.fadeOut[0] }, W.fadeOut[0]);
+      tl.fromTo(q('.leaf__dot'), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.03 }, W.appear);
+      tl.to(q('.leaf__dot'), { autoAlpha: 0, duration: 0.04 }, W.fadeOut[0]);
+      tl.fromTo(q('.leaf__outro'), { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.05 }, 0.66)
+        .to(q('.leaf__outro'), { autoAlpha: 0, duration: 0.04 }, 0.86)
+        .to(q('.leaf__kicker'), { autoAlpha: 0, duration: 0.04 }, 0.86);
     },
-    onProgress: () => setTheme('dark'),
+    onProgress: () => setTheme('light'),
   });
   return (
     <section className="runway" id="architecture" ref={runwayRef}>
-      <div className="stage era-arch" ref={stageRef}>
-        <img className="era-arch__sky" src="/v3/era/arch-bg.webp" alt="" aria-hidden="true" />
-        <div className="era-arch__copy">
-          <h2 className="era-arch__title">{words('ARCHITECTURE')}</h2>
-          <p className="era-arch__text">A new landmark for the skyline. The AFRAH towers pair the stepped silhouettes of the great high-rises of the last century with a precise contemporary facade: honed stone, bronze detailing and arches that glow at dusk.</p>
+      <div className="stage stage--light leaf" ref={stageRef}>
+        <span className="leaf__kicker t-small">05 / Architecture</span>
+        <p className="leaf__intro">Every tower wears a crown of bronze leaves. Here is one of them, let go.</p>
+        <div className="leaf__words" style={{ left: `${W.xRatio * 100}%`, top: `${W.slotY * 100}%`, fontSize: `${W.fontVh}vh` }}>
+          <i className="leaf__dot" style={{ left: `${(W.dotXRatio - W.xRatio) * 100}vw` }} />
+          <div className="leaf__col" style={{ rowGap: `calc(${W.rowGapY * 100}vh - 1em)` }}>
+            {LEAF_WORDS.map((w) => <span className="leaf__word" key={w}>{w}</span>)}
+          </div>
         </div>
-        <img className="era-arch__tower" src="/v3/era/arch-building.webp" alt="The stepped AFRAH tower rising into a dusk sky" />
-        <div className="era-ring" aria-hidden="true"><div className="era-ring__disc" /><div className="era-ring__img"><img src="/v3/era/arch-2.webp" alt="" /></div></div>
+        <div className="leaf__outro">
+          <p>The stepped silhouette of the great towers of the last century, honed stone, deep glass, and bronze that catches the last of the sun. A new landmark, drawn to age slowly.</p>
+          <a className="era-pill era-pill--dark" href="/architecture">THE ARCHITECTURE <b>↗</b></a>
+        </div>
       </div>
     </section>
   );

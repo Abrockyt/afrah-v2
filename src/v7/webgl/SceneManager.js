@@ -7,6 +7,7 @@ import { EraBuildingScene } from './scenes/EraBuildingScene';
 import { EraWorld } from './objects/EraWorld';
 import { EraMapScene } from './scenes/EraMapScene';
 import { WorldPost } from './post/WorldPost';
+import { LeafScene, LEAF_BG } from './scenes/LeafScene';
 import { HistoryScene, HISTORY_BG } from './scenes/HistoryScene';
 import { ZeusScene, ZEUS_BG } from './scenes/ZeusScene';
 import { HeroCloudScene } from './scenes/HeroCloudScene';
@@ -63,6 +64,7 @@ export class SceneManager {
     this.world = new EraWorld(this.scene, this.renderer);
     this.building = new EraBuildingScene(this.world);
     this.map = new EraMapScene(this.world);
+    this.leaf = new LeafScene(this.scene, this.envMap);
     try { this.post = new WorldPost(this.renderer); } catch (e) { console.warn('post pipeline unavailable', e); this.post = null; }
     this.world.volumetric = !!this.post;
     this.heroClouds = new HeroCloudScene(this.scene, this.world);
@@ -139,13 +141,15 @@ export class SceneManager {
     else if (act('tunnel')) { bg.from = sectionProgress('tunnel') > 0.8 ? INK : '#040608'; }
     else if (act('why')) { bg.from = INK2; }
     else if (act('bridge')) { bg.from = INK2; }
+    else if (act('leaf')) { bg.from = LEAF_BG; }
+    else if (!store.activeStage && s.leaf?.st && store.scroll > s.leaf.st.start - store.vh * 1.2 && store.scroll < s.leaf.st.start) { bg.from = LEAF_BG; }
     else if (act('history')) { bg.from = HISTORY_BG; }
     else if (act('statue')) { bg.from = ZEUS_BG; }
-    else if (!store.activeStage && s.building?.st && s.eraArch?.st && store.scroll > s.building.st.end && store.scroll < s.eraArch.st.start) { bg.from = BONE; }
+    else if (!store.activeStage && s.building?.st && s.leaf?.st && store.scroll > s.building.st.end && store.scroll < s.leaf.st.start) { bg.from = BONE; }
     else if (!store.activeStage && s.history?.st && store.scroll < s.history.st.start && store.scroll > s.history.st.start - store.vh * 1.5) { bg.from = HISTORY_BG; }
     else if (store.scroll < 4) { bg.from = INK; }
     // Theme for the navigation follows the dominant colour
-    const light = ((bg.from === BONE || bg.from === HISTORY_BG) && bg.p < 0.5) || (bg.to === BONE && bg.p >= 0.5);
+    const light = ((bg.from === BONE || bg.from === HISTORY_BG || bg.from === LEAF_BG) && bg.p < 0.5) || (bg.to === BONE && bg.p >= 0.5);
     store.themeHint = light ? 'light' : 'dark';
   }
 
@@ -215,6 +219,7 @@ export class SceneManager {
     this.heroClouds.update(this.camera, t);
     this.building.update(this.camera, t);
     this.map.update(this.camera, t);
+    this.leaf.update(this.camera, t);
     this.world.update(this.camera, t, inWorld);
     this.history.update(this.camera, t);
     this.zeus.update(this.camera, t);
@@ -247,6 +252,11 @@ export class SceneManager {
       this.wipe.cover(r,this.camera.aspect,range(sectionProgress('statue'),0,.08),ZEUS_BG,true,[0,-1]);
     if(stage==='statue' && sectionProgress('statue')>.68)
       this.wipe.cover(r,this.camera.aspect,range(sectionProgress('statue'),.68,.78),INK,false,[1,0]);
+    // Architecture → statement: a storm of leaves carries a cream wipe up the screen
+    if(stage==='leaf' && this.leaf.takeover>0){
+      this.wipe.cover(r,this.camera.aspect,this.leaf.takeover,'#f3ece2',false,[0,1]);
+      this.leaf.renderStorm(r,this.camera);
+    }
     if(stage==='building' && sectionProgress('building')>.9)
       this.wipe.cover(r,this.camera.aspect,range(sectionProgress('building'),.9,1),BONE,false,[0,-1]);
     mark('render');

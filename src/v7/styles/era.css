@@ -145,3 +145,15 @@
 .era-outro__copy h2{margin:20px 0 40px;font:300 clamp(44px,6.4vw,124px)/.92 var(--font-display)}
 @media (max-width:760px){.era-deco{grid-template-columns:1fr}.era-deco__img{grid-row:auto}.era-apart__cards{grid-template-columns:1fr}}
 br+.era-w{margin-left:0!important}
+
+/* Architecture — the falling leaf (canvas draws the grey room and the leaf) */
+.leaf{background:transparent;color:#1a1a1a}
+.leaf__kicker{position:absolute;left:var(--gutter);top:13vh;color:#8c705f}
+.leaf__intro{position:absolute;left:var(--gutter);bottom:14vh;max-width:30ch;margin:0;font:400 clamp(16px,1.4vw,22px)/1.45 var(--font-display);color:#2a2521}
+.leaf__words{position:absolute;text-align:left;line-height:1;text-transform:uppercase;font-weight:500;letter-spacing:.01em;transform:translateY(-.5em);font-family:var(--font-display)}
+.leaf__col{display:grid}
+.leaf__word{color:rgba(18,18,18,.12);opacity:0}
+.leaf__dot{position:absolute;top:.4em;width:6px;height:6px;background:#e07a2c}
+.leaf__outro{position:absolute;left:var(--gutter);top:22vh;width:min(420px,80vw);opacity:0}
+.leaf__outro p{margin:0 0 28px;font:400 15px/1.6 var(--font-display);color:#2a2521}
+@media (max-width:760px){.leaf__words{left:auto!important;right:var(--gutter);top:18%!important;font-size:4.6vw!important}.leaf__intro{bottom:10vh}.leaf__outro{bottom:8vh;right:auto;left:var(--gutter)}}

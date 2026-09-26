@@ -12,7 +12,7 @@ const CHAPTERS = [
   { id: 'tower', label: 'The building', sections: ['building'] },
   { id: 'map-teaser', label: 'Place', sections: ['place'] },
   { id: 'cases', label: 'Residences', sections: ['cases'] },
-  { id: 'architecture', label: 'Architecture', sections: ['eraArch'] },
+  { id: 'architecture', label: 'Architecture', sections: ['leaf'] },
   { id: 'history', label: 'History', sections: ['history'] },
   { id: 'statue', label: 'Heritage', sections: ['statue'] },
   { id: 'contact', label: 'Viewing', sections: [] },
