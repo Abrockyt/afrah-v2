@@ -2,15 +2,15 @@
    but expressed as our own scale. Everything downstream reads these. */
 :root {
   /* Surfaces */
-  --c-ink: #1f3d30;
-  --c-ink-2: #16291f;
-  --c-bone: #f4f0e8;
-  --c-bone-2: #e8e5dc;
-  --c-accent: #d8a78c;
-  --c-accent-deep: #b27456;
-  --c-mist: #cfd8cf;
-  --c-mist-2: #7f8f86;
-  --c-ghost: rgba(31,61,48, 0.14);
+  --c-ink: #2b1b2e;
+  --c-ink-2: #22152a;
+  --c-bone: #f3e6e1;
+  --c-bone-2: #ecdcd6;
+  --c-accent: #d9b38c;
+  --c-accent-deep: #c49a70;
+  --c-mist: #e5cfc9;
+  --c-mist-2: #8a7384;
+  --c-ghost: rgba(43,27,46, 0.14);
   --c-line: rgba(255, 255, 255, 0.16);
   --c-line-light: rgba(18, 18, 18, 0.18);
   --c-white: #f8f5f0;

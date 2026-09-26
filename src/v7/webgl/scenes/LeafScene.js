@@ -8,7 +8,7 @@ import { createLeaf, createLeafSwarm } from '../objects/CopperLeaf';
 // path, tumble and landing shadow), a far field of small leaves drifts behind
 // it, and at the end a storm of leaves carries the feathered wipe into the
 // next chapter, its edge made of leaves rather than a line.
-export const LEAF_BG = '#e4e8df';
+export const LEAF_BG = '#f1e2dd';
 const _o = new THREE.Object3D(), _v = new THREE.Vector3();
 
 export class LeafScene {

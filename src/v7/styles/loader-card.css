@@ -3,11 +3,11 @@
    stay while the background falls away to reveal the page. */
 .loader--card{background:transparent!important;cursor:default;display:block}
 .loader--card.is-done{opacity:0;visibility:hidden;transition:none}
-.loader--card .loader__ornament{position:absolute;inset:0;background:#1f3d30 url('/reference-study/loading-background.png') center/cover no-repeat}
+.loader--card .loader__ornament{position:absolute;inset:0;background:#2b1b2e url('/reference-study/loading-background.png') center/cover no-repeat}
 .loader--card .loader__ornament::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 40%,rgba(3,12,24,.55) 100%)}
 .loader__card{position:absolute;inset:0;background:#f4f1ec;will-change:clip-path}
-.loader__mark{position:absolute;left:38.2vw;top:38.5vh;font:400 2.5vw/1 var(--font-display);letter-spacing:.24em;color:#1f3d30;white-space:nowrap;z-index:2}
-.loader__pct{position:absolute;left:46vw;top:60.3vh;font:500 11px/1 var(--font-display);letter-spacing:.12em;color:#1f3d30;z-index:2}
+.loader__mark{position:absolute;left:38.2vw;top:38.5vh;font:400 2.5vw/1 var(--font-display);letter-spacing:.24em;color:#2b1b2e;white-space:nowrap;z-index:2}
+.loader__pct{position:absolute;left:46vw;top:60.3vh;font:500 11px/1 var(--font-display);letter-spacing:.12em;color:#2b1b2e;z-index:2}
 .loader__sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .era-opening__picture img{transform-origin:50% 42%}
 @media (max-width:600px){

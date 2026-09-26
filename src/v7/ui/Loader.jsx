@@ -107,14 +107,14 @@ export default function Loader({ onSound }) {
     return () => { clearTimeout(timer); creep.kill(); shimmer.kill(); rings.kill(); tl?.kill(); };
   }, []);
 
-  const bandStops = Array.from({ length: 21 }, (_, i) => <stop key={i} offset={i / 20} stopColor={i === 18 ? '#f6d2b8' : '#e3a98b'} stopOpacity={i % 2 ? 1 : 0.22} />);
+  const bandStops = Array.from({ length: 21 }, (_, i) => <stop key={i} offset={i / 20} stopColor={i === 18 ? '#f5dcc4' : '#e2b89a'} stopOpacity={i % 2 ? 1 : 0.22} />);
   return <div ref={ref} className={`lx loader ${done ? 'is-done' : ''}`} role="status" aria-live="polite" onClick={() => onSound?.(true)}>
     <span className="loader__sr">{done ? 'AFRAH loaded' : 'Loading AFRAH'}</span>
     <svg className="lx__svg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
       <defs>
         <linearGradient id="lxBand" className="lx__band" x1="0" y1="0" x2="1440" y2="360" gradientUnits="userSpaceOnUse" spreadMethod="repeat">{bandStops}</linearGradient>
-        <linearGradient id="lxFadeY" x1="0" y1="0" x2="0" y2="900" gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#16291f" /><stop offset=".3" stopColor="#16291f" stopOpacity="0" /><stop offset=".92" stopColor="#16291f" stopOpacity="0" /><stop offset="1" stopColor="#16291f" /></linearGradient>
-        <linearGradient id="lxFadeX" x1="0" y1="0" x2="1440" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#16291f" /><stop offset=".14" stopColor="#16291f" stopOpacity="0" /><stop offset=".86" stopColor="#16291f" stopOpacity="0" /><stop offset="1" stopColor="#16291f" /></linearGradient>
+        <linearGradient id="lxFadeY" x1="0" y1="0" x2="0" y2="900" gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#22152a" /><stop offset=".3" stopColor="#22152a" stopOpacity="0" /><stop offset=".92" stopColor="#22152a" stopOpacity="0" /><stop offset="1" stopColor="#22152a" /></linearGradient>
+        <linearGradient id="lxFadeX" x1="0" y1="0" x2="1440" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#22152a" /><stop offset=".14" stopColor="#22152a" stopOpacity="0" /><stop offset=".86" stopColor="#22152a" stopOpacity="0" /><stop offset="1" stopColor="#22152a" /></linearGradient>
         <filter id="lxBlur" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="3.2" /></filter>
       </defs>
       <g className="lx__rings">{[0, 1, 2].map((i) => <circle key={i} className="lx__ring" cx="720" cy="360" r="40" />)}</g>

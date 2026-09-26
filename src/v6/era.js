@@ -76,7 +76,7 @@ function stage(el, {fov = 30, far = 12000, fog = .00045, bloom = .5} = {}) {
   r.setPixelRatio(Math.min(devicePixelRatio, 1.6)); r.toneMapping = THREE.ACESFilmicToneMapping; r.toneMappingExposure = 1.05;
   r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFSoftShadowMap;
   el.appendChild(r.domElement);
-  const scene = new THREE.Scene(); scene.background = new THREE.Color('#1f3d30'); scene.fog = new THREE.FogExp2('#1f3d30', fog);
+  const scene = new THREE.Scene(); scene.background = new THREE.Color('#2b1b2e'); scene.fog = new THREE.FogExp2('#2b1b2e', fog);
   const env = environment(r); scene.environment = env.texture; scene.environmentIntensity = .32;
   const camera = new THREE.PerspectiveCamera(fov, 1, 4, far);
   const composer = new EffectComposer(r); composer.addPass(new RenderPass(scene, camera));

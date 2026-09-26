@@ -43,7 +43,7 @@ function useTower(canvasRef, onHover, onPick) {
     const key = new THREE.DirectionalLight('#ffffff', 1.4); key.position.set(-12, 20, -14); scene.add(key);
     const rim = new THREE.DirectionalLight('#bcd0ff', 0.6); rim.position.set(14, 8, 12); scene.add(rim);
 
-    const ground = new THREE.Mesh(new THREE.CircleGeometry(26, 64), new THREE.MeshStandardMaterial({ color: '#1a3328', roughness: 0.95 }));
+    const ground = new THREE.Mesh(new THREE.CircleGeometry(26, 64), new THREE.MeshStandardMaterial({ color: '#24172a', roughness: 0.95 }));
     ground.rotation.x = -Math.PI / 2; ground.position.set(CX, -0.01, CZ);
 
     // hover and selection storeys, and the dimming volumes above/below
@@ -55,9 +55,9 @@ function useTower(canvasRef, onHover, onPick) {
       g.add(new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color, transparent: true, opacity: Math.min(1, opacity * 3.2) })));
       g.position.set(CX, 0, CZ); g.visible = false; scene.add(g); return g;
     };
-    const hover = mkSlab('#d8a78c', 0.18);
+    const hover = mkSlab('#d9b38c', 0.18);
     const picked = mkSlab('#e2bf9f', 0.32);
-    const dimMat = new THREE.MeshBasicMaterial({ color: '#1f3d30', transparent: true, opacity: 0, depthWrite: false });
+    const dimMat = new THREE.MeshBasicMaterial({ color: '#2b1b2e', transparent: true, opacity: 0, depthWrite: false });
     const dimBelow = new THREE.Mesh(new THREE.BoxGeometry(W + 0.5, 1, D + 0.5), dimMat);
     const dimAbove = new THREE.Mesh(new THREE.BoxGeometry(W + 0.5, 1, D + 0.5), dimMat);
     scene.add(dimBelow, dimAbove);
@@ -77,7 +77,7 @@ function useTower(canvasRef, onHover, onPick) {
       api.current.tick = tick;
       canvas.classList.add('is-ready');
     });
-    scene.fog = new THREE.Fog('#1f3d30', 60, 260);
+    scene.fog = new THREE.Fog('#2b1b2e', 60, 260);
 
     const ray = new THREE.Raycaster(), ptr = new THREE.Vector2();
     const floorAt = (e) => {

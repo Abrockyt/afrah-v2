@@ -1,46 +1,46 @@
 /* Floor selection page */
-.fs-page{position:relative;min-height:100vh;background:#1f3d30;color:#f4f0e8;display:grid;grid-template-columns:1fr min(34vw,500px);grid-template-rows:auto 1fr;padding-top:clamp(100px,13vh,150px)}
+.fs-page{position:relative;min-height:100vh;background:#2b1b2e;color:#f3e6e1;display:grid;grid-template-columns:1fr min(34vw,500px);grid-template-rows:auto 1fr;padding-top:clamp(100px,13vh,150px)}
 .fs-head{grid-column:1/-1;padding:0 var(--gutter,40px) 2vh}
-.fs-eyebrow{font:500 11px/1 var(--font-display,Inter);letter-spacing:.2em;text-transform:uppercase;color:#d8a78c}
+.fs-eyebrow{font:500 11px/1 var(--font-display,Inter);letter-spacing:.2em;text-transform:uppercase;color:#d9b38c}
 .fs-head h1{margin:14px 0 10px;font:300 clamp(40px,5.4vw,96px)/.95 var(--font-display,Inter);letter-spacing:-.01em}
 .fs-head p{margin:0;font:400 13px/1.5 var(--font-display,Inter);color:rgba(243,236,226,.7)}
 .fs-stage{position:relative;min-height:72vh}
 .fs-canvas{position:absolute;inset:0;width:100%;height:100%;opacity:0;transition:opacity 1s ease;cursor:grab;touch-action:pan-y}
 .fs-canvas.is-ready{opacity:1}
-.fs-tip{position:absolute;left:0;top:0;pointer-events:none;display:grid;gap:4px;padding:10px 14px;background:rgba(31,61,48,.92);border:1px solid rgba(197,164,143,.5);opacity:0;transition:opacity .2s;font:400 12px/1.2 var(--font-display,Inter)}
+.fs-tip{position:absolute;left:0;top:0;pointer-events:none;display:grid;gap:4px;padding:10px 14px;background:rgba(43,27,46,.92);border:1px solid rgba(197,164,143,.5);opacity:0;transition:opacity .2s;font:400 12px/1.2 var(--font-display,Inter)}
 .fs-tip.is-on{opacity:1}
 .fs-tip strong{font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#e2bf9f}
 .fs-levels{position:absolute;right:18px;top:50%;transform:translateY(-50%);list-style:none;margin:0;padding:0;display:grid;gap:2px;max-height:70vh;overflow:auto}
 .fs-levels button{width:40px;padding:3px 0;font:500 10px/1.2 var(--font-display,Inter);letter-spacing:.1em;color:rgba(243,236,226,.5);border-right:2px solid transparent;text-align:right;padding-right:8px;transition:color .25s,border-color .25s}
-.fs-levels button:hover{color:#f4f0e8}
+.fs-levels button:hover{color:#f3e6e1}
 .fs-levels button.on{color:#e2bf9f;border-color:#e2bf9f}
 .fs-panel{position:relative;padding:0 var(--gutter,40px) 8vh 2vw;border-left:1px solid rgba(243,236,226,.12);overflow:hidden}
-.fs-back{font:500 11px/1 var(--font-display,Inter);letter-spacing:.14em;text-transform:uppercase;color:#d8a78c;margin-bottom:18px}
-.fs-num{overflow:hidden;font:300 clamp(96px,11vw,190px)/.85 var(--font-display,Inter);color:#f4f0e8}
+.fs-back{font:500 11px/1 var(--font-display,Inter);letter-spacing:.14em;text-transform:uppercase;color:#d9b38c;margin-bottom:18px}
+.fs-num{overflow:hidden;font:300 clamp(96px,11vw,190px)/.85 var(--font-display,Inter);color:#f3e6e1}
 .fs-num span{display:inline-block}
 .fs-meta{display:grid;gap:6px;margin:18px 0 22px;font:400 12px/1.4 var(--font-display,Inter);letter-spacing:.06em;text-transform:uppercase;color:rgba(243,236,226,.72)}
 .fs-plan{width:100%;max-width:360px;display:block;margin:0 0 20px}
 .fs-core{fill:rgba(243,236,226,.05);stroke:rgba(243,236,226,.3);stroke-width:1}
 .fs-core-t{fill:rgba(243,236,226,.4);font:500 9px var(--font-display,Inter);letter-spacing:.2em;text-anchor:middle}
 .fs-unit{cursor:pointer}
-.fs-unit path{stroke:#d8a78c;stroke-width:1.4;stroke-dasharray:1;fill:rgba(197,164,143,.08);transition:fill .3s}
-.fs-unit text{fill:#f4f0e8;font:400 22px var(--font-display,Inter);text-anchor:middle;pointer-events:none}
+.fs-unit path{stroke:#d9b38c;stroke-width:1.4;stroke-dasharray:1;fill:rgba(197,164,143,.08);transition:fill .3s}
+.fs-unit text{fill:#f3e6e1;font:400 22px var(--font-display,Inter);text-anchor:middle;pointer-events:none}
 .fs-unit text.t2{font-size:10px;fill:rgba(243,236,226,.7);letter-spacing:.06em}
 .fs-unit:hover path{fill:rgba(197,164,143,.24)}
 .fs-unit.is-picked path{fill:rgba(226,191,159,.42)}
 .fs-unit.is-reserved path{stroke-dasharray:1;fill:rgba(243,236,226,.03)}
 .fs-unit.is-sold{cursor:not-allowed}.fs-unit.is-sold path{fill:rgba(0,0,0,.25);stroke:rgba(243,236,226,.25)}
 .fs-list{list-style:none;margin:0 0 18px;padding:0;border-top:1px solid rgba(243,236,226,.12)}
-.fs-list button{width:100%;display:grid;grid-template-columns:60px 1fr 70px 80px;gap:10px;align-items:center;padding:11px 0;border-bottom:1px solid rgba(243,236,226,.12);font:400 12px/1 var(--font-display,Inter);color:#f4f0e8;text-align:left;transition:background .25s,padding .25s}
+.fs-list button{width:100%;display:grid;grid-template-columns:60px 1fr 70px 80px;gap:10px;align-items:center;padding:11px 0;border-bottom:1px solid rgba(243,236,226,.12);font:400 12px/1 var(--font-display,Inter);color:#f3e6e1;text-align:left;transition:background .25s,padding .25s}
 .fs-list button:hover:not(:disabled),.fs-list button.on{background:rgba(197,164,143,.1);padding-left:8px}
-.fs-list em{font-style:normal;text-transform:uppercase;letter-spacing:.1em;font-size:10px;color:#d8a78c;text-align:right}
+.fs-list em{font-style:normal;text-transform:uppercase;letter-spacing:.1em;font-size:10px;color:#d9b38c;text-align:right}
 .fs-list .is-reserved em{color:rgba(243,236,226,.5)}
 .fs-list button:disabled{opacity:.4;cursor:not-allowed}
 .fs-unitcard{display:grid;grid-template-columns:130px 1fr;gap:18px;align-items:center;padding:16px;background:rgba(243,236,226,.05);border:1px solid rgba(197,164,143,.3);animation:fs-card .5s cubic-bezier(.22,1,.36,1) both}
 .fs-unitcard strong{display:block;font:400 22px/1.1 var(--font-display,Inter);margin-bottom:6px}
 .fs-unitcard span{display:block;font:400 12px/1.4 var(--font-display,Inter);color:rgba(243,236,226,.72);margin-bottom:14px}
-.fs-unitplan{color:#d8a78c}
-.fs-cta{display:inline-block;padding:10px 16px;background:#d8a78c;color:#1f3d30;font:500 11px/1 var(--font-display,Inter);letter-spacing:.12em;text-transform:uppercase}
+.fs-unitplan{color:#d9b38c}
+.fs-cta{display:inline-block;padding:10px 16px;background:#d9b38c;color:#2b1b2e;font:500 11px/1 var(--font-display,Inter);letter-spacing:.12em;text-transform:uppercase}
 .fs-empty{display:grid;gap:10px;padding-top:24vh;font:400 14px/1.4 var(--font-display,Inter);letter-spacing:.08em;text-transform:uppercase}
 .fs-empty em{font-style:normal;font-size:11px;color:rgba(243,236,226,.5)}
 @keyframes fs-card{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
