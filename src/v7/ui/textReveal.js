@@ -30,19 +30,53 @@ function wrapWords(el, cls) {
   return el.querySelectorAll(`.${cls} > span`);
 }
 
+// Headings marked [data-air] are set like the reference: their <br>-separated
+// lines become blocks pushed to the two edges of the column.
+function splitLines(el) {
+  if (el.dataset.air === 'done') return;
+  const groups = [[]];
+  [...el.childNodes].forEach((n) => { if (n.nodeName === 'BR') groups.push([]); else groups[groups.length - 1].push(n); });
+  el.textContent = '';
+  groups.filter((g) => g.some((n) => n.textContent.trim())).forEach((g) => { const ln = document.createElement('span'); ln.className = 'air-ln'; g.forEach((n) => ln.appendChild(n)); el.appendChild(ln); });
+  el.classList.add('air-split');
+  el.dataset.air = 'done';
+}
+
+// Words rise out of a soft blur, one after another (the reference's text
+// reveal), once, when the block enters.
+const EASE = 'expo.out';
 export function revealText(root) {
+  root.querySelectorAll('[data-air]').forEach(splitLines);
   root.querySelectorAll('[data-lines]').forEach((el) => {
     const w = wrapWords(el, 'tr-l');
-    gsap.fromTo(w, { yPercent: 110, rotate: 2 }, {
-      yPercent: 0, rotate: 0, duration: 1.15, stagger: 0.05, ease: 'power4.out',
-      scrollTrigger: { trigger: el, start: 'top 86%' },
+    gsap.fromTo(w, { yPercent: 70, opacity: 0, filter: 'blur(12px)' }, {
+      yPercent: 0, opacity: 1, filter: 'blur(0px)', duration: 1.4, stagger: 0.05, ease: EASE,
+      scrollTrigger: { trigger: el, start: 'top 88%' },
     });
   });
   root.querySelectorAll('[data-fill]').forEach((el) => {
     const w = wrapWords(el, 'tr-f');
-    gsap.fromTo(w, { opacity: 0.16 }, {
-      opacity: 1, ease: 'none', stagger: 0.08,
-      scrollTrigger: { trigger: el, start: 'top 82%', end: 'bottom 45%', scrub: 0.6 },
+    gsap.fromTo(w, { y: 14, opacity: 0, filter: 'blur(8px)' }, {
+      y: 0, opacity: 1, filter: 'blur(0px)', duration: 1.2, stagger: 0.012, ease: EASE,
+      scrollTrigger: { trigger: el, start: 'top 86%' },
     });
+  });
+}
+
+// Section motion after the reference: pictures come in out of a blur,
+// [data-air-full] pictures open from an inset rounded card to the full
+// width, and every [data-air-fade] section dims as it scrolls away.
+export function airMotion(root) {
+  root.querySelectorAll('img[data-air-img], [data-air-img] img').forEach((img) => {
+    gsap.fromTo(img, { opacity: 0, filter: 'blur(20px)' }, { opacity: 1, filter: 'blur(0px)', duration: 1.2, ease: EASE, scrollTrigger: { trigger: img, start: 'top 90%' } });
+  });
+  root.querySelectorAll('[data-air-full]').forEach((el) => {
+    gsap.fromTo(el, { clipPath: 'inset(7% 9% 7% 9% round 6px)' }, { clipPath: 'inset(0% 0% 0% 0% round 0px)', ease: 'none', scrollTrigger: { trigger: el, start: 'top 95%', end: 'top 15%', scrub: 0.6 } });
+  });
+  const fades = root.matches?.('[data-air-fade]') ? [root] : [...root.querySelectorAll('[data-air-fade]')];
+  fades.forEach((sec) => {
+    let veil = sec.querySelector(':scope > .air-veil');
+    if (!veil) { veil = document.createElement('div'); veil.className = 'air-veil'; sec.appendChild(veil); }
+    gsap.fromTo(veil, { opacity: 0 }, { opacity: 0.55, ease: 'none', scrollTrigger: { trigger: sec, start: 'bottom bottom', end: 'bottom top', scrub: true } });
   });
 }

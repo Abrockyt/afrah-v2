@@ -124,6 +124,28 @@ vec4 waveCurtain(vec2 uv){
   a = max(a, max(line1, line2));
   return vec4(col, a);
 }
+// Card opening: the scene dims behind a veil while a rounded card of the
+// incoming colour grows from the centre, a thin gold edge on its rim, and
+// squares its corners as it fills the screen.
+vec4 cardOpen(vec2 uv){
+  float p = uProgress;
+  float e = smoothstep(0.0, 1.0, p);
+  e = e * e * (3.0 - 2.0 * e);
+  vec2 q = (uv - 0.5) * vec2(uAspect, 1.0);
+  vec2 full = vec2(0.5 * uAspect + 0.03, 0.53);
+  vec2 hs = mix(vec2(0.0), full, e);
+  float rad = mix(0.06, 0.0, smoothstep(0.55, 1.0, p));
+  rad = min(rad, min(hs.x, hs.y));
+  vec2 d = abs(q) - hs + rad;
+  float sd = length(max(d, 0.0)) + min(max(d.x, d.y), 0.0) - rad;
+  float aa = 0.0016;
+  float inside = smoothstep(aa, -aa, sd) * step(0.001, p);
+  float edge = smoothstep(0.0035, 0.0, abs(sd)) * step(0.001, p) * (1.0 - smoothstep(0.85, 1.0, p));
+  float veil = smoothstep(0.0, 0.4, p) * 0.6;
+  vec3 col = mix(vec3(0.02, 0.05, 0.11), uTo, inside);
+  col = mix(col, uEdge, edge);
+  return vec4(col, max(max(inside, veil), edge));
+}
 // Soft architectural lattice: quarter-circle arcs on a grid (ERA-like), faint.
 float lattice(vec2 uv){
   vec2 p = vec2(uv.x * 1.7778, uv.y) * 3.0;
@@ -135,6 +157,7 @@ float lattice(vec2 uv){
   return 1.0 - smoothstep(0.0, w, d);
 }
 void main(){
+  if (uCover > 0.5 && uMode > 1.5) { gl_FragColor = cardOpen(vUv); return; }
   if (uCover > 0.5 && uMode > 0.5) { gl_FragColor = waveCurtain(vUv); return; }
   float m = wipeMask(vUv);
   if (uCover > 0.5) { gl_FragColor = vec4(uTo, mix(1.0-m,m,uReverse)); return; }
@@ -200,7 +223,8 @@ export class FeatherWipe {
     const g=this.material.uniforms.uGrad.value;
     this.set(color,color,progress,dir,2.7,.12);
     this.material.uniforms.uCover.value=1;
-    this.material.uniforms.uMode.value=mode==='waves'?1:0;
+    this.material.uniforms.uMode.value=mode==='card'?2:mode==='waves'?1:0;
+    if(mode==='card') this.material.uniforms.uEdge.value.set('#c9a86a').convertLinearToSRGB();
     if(mode==='waves'){ this.material.uniforms.uMid.value.set('#1a2b4c').convertLinearToSRGB(); this.material.uniforms.uEdge.value.set('#d6b77c').convertLinearToSRGB(); }
     this.material.uniforms.uReverse.value=reverse?1:0;
     this.render(renderer,aspect);

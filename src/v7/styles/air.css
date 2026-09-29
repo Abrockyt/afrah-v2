@@ -1,0 +1,83 @@
+/* Home page UI after aircenter.space's design language (studied, not copied):
+   Onest throughout (the hero keeps its own face), headings set large and
+   pushed to the two edges of the column, small centred text, 5 px rounded
+   pictures that come out of a blur, full-width pictures that open from an
+   inset card, tall rectangular buttons with the arrow in the corner, and
+   location cards. Scoped to the home page and to its non-3D sections. */
+@import url('https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600&display=swap');
+body.is-home{--font-display:'Onest','Helvetica Neue',Helvetica,Arial,sans-serif;--air-ease:cubic-bezier(.25,.74,.22,.99);font-family:var(--font-display)}
+body.is-home #home{--font-display:'Orbit Display','Inter','Helvetica Neue',Arial,sans-serif}
+body.is-home .era-map__serif{font-family:var(--font-display)!important;font-weight:400!important;letter-spacing:-.04em!important}
+
+/* headings: large, tight, lines pushed to the edges */
+body.is-home :is(.lv h2,.era-joy__title,.int2 h2,.era-deco__title,.era-apart__head h2,.era-outro__copy h2,.site-foot__invite,.contact__title){
+  font-family:var(--font-display)!important;font-weight:400!important;letter-spacing:-.045em!important;line-height:.94!important;text-transform:none!important}
+body.is-home :is(.lv h2,.era-joy__title,.int2 h2,.era-deco__title){font-size:clamp(56px,8.4vw,176px)!important}
+body.is-home .lv h3{font:400 clamp(30px,3.2vw,66px)/1.02 var(--font-display)!important;letter-spacing:-.035em!important}
+body.is-home .air-split{display:flex!important;flex-wrap:wrap;justify-content:space-between;align-items:baseline;column-gap:.3em;width:100%}
+body.is-home .air-ln{display:block;white-space:nowrap}
+body.is-home :is(.lv,.int2,.era-joy,.era-deco) :is(h2,h3) em{font-style:normal;color:inherit;opacity:.45}
+body.is-home :is(.lv-k,.int2__k,.era-joy__k,.era-kicker,.era-statement__k){font:500 12px/1 var(--font-display)!important;letter-spacing:.02em!important;text-transform:uppercase}
+
+/* body text: small and centred under the headings */
+body.is-home :is(.lv,.int2,.era-joy,.era-deco,.era-garden,.era-statement) p{font-family:var(--font-display)!important;letter-spacing:-.01em}
+body.is-home .lv-intro{display:grid!important;grid-template-columns:1fr!important;justify-items:center;row-gap:7vh!important;text-align:center}
+body.is-home .lv-intro>.lv-k{justify-self:center}
+body.is-home .lv-intro__side{justify-items:center!important;text-align:center}
+body.is-home .lv-intro__side p{max-width:34ch!important;font-size:clamp(16px,1.2vw,20px)!important}
+body.is-home .int2__head{grid-template-columns:repeat(12,1fr)!important}
+body.is-home .int2__head>*{grid-column:1/-1}
+body.is-home .int2__head p{grid-column:4/10!important;justify-self:center;text-align:center}
+body.is-home .era-joy__head{grid-template-columns:repeat(12,1fr)!important;row-gap:6vh!important}
+body.is-home .era-joy__copy{grid-column:1/-1!important;grid-template-columns:repeat(12,1fr);column-gap:2vw}
+body.is-home .era-joy__copy>*{grid-column:1/-1}
+body.is-home .era-joy__copy p{grid-column:7/13!important;font-size:clamp(18px,1.6vw,28px)!important;line-height:1.3!important}
+body.is-home .era-joy__lead{grid-column:1/6!important;aspect-ratio:4/5}
+body.is-home .era-deco{grid-template-columns:repeat(12,1fr)!important;row-gap:8vh!important}
+body.is-home .era-deco>*{grid-column:1/-1}
+body.is-home .era-deco__img{grid-column:1/6!important;grid-row:auto!important}
+body.is-home .era-deco__text{grid-column:8/13!important;align-self:end}
+
+/* pictures: 5 px corners (no arches), parallax inside */
+body.is-home :is(#cases,#joy,#interiors,#art-deco,#garden) :is(figure,.int2__img){border-radius:5px!important;overflow:hidden}
+body.is-home .lv-duo__wide{grid-column:1/-1!important;margin:0 calc(-1 * var(--gutter))!important;height:92vh!important;border-radius:0!important}
+body.is-home .lv-duo__arch{grid-column:9/12!important;margin:-22vh 0 0!important;grid-row:2!important;box-shadow:none!important}
+body.is-home .lv-duo__cap{grid-row:2!important;margin-top:5vh!important}
+body.is-home .era-garden__circle{border-radius:5px!important;aspect-ratio:4/5!important}
+
+/* location cards (the minutes to the park, school, metro, downtown) */
+body.is-home .era-joy__stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;border-top:0!important;margin:14vh 0 12vh!important}
+body.is-home .era-joy__stats li{position:relative;display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto 1fr auto;aspect-ratio:1/1.08;padding:20px!important;border-radius:5px;background:rgba(244,242,237,.08);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+body.is-home .era-joy__stats strong{grid-column:1;grid-row:1;font:400 clamp(64px,7.6vw,150px)/.8 var(--font-display)!important;letter-spacing:-.05em;color:#f4f2ed!important}
+body.is-home .era-joy__stats span{grid-column:2;grid-row:1;align-self:start;margin:6px 0 0 10px;font:400 13px/1 var(--font-display)!important;letter-spacing:0!important;text-transform:none!important;color:rgba(244,242,237,.6)}
+body.is-home .era-joy__stats em{grid-column:1/-1;grid-row:3;justify-self:end;text-align:right;font:400 clamp(22px,2vw,40px)/1 var(--font-display)!important;letter-spacing:-.03em;color:#f4f2ed!important}
+@media (max-width:760px){body.is-home .era-joy__stats{grid-template-columns:repeat(2,1fr)}}
+
+/* buttons: tall rectangles, label top-left, arrow bottom-right that turns */
+body.is-home :is(#cases,#art-deco,.era-statement,#joy,#garden,#interiors,#ceilings,#apartments,#new-era,#contact,.site-foot,.menu) .btn{
+  display:grid!important;grid-template-columns:1fr auto;grid-template-rows:1fr auto;align-items:start;justify-items:start;
+  width:min(250px,70vw);height:112px;padding:15px 16px 14px 18px!important;border-radius:5px!important;
+  background:#1a2b4c;color:#f4f2ed;text-align:left;white-space:normal;
+  font:500 15px/1.2 var(--font-display)!important;letter-spacing:-.01em!important;text-transform:none!important;transition:background .6s var(--air-ease)}
+body.is-home :is(#cases,#art-deco,.era-statement,#joy,#garden,#interiors,#ceilings,#apartments,#new-era,#contact,.site-foot,.menu) .btn::before{display:none}
+body.is-home :is(#cases,#art-deco,.era-statement,#joy,#garden,#interiors,#ceilings,#apartments,#new-era,#contact,.site-foot,.menu) .btn b{
+  grid-column:2;grid-row:2;width:auto!important;height:auto!important;margin:0!important;background:none!important;border-radius:0!important;color:inherit!important;
+  font:300 24px/1 var(--font-display)!important;transform:rotate(0);transition:transform .6s var(--air-ease)}
+body.is-home :is(#cases,#art-deco,.era-statement,#joy,#garden,#interiors,#ceilings,#apartments,#new-era,#contact,.site-foot,.menu) .btn:hover{background:#253a60;color:#f4f2ed}
+body.is-home :is(#cases,#art-deco,.era-statement,#joy,#garden,#interiors,#ceilings,#apartments,#new-era,#contact,.site-foot,.menu) .btn:hover b{transform:rotate(45deg)}
+body.is-home :is(#art-deco,#joy,#garden,#apartments,#new-era,#contact,.site-foot,.menu) .btn{background:rgba(244,242,237,.12);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+body.is-home :is(#art-deco,#joy,#garden,#apartments,#new-era,#contact,.site-foot,.menu) .btn:hover{background:rgba(244,242,237,.22)}
+
+/* every section dims as it scrolls away */
+body.is-home [data-air-fade]{position:relative}
+body.is-home .air-veil{position:absolute;inset:0;z-index:6;pointer-events:none;background:#0b1528;opacity:0}
+
+/* the menu and footer take the same face */
+body.is-home :is(.menu,.site-foot,.nav){font-family:var(--font-display)}
+/* when a heading wraps, its last line still goes to the right edge */
+body.is-home .air-split .air-ln:last-child{margin-left:auto;text-align:right}
+/* body text in sentence case, as set */
+body.is-home :is(.era-statement p,.era-garden__intro p,.era-joy__copy p,.int2__head p,.lv p){text-transform:none!important}
+body.is-home .era-statement p{font-size:clamp(22px,2.4vw,44px)!important;line-height:1.15!important;letter-spacing:-.025em!important;max-width:30ch!important}
+body.is-home .era-garden__intro p{font-size:clamp(20px,1.8vw,32px)!important;line-height:1.25!important;letter-spacing:-.02em!important}
+body.is-home :is(.lv-k,.int2__k,.era-joy__k,.era-kicker,.era-statement__k){text-transform:none!important;font-size:13px!important}

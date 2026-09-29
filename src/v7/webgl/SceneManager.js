@@ -260,9 +260,9 @@ export class SceneManager {
       this.wipe.cover(r,this.camera.aspect,this.leaf.takeover,'#f4f2ed',false,[0,1]);
       this.leaf.renderStorm(r,this.camera);
     }
-    // Building → living: a green wave curtain, then ivory
+    // Building → living: the scene dims and an ivory card opens over it
     if(stage==='building' && sectionProgress('building')>.86)
-      this.wipe.cover(r,this.camera.aspect,range(sectionProgress('building'),.84,1),BONE,false,[0,1],'waves');
+      this.wipe.cover(r,this.camera.aspect,range(sectionProgress('building'),.84,1),BONE,false,[0,1],'card');
     mark('render');
   }
 

@@ -18,6 +18,7 @@ import SiteFooter from './ui/SiteFooter';
 // all original code): one persistent canvas, pinned stages, feathered wipes.
 export default function App() {
   useEffect(() => {
+    document.body.classList.add('is-home');
     initScroll();
     if (document.fonts) document.fonts.ready.then(() => ScrollTrigger.refresh());
     const t = setTimeout(() => ScrollTrigger.refresh(), 600);

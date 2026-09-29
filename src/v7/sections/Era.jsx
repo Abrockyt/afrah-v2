@@ -3,7 +3,7 @@ import { useStage } from '../core/useStage';
 import { gsap } from '../core/ScrollManager';
 import { setTheme } from '../core/store';
 import { fallData } from '../webgl/scenes/FeatherFall';
-import { revealText } from '../ui/textReveal';
+import { revealText, airMotion } from '../ui/textReveal';
 
 // ERA-style chapters that replace the old passage. Copy is AFRAH's own; the
 // imagery is temporary study material from /v3/era and /v3/silver.
@@ -72,6 +72,7 @@ function useReveals(ref, extra) {
       gsap.utils.toArray(el.querySelectorAll('[data-words]')).forEach((n) => gsap.fromTo(n.querySelectorAll('.era-w > span'), { yPercent: 105 }, { yPercent: 0, duration: 1, stagger: 0.06, ease: 'power3.out', scrollTrigger: { trigger: n, start: 'top 85%' } }));
       gsap.utils.toArray(el.querySelectorAll('[data-parallax]')).forEach((n) => { const k = parseFloat(n.dataset.parallax) || 10; gsap.fromTo(n, { yPercent: k }, { yPercent: -k, ease: 'none', scrollTrigger: { trigger: n, start: 'top bottom', end: 'bottom top', scrub: 0.5 } }); });
       revealText(el);
+      airMotion(el);
       extra && extra(el);
     }, el);
     return () => ctx.revert();
@@ -84,7 +85,7 @@ export function EraStatement() {
   const ref = useRef(null);
   useReveals(ref);
   return (
-    <section className="era-statement" ref={ref} onPointerEnter={() => setTheme('light')}>
+    <section className="era-statement" ref={ref} data-air-fade onPointerEnter={() => setTheme('light')}>
       <span className="era-statement__k">06 / A promise</span>
       <p data-fill>Great architecture has always promised more than shelter. It promises a way of living: light that moves across a room, materials that age with grace, and a presence on the street that people remember. AFRAH is built to keep that promise.</p>
       <blockquote><span className="era-statement__q" aria-hidden="true">“</span><span data-lines>We drew AFRAH for the next hundred years — a silhouette the city will recognise from any direction.</span><cite data-rise><i />Lead architect, AFRAH design studio</cite></blockquote>
@@ -98,18 +99,18 @@ export function EraJoy() {
   const ref = useRef(null);
   useReveals(ref);
   return (
-    <section className="era-joy" ref={ref} id="joy">
+    <section className="era-joy" ref={ref} id="joy" data-air-fade>
       <div className="era-joy__head">
         <div className="era-joy__copy">
           <span className="era-joy__k" data-rise>07 / Everyday life</span>
-          <h2 className="era-joy__title" data-lines>The joy<br /><em>of every day</em></h2>
+          <h2 className="era-joy__title" data-air data-lines>The joy<br /><em>of every day</em></h2>
           <p data-fill>Historic streets to wander, schools that open bright futures, parks for quiet mornings and restaurants for long evenings with friends — all within a short walk of your door.</p>
         </div>
-        <figure className="era-joy__lead" data-rise><img src="/v3/era/joy-1.webp" alt="A couple walking through the neighbourhood" loading="lazy" data-parallax="6" /></figure>
+        <figure className="era-joy__lead" data-rise data-air-img><img src="/v3/era/joy-1.webp" alt="A couple walking through the neighbourhood" loading="lazy" data-parallax="6" /></figure>
       </div>
       <ul className="era-joy__stats">{JOY_STATS.map(([n, u, t]) => <li key={t} data-rise><strong>{n}</strong><span>{u}</span><em>{t}</em></li>)}</ul>
       <div className="era-joy__strip">
-        {[['joy-2', 'Mornings in the park'], ['joy-c1', 'The Saturday market'], ['joy-c5', 'Round the corner'], ['joy-c6', 'Out in town'], ['joy-c4', 'The concert hall']].map(([k, c], i) => <figure key={k} data-rise style={{ '--i': i }}><div><img src={`/v3/era/${k}.webp`} alt="" loading="lazy" data-parallax={3 + (i % 3) * 2} /></div><figcaption>{c}</figcaption></figure>)}
+        {[['joy-2', 'Mornings in the park'], ['joy-c1', 'The Saturday market'], ['joy-c5', 'Round the corner'], ['joy-c6', 'Out in town'], ['joy-c4', 'The concert hall']].map(([k, c], i) => <figure key={k} data-rise data-air-img style={{ '--i': i }}><div><img src={`/v3/era/${k}.webp`} alt="" loading="lazy" data-parallax={3 + (i % 3) * 2} /></div><figcaption>{c}</figcaption></figure>)}
       </div>
     </section>
   );
@@ -164,12 +165,12 @@ export function EraGarden() {
     gsap.fromTo(el.querySelector('.era-garden__circle'), { yPercent: 40, scale: 0.8 }, { yPercent: -10, scale: 1, ease: 'none', scrollTrigger: { trigger: el, start: 'top bottom', end: 'center center', scrub: 0.6 } });
   });
   return (
-    <section className="era-garden" ref={ref} id="garden">
+    <section className="era-garden" ref={ref} id="garden" data-air-fade>
       <div className="era-garden__intro">
-        <figure className="era-garden__circle"><img src="/v3/era/touch.webp" alt="A path through the courtyard garden" loading="lazy" /></figure>
+        <figure className="era-garden__circle" data-air-img><img src="/v3/era/touch.webp" alt="A path through the courtyard garden" loading="lazy" /></figure>
         <p data-fill>Every tree in the courtyard garden was chosen to bring a little of the countryside into the city. Clipped hedges, seasonal planting and quiet benches — and a view of green from every window.</p>
       </div>
-      <figure className="era-garden__aerial"><img src="/v3/era/labirint.webp" alt="The formal courtyard garden seen from above" loading="lazy" data-parallax="8" /></figure>
+      <figure className="era-garden__aerial" data-air-full><img src="/v3/era/labirint.webp" alt="The formal courtyard garden seen from above" loading="lazy" data-parallax="8" /></figure>
     </section>
   );
 }
@@ -185,16 +186,16 @@ export function EraInteriors() {
   const ref = useRef(null);
   useReveals(ref);
   return (
-    <section className="int2" ref={ref} id="interiors">
+    <section className="int2" ref={ref} id="interiors" data-air-fade>
       <header className="int2__head">
         <span className="int2__k" data-rise>09 / Interiors</span>
-        <h2 data-lines>Rooms like<br /><em>a private house</em></h2>
+        <h2 data-air data-lines>Rooms like<br /><em>a private house</em></h2>
         <p data-fill>Lobbies by day and by night, lounges, a library and residents’ salons — each designed as a room in a private house, in stone, bronze, oak and silk.</p>
       </header>
       <div className="int2__grid">
         {ROOMS.map(([n, t, d, img], i) => (
           <figure className={`int2__f int2__f--${i + 1}`} key={n} data-rise>
-            <div className="int2__img"><img src={img} alt={t} loading="lazy" data-parallax={4 + (i % 2) * 4} /></div>
+            <div className="int2__img" data-air-img><img src={img} alt={t} loading="lazy" data-parallax={4 + (i % 2) * 4} /></div>
             <figcaption><b>{n}</b><span>{t}</span><small>{d}</small></figcaption>
           </figure>
         ))}
@@ -212,10 +213,10 @@ export function EraArtDeco() {
   const ref = useRef(null);
   useReveals(ref);
   return (
-    <section className="era-deco" ref={ref} id="art-deco" onPointerEnter={() => setTheme('dark')}>
+    <section className="era-deco" ref={ref} id="art-deco" data-air-fade onPointerEnter={() => setTheme('dark')}>
       <span className="t-small era-kicker" data-rise>04 / A place of art</span>
-      <h2 className="era-deco__title" data-words>{words('A NEW')}<br />{words('LANDMARK')}</h2>
-      <figure className="era-deco__img" data-rise><img src="/media/renders/lily-crown.webp" alt="The Lily's crown: colonnade, zinc mansard, clock lantern and spire" loading="lazy" data-parallax="8" /></figure>
+      <h2 className="era-deco__title" data-air data-words>{words('A NEW')}<br />{words('LANDMARK')}</h2>
+      <figure className="era-deco__img" data-rise data-air-img><img src="/media/renders/lily-crown.webp" alt="The Lily's crown: colonnade, zinc mansard, clock lantern and spire" loading="lazy" data-parallax="8" /></figure>
       <p className="era-deco__text" data-fill>The Lily turns an eighth of a turn as it rises, and thirty-two bronze fins turn with it. At the top, a crown from the grand avenues of Europe: a colonnade, a zinc mansard with dormers and a lantern with four clock faces under a spire. At night its clocks glow over the river.</p>
     </section>
   );
@@ -246,7 +247,7 @@ export function EraApartments() {
   const ref = useRef(null);
   useReveals(ref);
   return (
-    <section className="era-apart" ref={ref} id="apartments" onPointerEnter={() => setTheme('dark')}>
+    <section className="era-apart" ref={ref} id="apartments" data-air-fade onPointerEnter={() => setTheme('dark')}>
       <img className="era-apart__bg" src="/v3/era/apart-bg.webp" alt="" aria-hidden="true" data-parallax="6" />
       <div className="era-apart__head"><span className="t-small era-kicker" data-rise>10 / Residences</span><h2 data-words>{words('APARTMENTS')}</h2></div>
       <div className="era-apart__cards">
@@ -268,7 +269,7 @@ export function EraOutro() {
       <img className="era-outro__bg" src="/media/renders/quarter-river.webp" alt="" aria-hidden="true" />
       <div className="era-outro__copy">
         <span className="t-small" data-rise>A place where life becomes art</span>
-        <h2 data-words>{words('A NEW ERA')}<br />{words('FOR THE CITY,')}<br />{words('A NEW CHAPTER')}<br />{words('IN YOUR LIFE.')}</h2>
+        <h2 data-air data-words>{words('A NEW ERA')}<br />{words('FOR THE CITY,')}<br />{words('A NEW CHAPTER')}<br />{words('IN YOUR LIFE.')}</h2>
         <a className="btn" href="#contact" data-rise>Request a call<b>↗</b></a>
       </div>
     </section>
