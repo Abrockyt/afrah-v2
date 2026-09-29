@@ -1,12 +1,13 @@
 import * as THREE from 'three';
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 
 // AFRAH's own towers, built in place of ERA's six on the same plots.
 //
 //   The Lily (hero, 64 levels): a rounded-square glass tower that turns an
 //   eighth of a turn as it rises and narrows slightly. Every floor is drawn by a
-//   white slab edge, 32 bronze fins run up the facade with the twist, and above
-//   the last floor the fins keep rising and close over a glowing glass lantern
-//   like the petals of a bud.
+//   white slab edge and 32 bronze fins run up the facade with the twist. The
+//   crown is European: a cornice, a colonnade round a lit loggia, a zinc
+//   mansard with dormers, a lantern with four clock faces, and a spire.
 //
 //   The Waves (five sisters): glass towers wrapped in white balconies whose
 //   depth changes smoothly from floor to floor, so the facade ripples like
@@ -150,12 +151,10 @@ function buildLily({ cx, cz, size, mats }) {
   const g = new THREE.Group(); g.name = 'afrah-lily';
   const { storey, floors, base } = LILY;
   const top = base + storey * floors;                 // roof of the last floor
-  const crown = 50;                                   // the bud above it
   const N = 128, K = 32;
   const plan = arcPlan(superRect(size, size, 4.2));
   const rotAt = (y) => (y - base) / (top - base) * Math.PI / 4;
   const bodyScale = (y) => 1 - 0.1 * Math.min(1, (y - base) / (top - base));
-  const budScale = (u) => bodyScale(top) * (1 + 0.12 * Math.sin(u * Math.PI)) * Math.pow(Math.cos(u * Math.PI / 2), 0.75);
 
   // glass walls, floor by floor
   const rings = [], ys = [];
@@ -166,56 +165,95 @@ function buildLily({ cx, cz, size, mats }) {
   // white slab edges (the lobby is double height: no slab at level 1)
   const slabs = new Builder();
   for (let l = 2; l <= floors; l++) plate(slabs, rings[l], ys[l] - 0.25, 0.75, 0.6, 0.05);
-  plate(slabs, rings[floors], top + 0.9, 1.1, 1.8, 0.05);   // parapet band
-  cap(slabs, rings[floors], top + 0.2);
-  // a stone plinth ring round the lobby
-  plate(slabs, rings[0], base + 0.6, 2.2, 1.2);
-  g.add(mesh(slabs.geometry(), mats.slab));
+  plate(slabs, rings[0], base + 0.6, 2.2, 1.2);            // a stone plinth round the lobby
 
-  // lantern: glass narrowing inside the bud
-  const lan = new Builder(), lr = [], ly = [];
-  for (let s = 0; s <= 12; s++) { const u = s / 12 * 0.86, y = top + u * crown; ly.push(y); lr.push(ring(plan, 64, rotAt(y), budScale(u) * 0.86, cx, cz)); }
-  skin(lan, lr, ly); cap(lan, lr[lr.length - 1], ly[ly.length - 1]);
-  g.add(mesh(lan.geometry(), mats.lantern, false));
-
-  // bronze fins: up the facade with the twist, then over the lantern
+  // bronze fins up the facade with the twist, stopping under the cornice
   const fins = new Builder();
-  const steps = [];
-  for (let l = 0; l <= floors; l++) steps.push([base + l * storey, 1]);
-  for (let s = 1; s <= 16; s++) { const u = s / 16; steps.push([top + u * crown, u]); }
   for (let k = 0; k < K; k++) {
     const t = k / K, col = [];
-    steps.forEach(([y, flag], si) => {
-      const inBud = y > top + 1e-3, u = inBud ? (y - top) / crown : 0;
-      const sc = inBud ? budScale(u) : bodyScale(y);
-      const rot = rotAt(y);
+    for (let l = 0; l <= floors; l++) {
+      const y = base + l * storey, sc = bodyScale(y), rot = rotAt(y);
       const [px, pz] = plan(t), [qx, qz] = plan(t + 0.002);
       const cr = Math.cos(rot), sr = Math.sin(rot);
       const x = (px * cr - pz * sr) * sc, z = (px * sr + pz * cr) * sc;
       const tx = (qx - px) * cr - (qz - pz) * sr, tz = (qx - px) * sr + (qz - pz) * cr, tl = Math.hypot(tx, tz);
-      const nx = tz / tl, nz = -tx / tl;
-      const out = nx * x + nz * z < 0 ? -1 : 1;
-      const depth = inBud ? 1.2 + 2.2 * Math.sin(u * Math.PI) * (1 - u * 0.4) : (y < base + storey * 2 ? 0.4 : 0.9);
-      const w = 0.16;
+      const nx = tz / tl, nz = -tx / tl, out = nx * x + nz * z < 0 ? -1 : 1;
+      const depth = y < base + storey * 2 ? 0.4 : 0.9, w = 0.16;
       const ax = cx + x - (tx / tl) * w, az = cz + z - (tz / tl) * w, bx = cx + x + (tx / tl) * w, bz = cz + z + (tz / tl) * w;
-      col.push([
-        fins.v(ax, y, az), fins.v(ax + nx * out * depth, y, az + nz * out * depth),
-        fins.v(bx + nx * out * depth, y, bz + nz * out * depth), fins.v(bx, y, bz),
-      ]);
-    });
+      col.push([fins.v(ax, y, az), fins.v(ax + nx * out * depth, y, az + nz * out * depth), fins.v(bx + nx * out * depth, y, bz + nz * out * depth), fins.v(bx, y, bz)]);
+    }
     for (let i = 0; i < col.length - 1; i++) {
       const a = col[i], c = col[i + 1];
-      fins.quad(a[0], a[1], c[1], c[0]);   // one side
-      fins.quad(a[1], a[2], c[2], c[1]);   // outer edge
-      fins.quad(a[2], a[3], c[3], c[2]);   // other side
+      fins.quad(a[0], a[1], c[1], c[0]); fins.quad(a[1], a[2], c[2], c[1]); fins.quad(a[2], a[3], c[3], c[2]);
     }
   }
   g.add(mesh(fins.geometry(), mats.bronze));
 
-  // a finial where the petals meet
-  const fin = mesh(new THREE.ConeGeometry(0.6, 16, 12), mats.bronze);
-  fin.position.set(cx, top + crown + 6, cz); g.add(fin);
-  g.userData = { top, crownTop: top + crown + 14 };
+  // ── the crown, in the European tradition: cornice, colonnade, zinc
+  // mansard with dormers, a lantern with four clock faces, and a spire
+  const R0 = bodyScale(top), rot = rotAt(top), at = (t, sc) => {
+    const [px, pz] = plan(t), cr = Math.cos(rot), sr = Math.sin(rot);
+    return [cx + (px * cr - pz * sr) * sc, cz + (px * sr + pz * cr) * sc];
+  };
+  const outward = (t) => { const [x0, z0] = at(t - 0.002, 1), [x1, z1] = at(t + 0.002, 1); const tx = x1 - x0, tz = z1 - z0, l = Math.hypot(tx, tz); return [tz / l, -tx / l]; };
+  const stone = [], zinc = [], bronze = [], glow = [];
+  const put = (list, geo, x, y, z, ry = 0) => { geo.rotateY(ry); geo.translate(x, y, z); list.push(geo); };
+  // cornice over the last floor
+  plate(slabs, rings[floors], top + 0.9, 2.2, 1.4, 0.05);
+  cap(slabs, rings[floors], top + 0.25);
+  const y1 = top + 1.6, colH = 9;
+  // the loggia: a lit glass drum behind a ring of columns
+  const drum = new Builder(), dr = ring(plan, 96, rot, R0 * 0.8, cx, cz);
+  skin(drum, [dr, dr], [y1, y1 + colH]);
+  g.add(mesh(drum.geometry(), mats.lantern, false));
+  for (let k = 0; k < 40; k++) {
+    const t = (k + 0.5) / 40, [x, z] = at(t, R0 * 0.94);
+    put(stone, new THREE.CylinderGeometry(0.5, 0.58, colH - 1, 14), x, y1 + colH / 2, z);
+    put(stone, new THREE.BoxGeometry(1.5, 0.5, 1.5), x, y1 + 0.25, z, rot);
+    put(stone, new THREE.BoxGeometry(1.6, 0.5, 1.6), x, y1 + colH - 0.25, z, rot);
+  }
+  const ent = ring(plan, N, rot, R0 * 0.94, cx, cz);
+  plate(slabs, ent, y1 + colH + 0.6, 1.4, 1.2, 1.6);            // entablature
+  cap(slabs, ent, y1 + colH + 1.2);
+  // the mansard, sloping in from the entablature, with a stone curb
+  const y2 = y1 + colH + 1.2, y3 = y2 + 11.5;
+  const mansard = new Builder(), m0 = ring(plan, 96, rot, R0 * 0.9, cx, cz), m1 = ring(plan, 96, rot, R0 * 0.6, cx, cz), m2 = ring(plan, 96, rot, R0 * 0.52, cx, cz);
+  skin(mansard, [m0, m1, m2], [y2, y3 - 1.6, y3]); cap(mansard, m2, y3);
+  g.add(mesh(mansard.geometry(), mats.zinc));
+  // dormers: small stone windows with triangular pediments
+  for (let k = 0; k < 16; k++) {
+    const t = (k + 0.5) / 16, [x, z] = at(t, R0 * 0.8), [nx, nz] = outward(t), ry = Math.atan2(nx, nz), yb = y2 + 3.2;
+    put(stone, new THREE.BoxGeometry(2.6, 3.4, 2.4), x + nx * 0.4, yb + 1.7, z + nz * 0.4, ry);
+    const tri = new THREE.Shape([new THREE.Vector2(-1.6, 0), new THREE.Vector2(1.6, 0), new THREE.Vector2(0, 1.3)]);
+    const ped = new THREE.ExtrudeGeometry(tri, { depth: 2.6, bevelEnabled: false }); ped.translate(0, 0, -1.3);
+    put(stone, ped, x + nx * 0.4, yb + 3.4, z + nz * 0.4, ry);
+    const win = new THREE.PlaneGeometry(1.5, 2.2); win.translate(0, 0, 1.22);
+    put(glow, win, x + nx * 0.4, yb + 1.6, z + nz * 0.4, ry);
+  }
+  // the lantern: an octagon of lit glass with stone pilasters and four clocks
+  const y4 = y3, lanH = 10, lr = 6.2;
+  put(glow, new THREE.CylinderGeometry(lr, lr, lanH, 8, 1, true), cx, y4 + lanH / 2, cz, rot + Math.PI / 8);
+  for (let k = 0; k < 8; k++) { const a = rot + k * Math.PI / 4; put(stone, new THREE.BoxGeometry(1, lanH, 1), cx + Math.sin(a) * lr, y4 + lanH / 2, cz + Math.cos(a) * lr, a); }
+  put(stone, new THREE.CylinderGeometry(lr + 0.9, lr + 0.9, 0.9, 8), cx, y4 + lanH + 0.45, cz, rot + Math.PI / 8);
+  const clockFace = [];
+  for (let k = 0; k < 4; k++) {
+    const a = rot + Math.PI / 8 + k * Math.PI / 2, d = lr * Math.cos(Math.PI / 8) + 0.12;
+    const x = cx + Math.sin(a) * d, z = cz + Math.cos(a) * d, y = y4 + lanH / 2;
+    const face = new THREE.CircleGeometry(2.5, 40); face.translate(0, 0, 0.02); put(clockFace, face, x, y, z, a);
+    put(bronze, new THREE.TorusGeometry(2.5, 0.2, 8, 40), x, y, z, a);
+    const hh = new THREE.BoxGeometry(0.18, 1.5, 0.08); hh.translate(0, 0.75, 0.1); hh.rotateZ(-0.9); put(bronze, hh, x, y, z, a);
+    const mh = new THREE.BoxGeometry(0.12, 2.1, 0.08); mh.translate(0, 1.05, 0.12); mh.rotateZ(0.5); put(bronze, mh, x, y, z, a);
+  }
+  // the spire and its needle
+  const y5 = y4 + lanH + 0.9;
+  put(zinc, new THREE.ConeGeometry(lr + 0.4, 22, 8), cx, y5 + 11, cz, rot + Math.PI / 8);
+  put(bronze, new THREE.CylinderGeometry(0.08, 0.26, 14, 8), cx, y5 + 22 + 7, cz);
+  put(bronze, new THREE.SphereGeometry(0.85, 16, 12), cx, y5 + 21, cz);
+  const merged = (list) => mergeGeometries(list.map((q) => (q.index ? q.toNonIndexed() : q)).map((q) => { q.deleteAttribute('uv'); return q; }));
+  g.add(mesh(merged(stone), mats.slab), mesh(merged(zinc), mats.zinc), mesh(merged(bronze), mats.bronze));
+  g.add(mesh(merged(glow), mats.lantern, false), mesh(merged(clockFace), mats.clock || mats.lantern, false));
+  g.add(mesh(slabs.geometry(), mats.slab));
+  g.userData = { top, crownTop: y5 + 36 };
   return g;
 }
 

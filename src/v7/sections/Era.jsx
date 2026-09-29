@@ -47,7 +47,7 @@ export function EraArchitecture() {
     <section className="runway" id="architecture" ref={runwayRef}>
       <div className="stage stage--light leaf" ref={stageRef}>
         <span className="leaf__kicker t-small">05 / Architecture</span>
-        <p className="leaf__intro">The Lily wears a crown of bronze leaves. Here is one of them, let go.</p>
+        <p className="leaf__intro">Thirty-two bronze fins, cut like leaves, run up the Lily. Here is one of them, let go.</p>
         <div className="leaf__words" style={{ left: `${W.xRatio * 100}%`, top: `${W.slotY * 100}%`, fontSize: `${W.fontVh}vh` }}>
           <i className="leaf__dot" style={{ left: `${(W.dotXRatio - W.xRatio) * 100}vw` }} />
           <div className="leaf__col" style={{ rowGap: `calc(${W.rowGapY * 100}vh - 1em)` }}>
@@ -55,7 +55,7 @@ export function EraArchitecture() {
           </div>
         </div>
         <div className="leaf__outro">
-          <p>Thirty-two bronze fins, cut like leaves, turn with the Lily as it rises and close over its lantern. Glass, white stone and bronze that catches the last of the sun: a landmark drawn to age slowly.</p>
+          <p>Bronze fins cut like leaves turn with the Lily as it rises, up to a crown in the old European manner: colonnade, zinc mansard, clock lantern and spire. A landmark drawn to age slowly.</p>
           <a className="btn" href="/architecture">The architecture<b>↗</b></a>
         </div>
       </div>
@@ -215,8 +215,8 @@ export function EraArtDeco() {
     <section className="era-deco" ref={ref} id="art-deco" onPointerEnter={() => setTheme('dark')}>
       <span className="t-small era-kicker" data-rise>04 / A place of art</span>
       <h2 className="era-deco__title" data-words>{words('A NEW')}<br />{words('LANDMARK')}</h2>
-      <figure className="era-deco__img" data-rise><img src="/media/renders/lily-crown.webp" alt="The Lily's crown of bronze fins closing over its glass lantern" loading="lazy" data-parallax="8" /></figure>
-      <p className="era-deco__text" data-fill>The Lily turns an eighth of a turn as it rises, and thirty-two bronze fins turn with it, closing over a lantern of glass at the top. By day it holds the sky; at night it is the brightest thing on the river.</p>
+      <figure className="era-deco__img" data-rise><img src="/media/renders/lily-crown.webp" alt="The Lily's crown: colonnade, zinc mansard, clock lantern and spire" loading="lazy" data-parallax="8" /></figure>
+      <p className="era-deco__text" data-fill>The Lily turns an eighth of a turn as it rises, and thirty-two bronze fins turn with it. At the top, a crown from the grand avenues of Europe: a colonnade, a zinc mansard with dormers and a lantern with four clock faces under a spire. At night its clocks glow over the river.</p>
     </section>
   );
 }

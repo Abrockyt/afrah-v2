@@ -181,6 +181,9 @@ async function build(renderer) {
     bronze: new THREE.MeshStandardMaterial({color: '#8c7156', roughness: .34, metalness: .9, envMap, envMapIntensity: 1.1, side: THREE.DoubleSide}),
     rail: new THREE.MeshStandardMaterial({color: '#c4d8de', roughness: .05, metalness: .3, envMap, transparent: true, opacity: .26, depthWrite: false, side: THREE.DoubleSide}),
     lantern,
+    // the crown: Paris zinc for the mansard and spire, lit clock faces
+    zinc: new THREE.MeshStandardMaterial({color: '#59636e', roughness: .38, metalness: .78, envMap, envMapIntensity: 1.2}),
+    clock: (() => { const m = new THREE.MeshStandardMaterial({color: '#efe8da', roughness: .5, emissive: '#fff0cc', emissiveIntensity: 1}); m.onBeforeCompile = (sh) => { sh.uniforms.uEve = eve; sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nuniform float uEve;').replace('#include <emissivemap_fragment>', '#include <emissivemap_fragment>\ntotalEmissiveRadiance = vec3(1., .92, .75) * (.06 + uEve * 1.1);'); }; m.customProgramCacheKey = () => 'afrah-clock'; return m; })(),
   };
   Object.entries(sig).forEach(([k, m]) => { mats['__' + k] = m; });
   const afrah = buildSignatureTowers(sig);

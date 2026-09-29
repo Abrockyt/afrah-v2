@@ -112,7 +112,7 @@ function ArchitecturePage() {
     <p className="e-lede">A tower of glass that turns as it rises, crowned with bronze.</p>
     <Editorial items={[
       ['01 / Silhouette', 'The twist.', '/media/renders/quarter.webp', 'A rounded square in plan, the Lily turns an eighth of a turn over sixty-four levels and narrows slightly, so every floor sees the river from a new angle.'],
-      ['02 / Crown', 'The bud.', '/media/renders/lily-crown.webp', 'Thirty-two bronze fins run up the facade with the twist. Above the last floor they keep rising and close over a lantern of glass that glows at night.'],
+      ['02 / Crown', 'The crown.', '/media/renders/lily-crown.webp', 'A cornice and a colonnade round a lit loggia, a zinc mansard with dormers, and a lantern with four clock faces under a slender spire: the crown of a grand European tower.'],
       ['03 / Ensemble', 'The Waves.', '/media/renders/waves.webp', 'Five sister towers wrap their homes in white balconies whose depth changes from floor to floor, so the facades ripple like water in the light.'],
     ]}/>
     <Stats items={[['64', 'levels', 'Above the river'], ['297', 'm', 'Height to the finial'], ['10', 'towers', 'One ensemble'], ['4', 'ha', 'Park and garden']]}/>
@@ -149,10 +149,10 @@ function PlacePage() {
 
 const PHOTOS = [
   ['Exterior', 'The Lily’s crown', '/media/renders/lily-crown.webp', 1600, 1000],
-  ['Exterior', 'The quarter on the river bend', '/media/renders/quarter-river.webp', 1600, 1000],
+  ['Exterior', 'The pool in the park', '/media/renders/quarter-river.webp', 1600, 1000],
   ['Exterior', 'The Wave towers at dusk', '/media/renders/waves.webp', 1600, 1000],
   ['Exterior', 'Ten towers, one park', '/media/renders/quarter.webp', 1600, 1000],
-  ['Exterior', 'Evening over the district', '/media/renders/quarter-dusk.webp', 1600, 1000],
+  ['Exterior', 'The crown over the city', '/media/renders/quarter-dusk.webp', 1600, 1000],
   ['Interior', 'The entrance hall', '/v3/era/int-1.webp', 1300, 1625],
   ['Interior', 'Double-height lobby', '/v3/era/int-2.webp', 1300, 1625],
   ['Interior', 'Concierge', '/v3/era/int-3.webp', 1300, 1552],

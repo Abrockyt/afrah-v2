@@ -168,7 +168,7 @@ export class FeatherWipe {
     this.material = new THREE.ShaderMaterial({
       vertexShader: vert, fragmentShader: frag, depthTest: false, depthWrite: false,
       transparent: true,
-      uniforms: { uFrom: { value: new THREE.Color('#121212') }, uTo: { value: new THREE.Color('#cfcaca') }, uCover:{value:0},uReverse:{value:0}, uMode:{value:0}, uEdge:{value:new THREE.Color('#d99a88')}, uMid:{value:new THREE.Color('#2b1b2e')},
+      uniforms: { uFrom: { value: new THREE.Color('#121212') }, uTo: { value: new THREE.Color('#cfcaca') }, uCover:{value:0},uReverse:{value:0}, uMode:{value:0}, uEdge:{value:new THREE.Color('#d6b77c')}, uMid:{value:new THREE.Color('#1a2b4c')},
         uGrad:{value:0}, uGradTop:{value:new THREE.Color()}, uGradBot:{value:new THREE.Color()}, uGlow:{value:new THREE.Color()}, uLattice:{value:0}, ...this.shared },
     });
     const quad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), this.material);
@@ -201,7 +201,7 @@ export class FeatherWipe {
     this.set(color,color,progress,dir,2.7,.12);
     this.material.uniforms.uCover.value=1;
     this.material.uniforms.uMode.value=mode==='waves'?1:0;
-    if(mode==='waves'){ this.material.uniforms.uMid.value.set('#2b1b2e').convertLinearToSRGB(); this.material.uniforms.uEdge.value.set('#d99a88').convertLinearToSRGB(); }
+    if(mode==='waves'){ this.material.uniforms.uMid.value.set('#1a2b4c').convertLinearToSRGB(); this.material.uniforms.uEdge.value.set('#d6b77c').convertLinearToSRGB(); }
     this.material.uniforms.uReverse.value=reverse?1:0;
     this.render(renderer,aspect);
     this.material.uniforms.uCover.value=0; this.material.uniforms.uMode.value=0; this.material.uniforms.uGrad.value=g;

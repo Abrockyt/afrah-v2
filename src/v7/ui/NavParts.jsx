@@ -30,12 +30,13 @@ export function themeBehindNav() {
 // the wordmark and the side drawer menu.
 
 export function LilyMark({ size = 22 }) {
-  // the Lily in outline: a tapering shaft under a bud of petals
+  // the Lily in outline: shaft, colonnade, mansard, clock lantern and spire
   return (
     <svg className="lily-mark" width={size * 0.62} height={size} viewBox="0 0 26 42" fill="none" aria-hidden="true">
-      <path d="M8 41 L9 17 C7 12 9.5 6 13 2 C16.5 6 19 12 17 17 L18 41" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" />
-      <path d="M13 2 C11.2 7 11 12.5 11.6 17 M13 2 C14.8 7 15 12.5 14.4 17" stroke="currentColor" strokeWidth="1" opacity=".7" />
-      <path d="M9 22 H17 M8.8 27 H17.2 M8.6 32 H17.4 M8.4 37 H17.6" stroke="currentColor" strokeWidth=".8" opacity=".5" />
+      <path d="M8.2 41 L8.8 19 M17.8 41 L17.2 19 M7 19 H19 M8 16 H18 M9 19 V16 M11.4 19 V16 M13 19 V16 M14.6 19 V16 M17 19 V16" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" />
+      <path d="M8.6 16 L10.6 11.6 H15.4 L17.4 16 M11 11.6 V8 H15 V11.6 M10.7 8 L13 1.2 L15.3 8" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" />
+      <circle cx="13" cy="9.8" r="1" stroke="currentColor" strokeWidth=".8" />
+      <path d="M9 24 H17 M9 29 H17 M8.8 34 H17.2" stroke="currentColor" strokeWidth=".8" opacity=".5" />
     </svg>
   );
 }
@@ -68,7 +69,7 @@ const PREVIEW = {
   arrival: ['/media/renders/waves.webp', 'Down from the sky'],
   tower: ['/media/renders/lily-crown.webp', 'The Lily, sixty-four levels'],
   cases: ['/v3/era/int-1.webp', 'The art of living'],
-  architecture: ['/media/renders/lily-crown.webp', 'A crown of bronze leaves'],
+  architecture: ['/media/renders/lily-crown.webp', 'Bronze fins and a European crown'],
   'map-teaser': ['/media/renders/quarter.webp', 'At the centre of everything'],
   garden: ['/v3/era/labirint.webp', 'Four hectares of park'],
   interiors: ['/v3/era/int-2.webp', 'Rooms like a private house'],

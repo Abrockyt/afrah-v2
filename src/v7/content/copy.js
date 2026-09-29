@@ -71,7 +71,7 @@ export const TOWER = {
   chapter: '02',
   shots: [
     { at: [0.07, 0.2], num: '01', title: ['THE', 'QUARTER'], label: 'Ten towers · one park', body: 'The Lily at the centre, five Wave towers around her and four mirror towers across the park, on the river bend.' },
-    { at: [0.25, 0.36], num: '02', title: ['THE', 'CROWN'], label: 'The Lily · 64 levels · 297 m', body: 'Thirty-two bronze fins turn with the tower and close over a glass lantern: a bud of light above the city.' },
+    { at: [0.25, 0.36], num: '02', title: ['THE', 'CROWN'], label: 'The Lily · 64 levels · 297 m', body: 'A crown in the European tradition: a colonnade, a zinc mansard with dormers, a lantern with four clock faces and a spire.' },
     { at: [0.39, 0.5], num: '03', title: ['THE', 'GLASS'], label: 'Floor-to-ceiling glazing', body: 'Every home is glazed floor to ceiling. At dusk the rooms light up one by one behind the glass.' },
     { at: [0.53, 0.64], num: '04', title: ['THE', 'POOL DECK'], label: '64 m pool · in the park', body: 'A heated pool and sun deck in the park at the foot of the Lily, among the trees.' },
     { at: [0.67, 0.78], num: '05', title: ['THE', 'GARDEN'], label: '800 trees · 4 hectares', body: 'Paths, lawns and eight hundred trees: the ground belongs to the people who live here.' },
